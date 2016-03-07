@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<color name="colorPrimary">#00a0e9</color>
+	<color name="colorPrimaryDark">#4389f3</color>
+	<color name="colorAccent">#99daf7</color>
+	<color name="colorControlNormal">#99daf7</color>
+
+	<color name="aiview_ripple">#FFFFFF</color>
+	<color name="aiview_none">#FFFFFF</color>
+
+	<color name="aiview_toolbar_btn_rv">#99daf7</color>
+	<color name="aiview_toolbar_bg">#f9f9f9</color>
+	<color name="aiview_toolbar_title_text">#696969</color>
+	<color name="aiview_toolbar_bottom_divider">#d2d2d2</color>
+	<color name="aiview_toolbar_activity_bg">#ffffff</color>
+
+	<color name="aiview_dialog_window_bg">#00000000</color>
+
+	<color name="aiview_progress_stroke">#00a0e9</color>
+	<color name="aiview_progress_stroke_secondary">#99daf7</color>
+
+</resources>

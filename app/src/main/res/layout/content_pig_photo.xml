@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:paddingBottom="@dimen/activity_vertical_margin"
+	android:paddingLeft="@dimen/activity_horizontal_margin"
+	android:paddingRight="@dimen/activity_horizontal_margin"
+	android:paddingTop="@dimen/activity_vertical_margin"
+	app:layout_behavior="@string/appbar_scrolling_view_behavior"
+	tools:context=".PigPhotoActivity"
+	tools:showIn="@layout/activity_pig_photo">
+
+	<ImageView
+		android:id="@+id/pig_photo_view"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:scaleType="fitCenter"
+		tools:ignore="contentDescription"
+		tools:src="@mipmap/test"/>
+
+	<com.ai2020lab.aiviews.rippleview.RippleView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/pig_photo_view"
+		app:rv_zoom="true">
+
+		<Button
+			android:id="@+id/pig_photo_upload_btn"
+			style="@style/TextAppearance.AppCompat.Button"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_marginTop="5dp"
+			android:text="@string/pig_photo_upload"
+			android:background="@android:color/holo_blue_dark"
+			android:textColor="@android:color/white"/>
+	</com.ai2020lab.aiviews.rippleview.RippleView>
+
+</RelativeLayout>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/aiview_toolbar_activity_bg"
+	android:fitsSystemWindows="true"
+	tools:context=".activity.AnalysisDetailActivity">
+
+	<android.support.design.widget.AppBarLayout
+		android:id="@+id/toolbar_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:theme="@style/AppTheme.AppBarOverlay">
+
+		<!--自定义Toolbar-->
+		<!--注意自定义toolbar布局的时候左边有个16dp的空间，需要设置app:contentInsetStart=0dp来解决-->
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:background="@color/aiview_toolbar_bg"
+			app:contentInsetStart="0dp"
+			app:popupTheme="@style/AppTheme.PopupOverlay">
+
+			<com.ai2020lab.aiviews.rippleview.RippleView
+				android:id="@+id/toolbar_left_ripple"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="left|center_vertical"
+				android:padding="16dp"
+				app:rv_color="@color/aiview_toolbar_btn_rv"
+				app:rv_type="doubleRipple">
+				<!--工具栏返回按钮-->
+				<ImageView
+					android:id="@+id/toolbar_left_btn"
+					android:layout_width="20dp"
+					android:layout_height="20dp"
+					tools:ignore="contentDescription"/>
+			</com.ai2020lab.aiviews.rippleview.RippleView>
+
+			<TextView
+				android:id="@+id/toolbar_title"
+				style="@style/TextAppearance.AppCompat.Subhead"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:textColor="@color/aiview_toolbar_title_text"/>
+
+			<com.ai2020lab.aiviews.rippleview.RippleView
+				android:id="@+id/toolbar_right_ripple"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="right|center_vertical"
+				android:padding="16dp"
+				app:rv_color="@color/aiview_toolbar_btn_rv"
+				app:rv_type="doubleRipple">
+				<!--工具栏右边按钮-->
+				<ImageView
+					android:id="@+id/toolbar_right_btn"
+					android:layout_width="20dp"
+					android:layout_height="20dp"
+					tools:ignore="contentDescription"/>
+			</com.ai2020lab.aiviews.rippleview.RippleView>
+		</android.support.v7.widget.Toolbar>
+
+		<!--分隔线-->
+		<ImageView
+			android:layout_width="match_parent"
+			android:layout_height="1px"
+			android:src="@color/aiview_toolbar_bottom_divider"
+			tools:ignore="contentDescription"/>
+	</android.support.design.widget.AppBarLayout>
+
+	<!--activity的内容容器，注意要设置app:layout_behavior属性-->
+	<RelativeLayout
+		android:id="@+id/activity_content"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+</android.support.design.widget.CoordinatorLayout>

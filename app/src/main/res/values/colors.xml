@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--主色-->
+    <color name="colorPrimary">#3F51B5</color>
+    <!--辅色-->
+    <color name="colorPrimaryDark">#303F9F</color>
+    <!--控件颜色-->
+    <color name="colorAccent">#FF4081</color>
+    <!--popupview背景色-->
+    <color name="popupview_text">#ffffff</color>
+    <color name="popupview_bg">#cccccc</color>
+    <drawable name="popupview_bg">#cccccc</drawable>
+
+
+
+
+
+
+
+
+
+</resources>
