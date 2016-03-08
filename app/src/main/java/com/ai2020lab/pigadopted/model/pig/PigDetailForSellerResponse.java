@@ -9,7 +9,10 @@ import com.ai2020lab.pigadopted.model.base.ResponseData;
  */
 public class PigDetailForSellerResponse extends ResponseData<PigDetailForSellerResponse.PigDetailForSellerResult> {
 
-	public class PigDetailForSellerResult extends PigDetailInfo {
+	/**
+	 * 返回结果只包含growth_info,health_info和order_info
+	 */
+	public class PigDetailForSellerResult extends PigDetailInfoForSeller {
 
 	}
 }

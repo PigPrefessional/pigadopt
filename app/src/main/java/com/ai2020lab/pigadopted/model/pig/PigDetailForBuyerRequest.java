@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * 买家页面查询猪详情请求实体类
  * Created by Justin on 2016/3/7.
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */

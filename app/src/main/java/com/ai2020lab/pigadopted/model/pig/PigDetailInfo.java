@@ -1,6 +1,5 @@
 package com.ai2020lab.pigadopted.model.pig;
 
-import com.ai2020lab.pigadopted.model.order.OrderInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -22,9 +21,6 @@ public class PigDetailInfo {
 	@Expose
 	@SerializedName("health_info")
 	public HealthInfo healthInfo;
-
-
-
 
 
 }
