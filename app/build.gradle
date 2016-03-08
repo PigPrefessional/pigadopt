@@ -1,37 +1,38 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion 23
-	buildToolsVersion "23.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
-	defaultConfig {
-		applicationId "com.ai2020lab.pigadopted"
-		minSdkVersion 15
-		targetSdkVersion 23
-		versionCode 1
-		versionName "0.1.0"
-	}
-	buildTypes {
-		release {
-			minifyEnabled false
-			debuggable false
-			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-		}
-		debug {
-			minifyEnabled false
-			debuggable true
-		}
-	}
-	// Lint检查有错误也能打包
-	lintOptions {
-		checkReleaseBuilds false
-		abortOnError false
-	}
-	dexOptions {
-		javaMaxHeapSize "1g"
-	}
+    defaultConfig {
+        applicationId "com.ai2020lab.pigadopted"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "0.1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            debuggable true
+        }
+    }
+    // Lint检查有错误也能打包
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    dexOptions {
+        javaMaxHeapSize "1g"
+    }
 }
 
 dependencies {
-	compile project(':aiviews')
+    compile project(':aiviews')
+    compile 'com.android.support:support-v4:23.1.1'
 }
