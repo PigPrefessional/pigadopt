@@ -10,16 +10,23 @@ import com.google.gson.annotations.SerializedName;
  */
 public class PigCategory {
 
+	/**
+	 * 猪品种名
+	 */
 	@Expose
 	@SerializedName("category_id")
 	public String categoryID;
-
+	/**
+	 * 猪品种名
+	 */
 	@Expose
 	@SerializedName("category_name")
 	public String categoryName;
-
+	/**
+	 * 猪品种照片地址链接
+	 */
 	@Expose
-	@SerializedName("category_img")
-	public String categoryImg;
+	@SerializedName("category_photo")
+	public String categoryPhoto;
 
 }

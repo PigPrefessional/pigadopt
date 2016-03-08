@@ -17,7 +17,7 @@ import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.system.DisplayUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.common.SysCameraManager;
-import com.ai2020lab.pigadopted.model.pig.PhotoUploadResponse;
+import com.ai2020lab.pigadopted.model.pig.PigPhotoUploadResponse;
 import com.ai2020lab.pigadopted.net.HttpManager;
 import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
 import com.ai2020lab.pigadopted.net.UrlName;
@@ -75,12 +75,12 @@ public class PigPhotoActivity extends AppCompatActivity {
 			return;
 		}
 		HttpManager.postPhoto(this, UrlName.PIG_PHOTO_UPLOAD.getUrl(), photoPath,
-				new JsonHttpResponseHandler<PhotoUploadResponse>(this) {
+				new JsonHttpResponseHandler<PigPhotoUploadResponse>(this) {
 
 					@Override
 					public void onHandleSuccess(int statusCode, Header[] headers,
-					                            PhotoUploadResponse jsonObj) {
-						Snackbar.make(v, "返回图片地址:" + jsonObj.data.pigPhotoUrl,
+					                            PigPhotoUploadResponse jsonObj) {
+						Snackbar.make(v, "返回图片地址:" + jsonObj.data.pigPhoto,
 								Snackbar.LENGTH_LONG).setAction("Action", null).show();
 					}
 				});

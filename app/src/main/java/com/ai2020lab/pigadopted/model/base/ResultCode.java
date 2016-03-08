@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ResultCode {
 
+	@Expose
 	@SerializedName("result_code")
 	public int resultCode;
 

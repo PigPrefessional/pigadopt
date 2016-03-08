@@ -1,10 +1,8 @@
 package com.ai2020lab.pigadopted.model.hogpen;
 
-import com.ai2020lab.pigadopted.model.pig.PigInfo;
+import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 /**
  * 猪圈信息实体类
@@ -12,38 +10,42 @@ import java.util.List;
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
 public class HogpenInfo {
-
+	/**
+	 * 猪圈id
+	 */
 	@Expose
 	@SerializedName("hogpen_id")
 	public String hogpenID;
-
+	/**
+	 * 猪圈名字
+	 */
 	@Expose
-	@SerializedName("owner_id")
-	public String ownerID;
-
+	@SerializedName("hogpen_name")
+	public String hogpenName;
+	/**
+	 * 猪圈长
+	 */
 	@Expose
-	@SerializedName("owner_name")
-	public String ownerName;
-
+	@SerializedName("hogpen_length")
+	public float hogpenLength;
+	/**
+	 * 猪圈宽
+	 */
 	@Expose
-	@SerializedName("owner_img")
-	public String ownerImg;
-
+	@SerializedName("hogpen_width")
+	public float hogpenWidth;
+	/**
+	 * 猪圈照片
+	 */
 	@Expose
-	@SerializedName("area")
-	public float area;
-
+	@SerializedName("hogpen_photo")
+	public String hogpenPhoto;
+	/**
+	 * 卖家用户信息
+	 */
 	@Expose
-	@SerializedName("capacity")
-	public int capacity;
-
-	@Expose
-	@SerializedName("images")
-	public List<String> images;
-
-	@Expose
-	@SerializedName("pigs")
-	public List<PigInfo> pigInfos;
+	@SerializedName("user_info")
+	public UserInfo userInfo;
 
 
 }

@@ -9,12 +9,12 @@ import com.google.gson.annotations.SerializedName;
  * Created by Justin on 2015/12/3.
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
-public class PhotoUploadResponse extends ResponseData<PhotoUploadResponse.PigPhoto> {
+public class PigPhotoUploadResponse extends ResponseData<PigPhotoUploadResponse.PigPhotoUploadResult> {
 
-	public class PigPhoto {
+	public class PigPhotoUploadResult {
 
 		@Expose
 		@SerializedName("pig_photo")
-		public String pigPhotoUrl;
+		public String pigPhoto;
 	}
 }

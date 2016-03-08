@@ -1,5 +1,6 @@
 package com.ai2020lab.pigadopted.model.pig;
 
+import com.ai2020lab.pigadopted.model.hogpen.HogpenInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,42 +10,48 @@ import com.google.gson.annotations.SerializedName;
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
 public class PigInfo {
-
+	/**
+	 * 猪id
+	 */
 	@Expose
 	@SerializedName("pig_id")
 	public String pigID;
-
+	/**
+	 * 猪圈信息
+	 */
+	@Expose
+	@SerializedName("hogpen_info")
+	public HogpenInfo hogpenInfo;
+	/**
+	 * 猪品种对象
+	 */
     @Expose
-    @SerializedName("category_id")
-	public String categoryID;
-
-	@Expose
-	@SerializedName("category_name")
-	public String categoryName;
-
-	@Expose
-	@SerializedName("owner_id")
-	public String ownerID;
-
-	@Expose
-	@SerializedName("owner_name")
-	public String ownerName;
-
-	@Expose
-	@SerializedName("hogpen_id")
-	public String hogpenID;
-
-	@Expose
-	@SerializedName("birthday")
-	public long birthday;
-
-	public String birthDate;
-
+    @SerializedName("pig_category")
+	public PigCategory pigCategory;
+	/**
+	 * 入栏时间
+	 */
 	@Expose
 	@SerializedName("attended_time")
 	public long attendedTime;
 
 	public String attendedDate;
+	/**
+	 * 入栏体重
+	 */
+	@Expose
+	@SerializedName("attended_weight")
+	public float attendedWeight;
+	/**
+	 * 入栏猪龄
+	 */
+	@Expose
+	@SerializedName("attended_age")
+	public float attendedAge;
+
+	public String birthDate;
+
+
 
 
 }

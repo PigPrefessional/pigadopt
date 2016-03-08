@@ -10,14 +10,33 @@ import com.google.gson.annotations.SerializedName;
  */
 public class GrowthInfo {
 
+	/**
+	 * 猪照片链接地址
+	 */
 	@Expose
 	@SerializedName("pig_photo")
 	public String pigPhoto;
-
+	/**
+	 * 猪当前体重
+	 */
 	@Expose
 	@SerializedName("pig_weight")
 	public float pigWeight;
-
+	/**
+	 * 猪本次增长体重
+	 */
+	@Expose
+	@SerializedName("increased_weight")
+	public float increasedWeight;
+	/**
+	 * 猪图片的宽度同屏幕宽度的比例,使用猪出栏最大体重和猪当前体重的比例得出
+	 */
+	@Expose
+	@SerializedName("body_form")
+	public float bodyForm;
+	/**
+	 * 照片上传时间
+	 */
 	@Expose
 	@SerializedName("collected_time")
 	public long collectedTime;
