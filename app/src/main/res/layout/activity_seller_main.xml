@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--卖家主页界面布局-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/seller_main_bg">
+
+
+    <!--猪圈屋顶布局-->
+    <RelativeLayout
+        android:id="@+id/hogpen_roof_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/hogpen_roof_bg">
+
+    </RelativeLayout>
+
+    <!--猪圈圈身布局-->
+    <RelativeLayout
+        android:id="@+id/hogpen_body_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hogpen_roof_layout"
+        android:background="@mipmap/hogpen_body_bg">
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
