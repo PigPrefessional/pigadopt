@@ -9,8 +9,8 @@ import com.ai2020lab.pigadopted.base.AIBaseActivity;
  * Created by Justin on 2016/3/4.
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
-public class HogmanMainActivity extends AIBaseActivity {
-	private final static String TAG = HogmanMainActivity.class.getSimpleName();
+public class SellerMainActivity extends AIBaseActivity {
+	private final static String TAG = SellerMainActivity.class.getSimpleName();
 
 	/**
 	 * 程序入口
