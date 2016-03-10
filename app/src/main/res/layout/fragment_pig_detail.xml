@@ -1,40 +1,151 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@mipmap/card_background"
     tools:context=".fragment.PigDetailFragment">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <FrameLayout
-            android:id="@+id/pig_parts_container"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-            <ImageView
+            android:layout_marginTop="40dp">
+            <FrameLayout
+                android:id="@+id/pig_parts_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/pig_whole"/>
-        </FrameLayout>
-    </RelativeLayout>
+                android:layout_marginTop="10dp">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/pig_whole"/>
+            </FrameLayout>
+        </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp">
-        <TextView
-            android:id="@+id/buyer_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="已有4人购买" />
-        <android.support.v7.widget.RecyclerView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/buyer_number">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@mipmap/buyers_background"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp">
+            <TextView
+                android:id="@+id/buyer_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="164dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="28dp"
+                android:text="已有4人购买" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/buyer_list"
+                android:layout_width="match_parent"
+                android:layout_marginTop="65dp"
+                android:layout_marginLeft="70dp"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true">
 
-        </android.support.v7.widget.RecyclerView>
-    </RelativeLayout>
+            </android.support.v7.widget.RecyclerView>
+        </RelativeLayout>
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="2"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="0">
+
+                <LinearLayout
+                    style="@style/LabelLayout">
+                    <TextView
+                        style="@style/Label"
+                        android:text="@string/label_varieties" />
+                    <TextView
+                        style="@style/LabelContent"
+                        android:text="内江猪"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/LabelLayout">
+                    <TextView
+                        style="@style/Label"
+                        android:text="@string/label_age" />
+                    <TextView
+                        style="@style/LabelContent"
+                        android:text="2个月"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/LabelLayout">
+                    <TextView
+                        style="@style/Label"
+                        android:text="@string/label_weight" />
+                    <TextView
+                        style="@style/LabelContent"
+                        android:text="10公斤"/>
+
+                    <Button
+                        style="@style/ChartsButton" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/LabelLayout">
+                    <TextView
+                        style="@style/Label"
+                        android:text="@string/label_temperature" />
+                    <TextView
+                        style="@style/LabelContent"
+                        android:text="38℃"/>
+
+                    <Button
+                        style="@style/ChartsButton" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/LabelLayout">
+                    <TextView
+                        style="@style/Label"
+                        android:text="@string/label_fat" />
+                    <TextView
+                        style="@style/LabelContent"
+                        android:text="24%"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/LabelLayout">
+                    <TextView
+                        style="@style/Label"
+                        android:text="@string/label_steps" />
+                    <TextView
+                        style="@style/LabelContent"
+                        android:text="1333步"/>
+                    <Button
+                        style="@style/ChartsButton" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="2"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
+
