@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:paddingTop="10dp"
     android:fitsSystemWindows="true"
-    tools:context="com.ai2020lab.pigadopted.activity.PigDetailActivity">
+    tools:context="com.ai2020lab.pigadopted.activity.PigDetailActivity"
+    android:background="@mipmap/seller_main_bg">
 
     <!--<android.support.design.widget.AppBarLayout-->
         <!--android:layout_width="match_parent"-->

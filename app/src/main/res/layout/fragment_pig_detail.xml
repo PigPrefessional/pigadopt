@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="30dp"
     android:background="@mipmap/card_background"
     tools:context=".fragment.PigDetailFragment">
 
@@ -14,17 +15,29 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp">
+            android:layout_marginTop="10dp">
             <FrameLayout
                 android:id="@+id/pig_parts_container"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_centerInParent="true"
+                android:layout_marginTop="100dp">
                 <ImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/pig_whole"/>
             </FrameLayout>
+            <TextView
+                android:layout_width="90dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="3dp"
+                android:lines="2"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="我又胖20斤了哦"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="35dp"
+                android:background="@drawable/msg_bubble"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -42,12 +55,14 @@
                 android:layout_marginLeft="164dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="28dp"
+                android:textColor="#85aa4c"
+                android:textSize="12sp"
                 android:text="已有4人购买" />
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/buyer_list"
                 android:layout_width="match_parent"
-                android:layout_marginTop="65dp"
-                android:layout_marginLeft="70dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginLeft="60dp"
                 android:layout_height="60dp"
                 android:layout_alignParentBottom="true">
 

@@ -16,6 +16,8 @@
         android:gravity="center"
         android:singleLine="true"
         android:layout_width="50dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textColor="#50840b"
+        android:textSize="12sp"/>
 
 </LinearLayout>
