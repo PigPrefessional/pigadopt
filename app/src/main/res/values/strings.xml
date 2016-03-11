@@ -9,6 +9,13 @@
     <string name="pig_photo_take_photo">拍照</string>
     <string name="pig_photo_photo_album">相册</string>
     <string name="pig_photo_not_take_pic">还没有拍照!</string>
+    
+    <string name="label_varieties">品种:</string>
+    <string name="label_age">猪龄:</string>
+    <string name="label_weight">体重:</string>
+    <string name="label_temperature">体温:</string>
+    <string name="label_fat">体脂:</string>
+    <string name="label_steps">步数:</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
