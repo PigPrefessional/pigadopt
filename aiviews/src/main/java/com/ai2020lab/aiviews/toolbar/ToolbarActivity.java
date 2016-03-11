@@ -120,14 +120,15 @@ public class ToolbarActivity extends AppCompatActivity {
 	public void supportToolbar(boolean isSupport) {
 		if (isSupport) {
 			toolbarContainer.setVisibility(View.VISIBLE);
+			toolbar.setVisibility(View.VISIBLE);
 			intToolbar();
 		} else {
 			toolbarContainer.setVisibility(View.GONE);
+			toolbar.setVisibility(View.GONE);
 		}
 	}
 
 	private void intToolbar() {
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		toolbar.setTitle("");
 		toolbarLeftRipple = (RippleView) findViewById(R.id.toolbar_left_ripple);
 		toolbarRightRipple = (RippleView) findViewById(R.id.toolbar_right_ripple);

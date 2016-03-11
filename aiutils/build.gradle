@@ -33,5 +33,4 @@ dependencies {
 	compile 'com.github.rey5137:material:1.2.2'
 	// 手势操作返回库
 	compile 'me.imid.swipebacklayout.lib:library:1.0.0'
-	compile 'com.nineoldandroids:library:2.4.0'
 }

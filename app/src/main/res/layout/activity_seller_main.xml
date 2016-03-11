@@ -1,55 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--卖家主页界面布局-->
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@mipmap/seller_main_bg">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@mipmap/seller_main_bg">
 
+	<!--猪圈屋顶布局-->
+	<com.ai2020lab.pigadopted.view.BirdIndicator
+		android:id="@+id/hogpen_indicator"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@mipmap/hogpen_roof_bg"/>
 
-    <!--猪圈屋顶布局-->
-    <RelativeLayout
-        android:id="@+id/hogpen_roof_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/hogpen_roof_bg">
+	<!--猪圈圈身布局-->
+	<RelativeLayout
+		android:id="@+id/hogpen_body_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/hogpen_indicator"
+		android:background="@mipmap/hogpen_body_bg"
+		android:paddingBottom="15dp"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:paddingTop="5dp">
 
-    </RelativeLayout>
+	</RelativeLayout>
 
-    <!--猪圈圈身布局-->
-    <RelativeLayout
-        android:id="@+id/hogpen_body_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/hogpen_roof_layout"
-        android:background="@mipmap/hogpen_body_bg"
-        android:paddingTop="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingBottom="15dp">
+	<!--添加猪按钮-->
+	<ImageView
+		android:id="@+id/add_pig_btn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentLeft="true"
+		android:src="@mipmap/add_pig_btn_normal"
+		tools:ignore="contentDescription"/>
 
-    </RelativeLayout>
-
-    <!--添加猪按钮-->
-    <ImageView
-        android:id="@+id/add_pig_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:src="@mipmap/add_pig_btn_normal"/>
-
-    <!--用户信息展示-->
-    <TextView
-        android:id="@+id/seller_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        style="@style/Base.TextAppearance.AppCompat.Title"
-        android:text="周雪梅家"
-        android:background="@drawable/seller_info_bg"
-        />
+	<!--用户信息展示-->
+	<TextView
+		android:id="@+id/seller_info_text"
+		style="@style/Base.TextAppearance.AppCompat.Title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:background="@drawable/seller_info_bg"
+		tools:ignore="contentDescription"
+		tools:text="周雪梅家"/>
 
 
 </RelativeLayout>

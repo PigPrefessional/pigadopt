@@ -10,8 +10,8 @@
 	<color name="aiview_none">#FFFFFF</color>
 
 	<color name="aiview_toolbar_btn_rv">#99daf7</color>
-	<color name="aiview_toolbar_bg">#f9f9f9</color>
-	<color name="aiview_toolbar_title_text">#696969</color>
+	<color name="aiview_toolbar_bg">#00a0e9</color>
+	<color name="aiview_toolbar_title_text">#ffffffff</color>
 	<color name="aiview_toolbar_bottom_divider">#d2d2d2</color>
 	<color name="aiview_toolbar_activity_bg">#ffffff</color>
 
