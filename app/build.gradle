@@ -37,9 +37,6 @@ android {
 
 dependencies {
     compile project(':aiviews')
-<<<<<<< HEAD
-=======
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'de.hdodenhof:circleimageview:2.0.0'
->>>>>>> 880c9b2c8605060866bf73fbc7185427e6f2ec27
+
+
 }

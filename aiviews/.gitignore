@@ -1,1 +1,9 @@
-/build
+# IntelliJ IDEA
+*.iml
+
+# Gradle
+.gradle
+build
+
+#NDK
+obj/
