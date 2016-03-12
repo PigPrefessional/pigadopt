@@ -1,9 +1,4 @@
 # IntelliJ IDEA
-*.iml
+#*.iml
 
-# Gradle
-.gradle
-build
-
-#NDK
-obj/
+build/
