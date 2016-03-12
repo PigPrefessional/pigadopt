@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016. Justin Z All rights Reserved
+ */
+
 package com.ai2020lab.pigadopted.base;
 
 import android.content.BroadcastReceiver;
