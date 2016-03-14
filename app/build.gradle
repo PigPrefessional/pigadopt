@@ -35,8 +35,14 @@ android {
     }
 }
 
+repositories {
+    maven { url "https://jitpack.io" }
+    maven { // this is for realm-db
+        url 'http://oss.jfrog.org/artifactory/oss-snapshot-local'
+    }
+}
+
 dependencies {
     compile project(':aiviews')
-
-
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.2'
 }

@@ -3,15 +3,17 @@ package com.ai2020lab.pigadopted.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ai2020lab.pigadopted.R;
@@ -27,6 +29,8 @@ public class PigDetailFragment extends Fragment {
 
     private FrameLayout mPigPartsContainer;
     private RecyclerView mBuyerRecyclerView;
+    private ImageView mWholePig;
+    private Button mWeightChartBtn;
 
 
     public PigDetailFragment() {
@@ -41,9 +45,14 @@ public class PigDetailFragment extends Fragment {
 
         mPigPartsContainer = (FrameLayout) rootView.findViewById(R.id.pig_parts_container);
         mBuyerRecyclerView = (RecyclerView) rootView.findViewById(R.id.buyer_list);
+        mWholePig = (ImageView) rootView.findViewById(R.id.whole_pig);
+        mWeightChartBtn = (Button) rootView.findViewById(R.id.weight_chart);
 
         displayPig();
         loadBuyerList();
+        setChartsButtonListener();
+
+
 
         return rootView;
     }
@@ -112,12 +121,38 @@ public class PigDetailFragment extends Fragment {
             final int partImageId = firstPartImageId + (Integer.parseInt(part.partId) - firstPartId);
 
             ImageView image = new ImageView(getContext());
-            image.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+            image.setLayoutParams(mWholePig.getLayoutParams());
+            image.setScaleType(mWholePig.getScaleType());
+         //   image.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
 
             image.setImageResource(partImageId);
 
             mPigPartsContainer.addView(image);
         }
+    }
+
+    private void setChartsButtonListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                Fragment  prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
+
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+                DialogFragment newFragment = StatisticsChartFragment.newInstance();
+
+                newFragment.show(ft, "dialog");
+
+            }
+        };
+
+        mWeightChartBtn.setOnClickListener(listener);
+
     }
 
 
@@ -181,5 +216,18 @@ public class PigDetailFragment extends Fragment {
         }
 
     }
+    public static class ChartDialogFragment extends DialogFragment {
+        static ChartDialogFragment newInstance() {
+            return new ChartDialogFragment();
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View v = inflater.inflate(R.layout.item_buyer, container, false);
+            return v;
+        }
+    }
+
 
 }

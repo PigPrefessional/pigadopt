@@ -20,20 +20,23 @@
                 android:id="@+id/pig_parts_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="100dp">
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp">
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/whole_pig"
+                    android:scaleType="centerInside"
+                    android:layout_width="250dp"
+                    android:layout_height="150dp"
                     android:src="@mipmap/pig_whole"/>
             </FrameLayout>
             <TextView
-                android:layout_width="90dp"
-                android:layout_height="80dp"
+                android:layout_width="84dp"
+                android:layout_height="70dp"
                 android:layout_marginTop="3dp"
                 android:lines="2"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="8dp"
+                android:textSize="12sp"
                 android:text="我又胖20斤了哦"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="35dp"
@@ -43,8 +46,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="10dp"
             android:background="@mipmap/buyers_background"
             android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp">
@@ -61,9 +64,9 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/buyer_list"
                 android:layout_width="match_parent"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="50dp"
                 android:layout_marginLeft="60dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_alignParentBottom="true">
 
             </android.support.v7.widget.RecyclerView>
@@ -88,7 +91,7 @@
                     style="@style/LabelLayout">
                     <TextView
                         style="@style/Label"
-                        android:text="@string/label_varieties" />
+                        android:text="@string/pig_detail_label_varieties" />
                     <TextView
                         style="@style/LabelContent"
                         android:text="内江猪"/>
@@ -98,7 +101,7 @@
                     style="@style/LabelLayout">
                     <TextView
                         style="@style/Label"
-                        android:text="@string/label_age" />
+                        android:text="@string/pig_detail_label_age" />
                     <TextView
                         style="@style/LabelContent"
                         android:text="2个月"/>
@@ -108,12 +111,13 @@
                     style="@style/LabelLayout">
                     <TextView
                         style="@style/Label"
-                        android:text="@string/label_weight" />
+                        android:text="@string/pig_detail_label_weight" />
                     <TextView
                         style="@style/LabelContent"
                         android:text="10公斤"/>
 
                     <Button
+                        android:id="@+id/weight_chart"
                         style="@style/ChartsButton" />
                 </LinearLayout>
 
@@ -121,7 +125,7 @@
                     style="@style/LabelLayout">
                     <TextView
                         style="@style/Label"
-                        android:text="@string/label_temperature" />
+                        android:text="@string/pig_detail_label_temperature" />
                     <TextView
                         style="@style/LabelContent"
                         android:text="38℃"/>
@@ -134,7 +138,7 @@
                     style="@style/LabelLayout">
                     <TextView
                         style="@style/Label"
-                        android:text="@string/label_fat" />
+                        android:text="@string/pig_detail_label_fat" />
                     <TextView
                         style="@style/LabelContent"
                         android:text="24%"/>
@@ -144,7 +148,7 @@
                     style="@style/LabelLayout">
                     <TextView
                         style="@style/Label"
-                        android:text="@string/label_steps" />
+                        android:text="@string/pig_detail_label_steps" />
                     <TextView
                         style="@style/LabelContent"
                         android:text="1333步"/>

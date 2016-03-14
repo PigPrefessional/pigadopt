@@ -16,6 +16,11 @@ public class PigDetailActivity extends AIBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pig_detail);
+
+        supportToolbar(true);
+        setToolbarTitle("详细信息");
+        setToolbarLeft(R.drawable.pig_detail_back_selector);
+        setToolbarRight(R.drawable.pig_detail_grow_history_selector);
      /*   Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

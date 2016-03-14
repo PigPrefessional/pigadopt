@@ -67,11 +67,11 @@
 		</android.support.v7.widget.Toolbar>
 
 		<!--分隔线-->
-		<ImageView
+		<!--<ImageView
 			android:layout_width="match_parent"
 			android:layout_height="1px"
 			android:src="@color/aiview_toolbar_bottom_divider"
-			tools:ignore="contentDescription"/>
+			tools:ignore="contentDescription"/>-->
 	</android.support.design.widget.AppBarLayout>
 
 	<!--activity的内容容器，注意要设置app:layout_behavior属性-->
