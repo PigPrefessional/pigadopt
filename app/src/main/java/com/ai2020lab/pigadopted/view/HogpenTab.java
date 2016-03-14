@@ -4,20 +4,13 @@
 
 package com.ai2020lab.pigadopted.view;
 
-import android.widget.LinearLayout;
-
-import com.ai2020lab.pigadopted.model.hogpen.SellerHogpenInfo;
-
 /**
  * Created by Justin Z on 2016/3/13.
  * 502953057@qq.com
  */
 public class HogpenTab {
-
-	public SellerHogpenInfo sellerHogpenInfo;
-
 	/**
-	 * 猪容器布局
+	 * 猪列表容器
 	 */
-	public LinearLayout hogpenContainer;
+	public HogpenPigListView hogpenPigListView;
 }
