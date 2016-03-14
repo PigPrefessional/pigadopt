@@ -70,10 +70,6 @@ public class HogpenViewPager extends LinearLayout {
 	 * 猪点击事件监听
 	 */
 	private OnPigClickListener onPigClickListener;
-	/**
-	 * 当前选中的猪圈ListView
-	 */
-	private HogpenPigListView currenPigListView;
 
 	public HogpenViewPager(Context context) {
 		super(context);

@@ -33,6 +33,6 @@ public class HealthInfo {
 	 */
 	@Expose
 	@SerializedName("status")
-	public int status = PigStatus.NORMAL;
+	public int status = PigStatus.WALKING;
 
 }

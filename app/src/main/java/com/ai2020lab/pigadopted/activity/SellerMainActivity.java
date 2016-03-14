@@ -106,7 +106,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	private void initHogpenViewPager() {
 		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)
 				hogpenViewPager.getLayoutParams();
-		lp.height = (int) (DisplayUtils.getScreenHeight(this) * 0.6);
+		lp.height = (int) (DisplayUtils.getScreenHeight(this) * 0.62);
 		hogpenViewPager.setLayoutParams(lp);
 		hogpenViewPager.setOnHogpenChangeListener(new HogpenViewPager.OnHogpenChangeListener() {
 			@Override
@@ -210,7 +210,7 @@ public class SellerMainActivity extends AIBaseActivity {
 		pigInfo.growthInfo.pigWeight = 150;
 		pigInfo.healthInfo = new HealthInfo();
 		pigInfo.healthInfo.temperature = 36;
-		pigInfo.healthInfo.status = PigStatus.EATING;
+		pigInfo.healthInfo.status = PigStatus.SLEEPING;
 		pigInfo.pigInfo = new PigInfo();
 		return pigInfo;
 	}

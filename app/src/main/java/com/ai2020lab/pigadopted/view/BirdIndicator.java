@@ -126,7 +126,7 @@ public class BirdIndicator extends LinearLayout {
 		LayoutParams lp = (LayoutParams) indicatorLayout.getLayoutParams();
 		lp.width = LayoutParams.MATCH_PARENT;
 		// 设置容器高度为固定，避免执行动画的时候超出边界
-		lp.height = DisplayUtils.getScreenHeight(context) / 6;
+		lp.height = DisplayUtils.getScreenHeight(context) / 7;
 		setGravity(Gravity.CENTER);
 		indicatorLayout.setLayoutParams(lp);
 //		initLayoutTransition();

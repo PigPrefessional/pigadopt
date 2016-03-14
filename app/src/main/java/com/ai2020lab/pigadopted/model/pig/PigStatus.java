@@ -7,7 +7,7 @@ package com.ai2020lab.pigadopted.model.pig;
  */
 public interface PigStatus {
 
-	int NORMAL = 1;
+	int WALKING = 1;
 	int EATING = 2;
 	int SLEEPING = 3;
 }

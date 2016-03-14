@@ -193,7 +193,7 @@ public class HogpenPigListView extends LinearLayout {
 	 */
 	private Drawable getPigDrawable(int status) {
 		switch (status) {
-			case PigStatus.NORMAL:
+			case PigStatus.WALKING:
 				return ResourcesUtils.getDrawable(R.mipmap.pig_status_walking);
 			case PigStatus.SLEEPING:
 				return ResourcesUtils.getDrawable(R.mipmap.pig_status_sleeping);
