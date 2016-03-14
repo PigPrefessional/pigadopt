@@ -9,8 +9,6 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ai2020lab.aiutils.common.LogUtils;
-import com.ai2020lab.aiviews.imageviewpager.ImageTab;
 import com.ai2020lab.pigadopted.model.hogpen.SellerHogpenInfo;
 
 import java.util.List;
@@ -82,9 +80,9 @@ public class HogpenViewPagerAdapter extends PagerAdapter {
 		final HogpenTab hogpenTab = getItem(position);
 		final SellerHogpenInfo sellerHogpenInfo = getItemData(position);
 		if (hogpenTab == null || sellerHogpenInfo == null) return null;
-		container.addView(hogpenTab.hogpenContainer);
+		container.addView(hogpenTab.hogpenPigListView);
 
-		return hogpenTab.hogpenContainer;
+		return hogpenTab.hogpenPigListView;
 	}
 
 
@@ -102,7 +100,7 @@ public class HogpenViewPagerAdapter extends PagerAdapter {
 	public void destroyItem(ViewGroup container, int position, Object object) {
 		final HogpenTab hogpenTab = getItem(position);
 		if (hogpenTab == null) return;
-		container.removeView(hogpenTab.hogpenContainer);
+		container.removeView(hogpenTab.hogpenPigListView);
 	}
 
 }

@@ -230,8 +230,6 @@ public class BirdIndicator extends LinearLayout {
 					}
 				});
 				indicatorNumber++;
-				// 添加鸟1的时候默认选中鸟1
-				setCurrentIndex(0);
 				break;
 			case 2:
 				LogUtils.i(TAG, "2个鸟的时候添加鸟2");
@@ -289,7 +287,6 @@ public class BirdIndicator extends LinearLayout {
 	 * @param index 当前选中游标的位置，游标位置可以设置从0开始到游标总个数减1的整数
 	 */
 	public void setCurrentIndex(int index) {
-//		currentIndex = index;
 		int birdNum = getIndicatorNumber();
 		if (birdNum == 0) {
 			LogUtils.i(TAG, "请先初始化游标再设置选中游标的位置");
@@ -303,8 +300,10 @@ public class BirdIndicator extends LinearLayout {
 			LogUtils.i(TAG, "要选中的位置:" + index + " 同当前位置:" + currentIndex + "相同");
 			return;
 		}
+		LogUtils.i(TAG, "鸟游标选中:" + index);
 		// 找到当前已经选中的游标
-		View currentSelectedView = indicatorLayout.findViewWithTag(INDICATOR_TAG_PREFIX + currentIndex);
+		View currentSelectedView = indicatorLayout.findViewWithTag(INDICATOR_TAG_PREFIX
+				+ currentIndex);
 		// 找到需要选中的游标
 		View wonderSelectedView = indicatorLayout.findViewWithTag(INDICATOR_TAG_PREFIX + index);
 		loadSelectAnim(wonderSelectedView);
