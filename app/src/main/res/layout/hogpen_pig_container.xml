@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--猪圈中的单个猪容器-->
+<LinearLayout
+	android:id="@+id/pig_rl"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:gravity="center"
+	android:orientation="horizontal"
+	android:paddingBottom="10dp"
+	android:paddingTop="10dp">
+
+	<!--猪文字显示区域-->
+	<RelativeLayout
+		android:id="@+id/pig_info_rl"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@mipmap/pig_info_bg"
+		android:paddingBottom="20dp"
+		android:paddingLeft="25dp"
+		android:paddingRight="25dp"
+		android:paddingTop="20dp">
+
+		<TextView
+			android:id="@+id/pig_weight_tv"
+			style="@style/Base.TextAppearance.AppCompat.Title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			tools:text="体重 : 150斤"/>
+
+		<TextView
+			android:id="@+id/pig_temperature_tv"
+			style="@style/Base.TextAppearance.AppCompat.Title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/pig_weight_tv"
+			tools:text="体温 : 38℃"/>
+
+		<TextView
+			android:id="@+id/pig_buyers_tv"
+			style="@style/Base.TextAppearance.AppCompat.Body2"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/pig_temperature_tv"
+			android:layout_centerHorizontal="true"
+			android:layout_marginTop="5dp"
+			tools:text="已有3家购买"/>
+
+	</RelativeLayout>
+
+	<!--猪图片展示-->
+	<ImageView
+		android:id="@+id/pig_iv"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@mipmap/pig_status_walking"
+		tools:ignore="contentDescription"/>
+
+</LinearLayout>

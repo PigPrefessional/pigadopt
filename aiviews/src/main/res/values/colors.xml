@@ -7,7 +7,7 @@
 	<color name="colorControlNormal">#99daf7</color>
 
 	<color name="aiview_ripple">#FFFFFF</color>
-	<color name="aiview_none">#FFFFFF</color>
+	<color name="aiview_none">#FFFFFFFF</color>
 
 	<color name="aiview_toolbar_btn_rv">#99daf7</color>
 	<color name="aiview_toolbar_bg">#00a0e9</color>

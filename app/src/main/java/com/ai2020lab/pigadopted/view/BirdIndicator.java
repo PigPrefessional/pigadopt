@@ -122,14 +122,14 @@ public class BirdIndicator extends LinearLayout {
 	 * 初始化鸟容器
 	 */
 	private void initIndicatorLayout() {
-		indicatorLayout = (LinearLayout) findViewById(R.id.indicators_layout);
+		indicatorLayout = (LinearLayout) findViewById(R.id.indicators_ll);
 		LayoutParams lp = (LayoutParams) indicatorLayout.getLayoutParams();
 		lp.width = LayoutParams.MATCH_PARENT;
 		// 设置容器高度为固定，避免执行动画的时候超出边界
 		lp.height = DisplayUtils.getScreenHeight(context) / 6;
 		setGravity(Gravity.CENTER);
 		indicatorLayout.setLayoutParams(lp);
-		initLayoutTrasition();
+//		initLayoutTransition();
 	}
 
 	/**
@@ -150,8 +150,8 @@ public class BirdIndicator extends LinearLayout {
 			LogUtils.i(TAG, "indicatorNumber: " + this.indicatorNumber);
 			addIndicator();
 		}
-		// 默认都选中第一个鸟
-		setCurrentIndex(0);
+//		// 默认都选中第一个鸟
+//		setCurrentIndex(0);
 	}
 
 
@@ -366,7 +366,7 @@ public class BirdIndicator extends LinearLayout {
 		animatorSet.start();
 	}
 
-	private void initLayoutTrasition() {
+	private void initLayoutTransition() {
 		LayoutTransition transition = new LayoutTransition();
 		// 当View在容器中出现时，对View设置的动画
 		transition.setAnimator(LayoutTransition.APPEARING,

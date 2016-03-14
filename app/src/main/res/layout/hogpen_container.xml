@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--猪圈容器布局-->
+<LinearLayout
+	android:id="@+id/hogpen_ll"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:background="@color/colorPrimary">
+
+
+	<TextView
+		android:id="@+id/pig_weight_tv"
+		style="@style/Base.TextAppearance.AppCompat.Title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="体重 : 150斤"/>
+
+</LinearLayout>
