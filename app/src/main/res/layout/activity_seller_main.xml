@@ -30,6 +30,7 @@
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentLeft="true"
 		android:background="@drawable/add_pig_btn_selector"
+		android:visibility="gone"
 		tools:ignore="contentDescription"/>
 
 	<!--用户信息展示-->

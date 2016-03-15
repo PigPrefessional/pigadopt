@@ -3,6 +3,9 @@ package com.ai2020lab.pigadopted.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -113,6 +116,9 @@ public class SellerMainActivity extends AIBaseActivity {
 			public void onHogpenSelected(int index) {
 				// 猪圈切换，游标跟随移动
 				birdIndicator.setCurrentIndex(index);
+				// 根据当前猪圈中的猪决定是否隐藏添加猪按钮
+				setAddPigBtnVisibility(hogpenViewPager.getPigNumber(index)
+						< HogpenViewPager.PIG_LIMIT);
 			}
 		});
 		hogpenViewPager.setOnPigClickListener(new HogpenViewPager.OnPigClickListener() {
@@ -157,16 +163,37 @@ public class SellerMainActivity extends AIBaseActivity {
 	}
 
 	/**
+	 * 设置隐藏或者显示添加猪按钮
+	 */
+	// TODO:猪圈切换的时候监听猪圈中的猪是否达到上限，达到上限则隐藏添加猪按钮,否则显示添加猪按钮
+	private void setAddPigBtnVisibility(boolean isShow) {
+		Animation animIn = AnimationUtils.loadAnimation(this, R.anim.push_bottom_in);
+		Animation animOut = AnimationUtils.loadAnimation(this, R.anim.push_bottom_out);
+		animIn.setInterpolator(new BounceInterpolator());
+//		animOut.setInterpolator(new BounceInterpolator());
+		if (isShow && addPigIv.getVisibility() == View.GONE) {
+			addPigIv.setVisibility(View.VISIBLE);
+			addPigIv.startAnimation(animIn);
+		} else if (!isShow && addPigIv.getVisibility() == View.VISIBLE) {
+			addPigIv.setVisibility(View.GONE);
+			addPigIv.startAnimation(animOut);
+		}
+	}
+
+	/**
 	 * 添加测试鸟和猪圈
 	 */
 	private void addHogpen() {
 		birdIndicator.addIndicator();
 		hogpenViewPager.addHogpen(new SellerHogpenInfo());
-		// 让游标选中最后一项
+		// 选中新添加的猪圈
 		hogpenViewPager.setCurrentIndex(birdIndicator.getIndicatorNumber() - 1);
 		// TODO:为何ViewPager的第一项刚添加的时候无法响应页面切换事件??
 		if (birdIndicator.getIndicatorNumber() == 1) {
 			birdIndicator.setCurrentIndex(0);
+			// 根据当前猪圈中的猪决定是否隐藏添加猪按钮
+			setAddPigBtnVisibility(hogpenViewPager.getPigNumber()
+					< HogpenViewPager.PIG_LIMIT);
 		}
 	}
 
@@ -175,6 +202,10 @@ public class SellerMainActivity extends AIBaseActivity {
 	 */
 	private void addPig() {
 		hogpenViewPager.addPig(getPigTestData());
+		// TODO:添加猪的时候也需要判断是否已经达到当前猪圈的猪上限
+		// 根据当前猪圈中的猪决定是否隐藏添加猪按钮
+		setAddPigBtnVisibility(hogpenViewPager.getPigNumber()
+				< HogpenViewPager.PIG_LIMIT);
 	}
 
 	// 加入测试数据
@@ -191,8 +222,8 @@ public class SellerMainActivity extends AIBaseActivity {
 				LogUtils.i(TAG, "当前鸟个数：" + birdIndicator.getIndicatorNumber());
 				// 初始化猪圈数据
 				hogpenViewPager.setHogpenTabs(sellerHogpenInfos);
-				// 让游标选中最后一项
-				hogpenViewPager.setCurrentIndex(size - 1 < 0 ? 0 : size - 1);
+				// 让游标选中第一个猪圈
+				hogpenViewPager.setCurrentIndex(0);
 			}
 		}, 2000);
 	}
