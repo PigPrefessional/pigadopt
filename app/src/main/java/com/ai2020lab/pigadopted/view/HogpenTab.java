@@ -5,6 +5,7 @@
 package com.ai2020lab.pigadopted.view;
 
 /**
+ * 貌似没有必要建立这个类？？
  * Created by Justin Z on 2016/3/13.
  * 502953057@qq.com
  */

@@ -157,7 +157,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	}
 
 	/**
-	 * 添加鸟和猪圈
+	 * 添加测试鸟和猪圈
 	 */
 	private void addHogpen() {
 		birdIndicator.addIndicator();
@@ -171,7 +171,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	}
 
 	/**
-	 * 添加猪
+	 * 添加测试猪
 	 */
 	private void addPig() {
 		hogpenViewPager.addPig(getPigTestData());
@@ -205,7 +205,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	private PigDetailInfoForSeller getPigTestData() {
 		PigDetailInfoForSeller pigInfo = new PigDetailInfoForSeller();
 		pigInfo.orderInfo = new OrderInfoForSeller();
-		pigInfo.orderInfo.buyerNums = 3;
+		pigInfo.orderInfo.buyerNums = 30;
 		pigInfo.growthInfo = new GrowthInfo();
 		pigInfo.growthInfo.pigWeight = 150;
 		pigInfo.healthInfo = new HealthInfo();

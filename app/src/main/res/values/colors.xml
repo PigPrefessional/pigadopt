@@ -10,7 +10,9 @@
     <color name="popupview_text">#ffffff</color>
     <color name="popupview_bg">#cccccc</color>
     <drawable name="popupview_bg">#cccccc</drawable>
-
+    <!---->
+    <color name="text_normal">#a15737</color>
+    <color name="text_light">#c7a295</color>
 
 
 

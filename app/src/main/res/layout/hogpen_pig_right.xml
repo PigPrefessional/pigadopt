@@ -22,14 +22,14 @@
 
 		<TextView
 			android:id="@+id/pig_weight_tv"
-			style="@style/Base.TextAppearance.AppCompat.Subhead"
+			style="@style/TextNormal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			tools:text="体重 : 150斤"/>
 
 		<TextView
 			android:id="@+id/pig_temperature_tv"
-			style="@style/Base.TextAppearance.AppCompat.Subhead"
+			style="@style/TextNormal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_below="@+id/pig_weight_tv"
@@ -37,12 +37,11 @@
 
 		<TextView
 			android:id="@+id/pig_buyers_tv"
-			style="@style/Base.TextAppearance.AppCompat.Body2"
+			style="@style/TextLittle.Light"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_below="@+id/pig_temperature_tv"
 			android:layout_centerHorizontal="true"
-			android:layout_marginTop="5dp"
 			tools:text="已有3家购买"/>
 
 	</RelativeLayout>

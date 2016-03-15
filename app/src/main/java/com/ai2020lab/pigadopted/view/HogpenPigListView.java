@@ -6,6 +6,9 @@ package com.ai2020lab.pigadopted.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.TextAppearanceSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -151,35 +154,23 @@ public class HogpenPigListView extends LinearLayout {
 	 * 设置猪信息
 	 */
 	private void setPigInfo(View pigInfoView, final PigDetailInfoForSeller pigInfo) {
-		// 图片,可能是吃饭，散步，睡觉
 		ImageView pigIv = (ImageView) pigInfoView.findViewById(R.id.pig_iv);
-		// 体重
 		TextView pigWeightTv = (TextView) pigInfoView.findViewById(R.id.pig_weight_tv);
-		// 体温
 		TextView pigTemperatureTv = (TextView) pigInfoView.findViewById(R.id.pig_temperature_tv);
-		// 买家总数
 		TextView pigBuyersTv = (TextView) pigInfoView.findViewById(R.id.pig_buyers_tv);
-		if (pigInfo.growthInfo != null) {
-			String weight = String.format(context.getString(R.string.seller_main_pig_weight),
-					pigInfo.growthInfo.pigWeight);
-			pigWeightTv.setText(weight);
-		}
-		if (pigInfo.healthInfo != null) {
-			pigIv.setBackgroundDrawable(getPigDrawable(pigInfo.healthInfo.status));
-			String temperature = String.format(context.getString(R.string.seller_main_pig_temperature),
-					pigInfo.healthInfo.temperature);
-			pigTemperatureTv.setText(temperature);
-		}
-		if (pigInfo.orderInfo != null) {
-			String buyers = String.format(context.getString(R.string.seller_main_pig_buyers_number),
-					pigInfo.orderInfo.buyerNums);
-			pigBuyersTv.setText(buyers);
-		}
-		// 绑定点击事件
+		// 设置猪的图片样式，可能是吃饭，散步，睡觉
+		pigIv.setBackgroundDrawable(getPigDrawable(pigInfo));
+		// 设置体重
+		pigWeightTv.setText(getWeightStr(pigInfo));
+		// 设置体温
+		pigTemperatureTv.setText(getTemperatureStr(pigInfo));
+		// 设置买家数量
+		pigBuyersTv.setText(getBuyerNumStr(pigInfo));
+		// 绑定点击Item事件
 		pigInfoView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(onClickPigItemListener != null)
+				if (onClickPigItemListener != null)
 					onClickPigItemListener.onClickPigItem(pigInfo);
 			}
 		});
@@ -187,11 +178,72 @@ public class HogpenPigListView extends LinearLayout {
 	}
 
 	/**
+	 * 猪体重
+	 */
+	private SpannableString getWeightStr(PigDetailInfoForSeller pigInfo) {
+		String weight = "--";
+		if (pigInfo.growthInfo != null && pigInfo.growthInfo.pigWeight > 0) {
+			weight = pigInfo.growthInfo.pigWeight + "";
+		}
+		String weightStr = String.format(context.getString(R.string.seller_main_pig_weight),
+				weight);
+		SpannableString str = new SpannableString(weightStr);
+		str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal_Light), 0, 2,
+				Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+		return str;
+	}
+
+	/**
+	 * 猪体温
+	 */
+	private SpannableString getTemperatureStr(PigDetailInfoForSeller pigInfo) {
+		String tem = "--";
+		if (pigInfo.healthInfo != null && pigInfo.healthInfo.temperature > 0) {
+			tem = pigInfo.healthInfo.temperature + "";
+		}
+		String temStr = String.format(context.getString(R.string.seller_main_pig_temperature),
+				tem);
+		SpannableString str = new SpannableString(temStr);
+		str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal_Light), 0, 2,
+				Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+		return str;
+	}
+
+	/**
+	 * 买家数量
+	 */
+	private SpannableString getBuyerNumStr(PigDetailInfoForSeller pigInfo) {
+		int buyerNum = 0;
+		if (pigInfo.orderInfo != null) {
+			buyerNum = pigInfo.orderInfo.buyerNums;
+		}
+		SpannableString str = new SpannableString(String.format(context
+				.getString(R.string.seller_main_pig_buyers_number), buyerNum));
+		if (buyerNum < 10) {
+			LogUtils.i(TAG, "使用购买者数小于10的策略");
+			str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal), 2, 3,
+					Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		} else if (buyerNum >= 10 && buyerNum < 100) {
+			LogUtils.i(TAG, "使用购买者数大于10小于100的策略");
+			str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal), 2, 4,
+					Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		}
+		// TODO:不考虑单个猪的买家超过1000个人的情况
+		else if (buyerNum >= 100 && buyerNum < 1000) {
+			LogUtils.i(TAG, "使用购买者数大于100小于1000的策略");
+			str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal), 2, 5,
+					Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		}
+		return str;
+	}
+
+	/**
 	 * 根据猪状态获取猪的Drawable资源
 	 *
-	 * @param status 猪状态
+	 * @param pigInfo PigDetailInfoForSeller
 	 */
-	private Drawable getPigDrawable(int status) {
+	private Drawable getPigDrawable(PigDetailInfoForSeller pigInfo) {
+		int status = pigInfo.healthInfo != null ? pigInfo.healthInfo.status : PigStatus.WALKING;
 		switch (status) {
 			case PigStatus.WALKING:
 				return ResourcesUtils.getDrawable(R.mipmap.pig_status_walking);

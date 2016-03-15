@@ -48,4 +48,25 @@
         <item name="android:background">@drawable/pig_detail_charts_button_selector</item>
     </style>
 
+    <!--大号字体-->
+    <style name="TextLarge" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/text_normal</item>
+    </style>
+    <!--中号字体-->
+    <style name="TextNormal" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">@color/text_normal</item>
+    </style>
+    <!--中号字体-->
+    <style name="TextNormal.Light" parent="TextNormal">
+        <item name="android:textColor">@color/text_light</item>
+    </style>
+    <!--小号字体-->
+    <style name="TextLittle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/text_normal</item>
+    </style>
+    <!--小号字体-->
+    <style name="TextLittle.Light" parent="TextLittle">
+        <item name="android:textColor">@color/text_light</item>
+    </style>
+
 </resources>
