@@ -42,7 +42,8 @@
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentRight="true"
 		android:background="@drawable/seller_info_bg"
-		tools:text="周雪梅家"/>
+		tools:text="周雪梅家"
+		android:visibility="gone"/>
 
 
 </RelativeLayout>
