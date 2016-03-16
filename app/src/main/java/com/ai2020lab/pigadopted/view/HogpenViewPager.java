@@ -128,6 +128,7 @@ public class HogpenViewPager extends LinearLayout {
 	/**
 	 * 设置猪圈的页卡列表
 	 * 调用这个方法会对猪圈数据进行整体刷新
+	 * 初始化猪圈数据的时候，默认选中第一个猪圈
 	 *
 	 * @param hogpenInfos List<SellerHogpenInfo>
 	 */
@@ -149,13 +150,19 @@ public class HogpenViewPager extends LinearLayout {
 			hogpenTab = new HogpenTab();
 			hogpenTab.hogpenPigListView = (HogpenPigListView) ViewUtils
 					.makeView(context, R.layout.hogpen_listview);
-//			hogpenTab.hogpenPigListView.setTag(PREFIX_PIG_LIST + i);
-			// TODO:初始化加入猪列表
-			hogpenTab.hogpenPigListView.setPigs(hogpenInfos.get(i).pigInfos);
 			hogpenTabs.add(hogpenTab);
 		}
-		// 刷新界面数据
+		// 刷新猪圈数据
 		hogpenAdapter.notifyDataSetChanged();
+		// 选中第一个猪圈
+		setCurrentIndex(0);
+		// TODO:先加入猪圈界面元素，然后再添加猪界面元素，才有动画效果
+		int tabSize = hogpenTabs.size();
+		for (int i = 0; i < tabSize; i++) {
+			HogpenPigListView pigListView = hogpenTabs.get(i).hogpenPigListView;
+			pigListView.setPigs(hogpenInfos.get(i).pigInfos, i == currentIndex);
+		}
+
 	}
 
 	/**
@@ -180,11 +187,9 @@ public class HogpenViewPager extends LinearLayout {
 		HogpenTab hogpenTab = new HogpenTab();
 		hogpenTab.hogpenPigListView = (HogpenPigListView) ViewUtils
 				.makeView(context, R.layout.hogpen_listview);
-//		hogpenTab.hogpenPigListView.setTag(PREFIX_PIG_LIST + (getHogpenNumber() - 1));
 		hogpenTabs.add(hogpenTab);
 		// 刷新界面数据
 		hogpenAdapter.notifyDataSetChanged();
-//		hogpenViewPager.addOnPageChangeListener(new OnPageChangeListener());
 	}
 
 	/**
@@ -208,7 +213,7 @@ public class HogpenViewPager extends LinearLayout {
 	 * 获取当前选中的猪圈中的猪总数
 	 */
 	public int getPigNumber() {
-		if(currentIndex == -1) {
+		if (currentIndex == -1) {
 			LogUtils.i(TAG, "请先选中一个猪圈");
 			return -1;
 		}
@@ -235,7 +240,8 @@ public class HogpenViewPager extends LinearLayout {
 			LogUtils.i(TAG, "没有找到猪圈ListView");
 			return;
 		}
-		pigListView.addPig(pigInfo);
+		// 加入猪并执行动画
+		pigListView.addPig(pigInfo, true);
 		// 找到当前猪圈数据，并加入猪详情
 		final SellerHogpenInfo hogpenInfo = hogpenInfos.get(currentIndex);
 		if (hogpenInfo.pigInfos == null)

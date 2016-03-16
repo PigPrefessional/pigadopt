@@ -11,13 +11,18 @@ import android.text.Spanned;
 import android.text.style.TextAppearanceSpan;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.common.ResourcesUtils;
 import com.ai2020lab.aiutils.common.ViewUtils;
+import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoForSeller;
 import com.ai2020lab.pigadopted.model.pig.PigStatus;
@@ -31,6 +36,7 @@ import java.util.List;
  * Created by Justin Z on 2016/3/14.
  * 502953057@qq.com
  */
+// TODO:需要将View和数据分离？？？定义Adapter
 public class HogpenPigListView extends LinearLayout {
 
 	private final static String TAG = HogpenPigListView.class.getSimpleName();
@@ -94,7 +100,7 @@ public class HogpenPigListView extends LinearLayout {
 	 * 初始化设置猪列表数据<p>
 	 * 调用这个方法初始化数据
 	 */
-	public void setPigs(List<PigDetailInfoForSeller> pigInfos) {
+	public void setPigs(List<PigDetailInfoForSeller> pigInfos, boolean isLoadAnim) {
 		if (pigInfos == null || pigInfos.size() == 0) {
 			LogUtils.i(TAG, "没有猪列表数据，不刷新界面");
 			return;
@@ -105,7 +111,7 @@ public class HogpenPigListView extends LinearLayout {
 		}
 		this.pigInfos.clear();
 		for (int i = 0; i < pigInfos.size(); i++) {
-			addPig(pigInfos.get(i));
+			addPig(pigInfos.get(i), isLoadAnim);
 		}
 	}
 
@@ -113,7 +119,7 @@ public class HogpenPigListView extends LinearLayout {
 	 * 添加猪<p>
 	 * 调用这个方法添加猪
 	 */
-	public void addPig(PigDetailInfoForSeller pigInfo) {
+	public void addPig(PigDetailInfoForSeller pigInfo, boolean isLoadAnim) {
 		if (pigInfo == null) {
 			LogUtils.i(TAG, "要添加的猪信息不能为空");
 			return;
@@ -126,14 +132,22 @@ public class HogpenPigListView extends LinearLayout {
 		View pigInfoView = getPigInfoView(size > 0 ? size : 0);
 		// 设置界面数据
 		setPigInfo(pigInfoView, pigInfo);
-		hogpenContainer.addView(pigInfoView);
 		// 加入猪列表数据
 		pigInfos.add(pigInfo);
-		// TODO:执行添加动画
+		// 加入界面元素
+		hogpenContainer.addView(pigInfoView);
+		// 加载猪飞入动画
+		// TODO:需要增加标志位，PigList不在屏幕上显示的时候不加载动画
+		if (isLoadAnim) {
+			loadPigInAnim(pigInfoView, size > 0 ? size : 0);
+		} else {
+			pigInfoView.findViewById(R.id.pig_info_rl).setVisibility(View.VISIBLE);
+		}
+
 	}
 
 	/**
-	 * 根据添加的猪信息的位置，返回猪信息布局View
+	 * 根据添加猪的位置下标，返回猪信息布局View
 	 *
 	 * @param index 要添加到的位置
 	 * @return View
@@ -148,6 +162,51 @@ public class HogpenPigListView extends LinearLayout {
 			view = ViewUtils.makeView(context, R.layout.hogpen_pig_right);
 		}
 		return view;
+	}
+
+	/**
+	 * 根据添加猪的位置下标载入猪的飞入动画
+	 */
+	private void loadPigInAnim(View view, int index) {
+		final RelativeLayout pigInfoLayout = (RelativeLayout) view.findViewById(R.id.pig_info_rl);
+		if (index % 2 != 0) {
+			LogUtils.i(TAG, "猪从左边飞入的动画");
+			Animation anim = AnimationUtils.loadAnimation(context, R.anim.push_left_in);
+			view.startAnimation(anim);
+			anim.setAnimationListener(new AnimSimpleListener() {
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					loadPigInfoInAnim(pigInfoLayout, true);
+				}
+			});
+		} else {
+			LogUtils.i(TAG, "猪从右边飞入的动画");
+			Animation anim = AnimationUtils.loadAnimation(context, R.anim.push_right_in);
+			view.startAnimation(anim);
+			anim.setAnimationListener(new AnimSimpleListener() {
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					loadPigInfoInAnim(pigInfoLayout, false);
+				}
+			});
+		}
+	}
+
+	// 猪信息进入属性动画
+	private void loadPigInfoInAnim(View view, boolean isLeft) {
+		if (view == null) {
+			LogUtils.i(TAG, "没有找到执行缩放动画的猪信息布局");
+			return;
+		}
+		Animation anim;
+		if (isLeft) {
+			anim = AnimationUtils.loadAnimation(context, R.anim.scale_left_down_in);
+		} else {
+			anim = AnimationUtils.loadAnimation(context, R.anim.scale_right_down_in);
+		}
+		anim.setInterpolator(new AnticipateOvershootInterpolator());
+		view.setVisibility(View.VISIBLE);
+		view.startAnimation(anim);
 	}
 
 	/**

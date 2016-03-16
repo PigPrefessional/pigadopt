@@ -21,6 +21,7 @@ import com.ai2020lab.pigadopted.model.pig.HealthInfo;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoForSeller;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
 import com.ai2020lab.pigadopted.model.pig.PigStatus;
+import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.ai2020lab.pigadopted.view.BirdIndicator;
 import com.ai2020lab.pigadopted.view.HogpenViewPager;
 
@@ -76,10 +77,11 @@ public class SellerMainActivity extends AIBaseActivity {
 		setContentView(R.layout.activity_seller_main);
 		hogpenViewPager = (HogpenViewPager) findViewById(R.id.hogpen_viewPager);
 		birdIndicator = (BirdIndicator) findViewById(R.id.hogpen_indicator);
+		sellerInfoTv = (TextView) findViewById(R.id.seller_info_tv);
+		addPigIv = (ImageView) findViewById(R.id.add_pig_iv);
 		initHogpenViewPager();
 		initBirdIndicator();
 		initAddPigBtn();
-		initSellerInfoText();
 		// 载入测试数据
 		loadTestData();
 
@@ -131,12 +133,10 @@ public class SellerMainActivity extends AIBaseActivity {
 		});
 	}
 
-
 	/**
 	 * 初始化添加猪按钮
 	 */
 	private void initAddPigBtn() {
-		addPigIv = (ImageView) findViewById(R.id.add_pig_iv);
 		addPigIv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -144,14 +144,6 @@ public class SellerMainActivity extends AIBaseActivity {
 				addPig();
 			}
 		});
-	}
-
-	/**
-	 * 初始化卖家信息TextView
-	 */
-	private void initSellerInfoText() {
-		sellerInfoTv = (TextView) findViewById(R.id.seller_info_tv);
-		sellerInfoTv.setText("刘司机家");
 	}
 
 	/**
@@ -165,7 +157,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	/**
 	 * 设置隐藏或者显示添加猪按钮
 	 */
-	// TODO:猪圈切换的时候监听猪圈中的猪是否达到上限，达到上限则隐藏添加猪按钮,否则显示添加猪按钮
+	//猪圈切换的时候监听猪圈中的猪是否达到上限，达到上限则隐藏添加猪按钮,否则显示添加猪按钮
 	private void setAddPigBtnVisibility(boolean isShow) {
 		Animation animIn = AnimationUtils.loadAnimation(this, R.anim.push_bottom_in);
 		Animation animOut = AnimationUtils.loadAnimation(this, R.anim.push_bottom_out);
@@ -181,6 +173,17 @@ public class SellerMainActivity extends AIBaseActivity {
 	}
 
 	/**
+	 * 动画显示卖家用户名
+	 */
+	private void loadSellerInfoAnim(UserInfo userInfo) {
+		Animation animIn = AnimationUtils.loadAnimation(this, R.anim.push_bottom_in);
+		animIn.setInterpolator(new BounceInterpolator());
+		sellerInfoTv.setText(userInfo.userName);
+		sellerInfoTv.setVisibility(View.VISIBLE);
+		sellerInfoTv.startAnimation(animIn);
+	}
+
+	/**
 	 * 添加测试鸟和猪圈
 	 */
 	private void addHogpen() {
@@ -191,7 +194,6 @@ public class SellerMainActivity extends AIBaseActivity {
 		// TODO:为何ViewPager的第一项刚添加的时候无法响应页面切换事件??
 		if (birdIndicator.getIndicatorNumber() == 1) {
 			birdIndicator.setCurrentIndex(0);
-			// 根据当前猪圈中的猪决定是否隐藏添加猪按钮
 			setAddPigBtnVisibility(hogpenViewPager.getPigNumber()
 					< HogpenViewPager.PIG_LIMIT);
 		}
@@ -202,16 +204,15 @@ public class SellerMainActivity extends AIBaseActivity {
 	 */
 	private void addPig() {
 		hogpenViewPager.addPig(getPigTestData());
-		// TODO:添加猪的时候也需要判断是否已经达到当前猪圈的猪上限
-		// 根据当前猪圈中的猪决定是否隐藏添加猪按钮
 		setAddPigBtnVisibility(hogpenViewPager.getPigNumber()
 				< HogpenViewPager.PIG_LIMIT);
 	}
 
-	// 加入测试数据
+	// 加入测试数据，这里模拟测试数据，初始为0个猪圈
 	private void loadTestData() {
-		// TODO:这里模拟测试数据，初始为0个猪圈
-		sellerHogpenInfos = new ArrayList<>();
+		sellerHogpenInfos = getHogpenInfos();
+		final UserInfo userInfo = new UserInfo();
+		userInfo.userName = "刘司机家";
 		final int size = sellerHogpenInfos.size();
 		// 初始化数据
 		new Handler().postDelayed(new Runnable() {
@@ -222,16 +223,19 @@ public class SellerMainActivity extends AIBaseActivity {
 				LogUtils.i(TAG, "当前鸟个数：" + birdIndicator.getIndicatorNumber());
 				// 初始化猪圈数据
 				hogpenViewPager.setHogpenTabs(sellerHogpenInfos);
-				// 让游标选中第一个猪圈
-				hogpenViewPager.setCurrentIndex(0);
+				// 让游标选中第一项,初始化猪圈的时候，页面选择事件是无效的？
+				birdIndicator.setCurrentIndex(0);
+				// 判断添加猪按钮是否显示
+				setAddPigBtnVisibility(hogpenViewPager.getPigNumber()
+						< HogpenViewPager.PIG_LIMIT);
+				// 动画显示卖家信息
+				loadSellerInfoAnim(userInfo);
 			}
 		}, 2000);
 	}
 
 	/**
-	 * 返回测试猪数据
-	 *
-	 * @return
+	 * 返回添加猪测试数据
 	 */
 	private PigDetailInfoForSeller getPigTestData() {
 		PigDetailInfoForSeller pigInfo = new PigDetailInfoForSeller();
@@ -244,6 +248,45 @@ public class SellerMainActivity extends AIBaseActivity {
 		pigInfo.healthInfo.status = PigStatus.SLEEPING;
 		pigInfo.pigInfo = new PigInfo();
 		return pigInfo;
+	}
+
+	/**
+	 * 返回初始化猪圈测试数据
+	 */
+	private List<SellerHogpenInfo> getHogpenInfos() {
+		List<SellerHogpenInfo> hogpenInfos = new ArrayList<>();
+		SellerHogpenInfo hogpenInfo;
+		hogpenInfo = new SellerHogpenInfo();
+		hogpenInfo.hogpenID = "厕所边";
+		hogpenInfo.hogpenWidth = 3;
+		hogpenInfo.hogpenLength = 4;
+		hogpenInfo.pigInfos = new ArrayList<>();
+		// 构造猪数据
+		PigDetailInfoForSeller pigDetail;
+		pigDetail = new PigDetailInfoForSeller();
+		pigDetail.growthInfo = new GrowthInfo();
+		pigDetail.growthInfo.pigWeight = 180;
+		pigDetail.healthInfo = new HealthInfo();
+		pigDetail.healthInfo.status = PigStatus.EATING;
+		pigDetail.healthInfo.temperature = 37.5f;
+		pigDetail.orderInfo = new OrderInfoForSeller();
+		pigDetail.orderInfo.buyerNums = 8;
+		hogpenInfo.pigInfos.add(pigDetail);
+		//
+		pigDetail = new PigDetailInfoForSeller();
+		pigDetail.growthInfo = new GrowthInfo();
+		pigDetail.growthInfo.pigWeight = 180;
+		pigDetail.healthInfo = new HealthInfo();
+		pigDetail.healthInfo.status = PigStatus.EATING;
+		pigDetail.healthInfo.temperature = 37.5f;
+		pigDetail.orderInfo = new OrderInfoForSeller();
+		pigDetail.orderInfo.buyerNums = 8;
+		hogpenInfo.pigInfos.add(pigDetail);
+
+		hogpenInfos.add(hogpenInfo);
+
+
+		return hogpenInfos;
 	}
 
 
