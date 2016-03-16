@@ -23,6 +23,8 @@ import com.ai2020lab.aiviews.popupview.PromptView;
 import com.ai2020lab.aiviews.toolbar.ToolbarActivity;
 import com.ai2020lab.pigadopted.R;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 /**
  * Activity基类，继承自ToolbarActivity，添加网络连接监听，并且可以弹出进度条对话框
  * Created by Justin on 2015/12/10.
@@ -56,6 +58,12 @@ public class AIBaseActivity extends ToolbarActivity {
 		super.onCreate(savedInstanceState);
 		init();
 	}
+
+	@Override
+	protected void attachBaseContext(Context newBase) {
+		super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+	}
+
 
 	// 初始化数据和界面布局
 	private void init() {

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,6 +137,12 @@ public class PigDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                DisplayMetrics metric = new DisplayMetrics();
+                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+                int width = metric.widthPixels;  // 屏幕宽度（像素）
+                int height = metric.heightPixels;  // 屏幕高度（像素
+
+
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 Fragment  prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
 
@@ -144,7 +151,12 @@ public class PigDetailFragment extends Fragment {
                 }
                 ft.addToBackStack(null);
 
-                DialogFragment newFragment = StatisticsChartFragment.newInstance();
+                final float scale = metric.density;
+                int marginWidth =  (int) (15 * scale + 0.5f);
+                int marginHeight =  (int) (40 * scale + 0.5f);
+
+                DialogFragment newFragment = StatisticsChartFragment.newInstance(width - marginWidth, height - marginHeight);
+
 
                 newFragment.show(ft, "dialog");
 

@@ -2,14 +2,18 @@ package com.ai2020lab.pigadopted.fragment;
 
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.ai2020lab.pigadopted.R;
 
@@ -33,16 +37,81 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
  */
 public class StatisticsChartFragment extends DialogFragment implements OnChartGestureListener  {
 
+    private  static final String WIDTH = "width";
+    private  static final String HEIGHT = "height";
+
+    private LineChart mChart;
+    private int mWidth = -1;
+    private int mHeight = -1;
+
     static StatisticsChartFragment newInstance() {
-        return new StatisticsChartFragment();
+        return newInstance(-1, -1);
+    }
+
+    static StatisticsChartFragment newInstance(int width, int height) {
+        StatisticsChartFragment f = new StatisticsChartFragment();
+
+        Bundle args = new Bundle();
+        args.putInt(WIDTH, width);
+        args.putInt(HEIGHT, height);
+
+        f.setArguments(args);
+        return f;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_Dialog);
+
+        mWidth = getArguments().getInt(WIDTH);
+        mHeight = getArguments().getInt(HEIGHT);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_statistics_chart, container, false);
 
         mChart = (LineChart) rootView.findViewById(R.id.chart1);
+
+        setChartProperties();
+        setChartAxis();
+
+
+        //mChart.getViewPortHandler().setMaximumScaleY(2f);
+        //mChart.getViewPortHandler().setMaximumScaleX(2f);
+
+        // add data
+        setData(45, 100);
+
+//        mChart.setVisibleXRange(20);
+//        mChart.setVisibleYRange(20f, AxisDependency.LEFT);
+//        mChart.centerViewTo(20, 50, AxisDependency.LEFT);
+
+        mChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
+//        mChart.invalidate();
+
+        setChartLegend();
+
+        // // dont forget to refresh the drawing
+        // mChart.invalidate();
+
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        if (mWidth > 0 && mHeight > 0) {
+            getDialog().getWindow().setLayout(mWidth, mHeight);
+        }
+    }
+
+    private void setChartProperties() {
         mChart.setOnChartGestureListener(this);
         //    mChart.setOnChartValueSelectedListener(this);
         mChart.setDrawGridBackground(false);
@@ -62,8 +131,12 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
         // if disabled, scaling can be done on x- and y-axis separately
         mChart.setPinchZoom(true);
+    }
 
 
+
+
+    private void setChartAxis() {
         // x-axis limit line
         LimitLine llXAxis = new LimitLine(10f, "Index 10");
         llXAxis.setLineWidth(4f);
@@ -77,24 +150,24 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
         //     Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
 
-        LimitLine ll1 = new LimitLine(130f, "Upper Limit");
-        ll1.setLineWidth(4f);
-        ll1.enableDashedLine(10f, 10f, 0f);
-        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-        ll1.setTextSize(10f);
+//        LimitLine ll1 = new LimitLine(130f, "Upper Limit");
+//        ll1.setLineWidth(4f);
+//        ll1.enableDashedLine(10f, 10f, 0f);
+//        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+//        ll1.setTextSize(10f);
         //     ll1.setTypeface(tf);
 
-        LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
-        ll2.setLineWidth(4f);
-        ll2.enableDashedLine(10f, 10f, 0f);
-        ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-        ll2.setTextSize(10f);
+//        LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
+//        ll2.setLineWidth(4f);
+//        ll2.enableDashedLine(10f, 10f, 0f);
+//        ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+//        ll2.setTextSize(10f);
         //     ll2.setTypeface(tf);
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
-        leftAxis.addLimitLine(ll1);
-        leftAxis.addLimitLine(ll2);
+//        leftAxis.addLimitLine(ll1);
+//        leftAxis.addLimitLine(ll2);
         leftAxis.setAxisMaxValue(220f);
         leftAxis.setAxisMinValue(-50f);
         //leftAxis.setYOffset(20f);
@@ -105,20 +178,9 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         leftAxis.setDrawLimitLinesBehindData(true);
 
         mChart.getAxisRight().setEnabled(false);
+    }
 
-        //mChart.getViewPortHandler().setMaximumScaleY(2f);
-        //mChart.getViewPortHandler().setMaximumScaleX(2f);
-
-        // add data
-        setData(45, 100);
-
-//        mChart.setVisibleXRange(20);
-//        mChart.setVisibleYRange(20f, AxisDependency.LEFT);
-//        mChart.centerViewTo(20, 50, AxisDependency.LEFT);
-
-        mChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
-//        mChart.invalidate();
-
+    private void setChartLegend() {
         // get the legend (only possible after setting data)
         Legend l = mChart.getLegend();
 
@@ -126,14 +188,9 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         // l.setPosition(LegendPosition.LEFT_OF_CHART);
         l.setForm(Legend.LegendForm.LINE);
 
-        // // dont forget to refresh the drawing
-        // mChart.invalidate();
 
-        return rootView;
     }
 
-
-    private LineChart mChart;
 
     @Override
     public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -207,17 +264,20 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         // set1.setFillColor(Color.RED);
 
         // set the line to be drawn like this "- - - - - -"
-        set1.enableDashedLine(10f, 5f, 0f);
-        set1.enableDashedHighlightLine(10f, 5f, 0f);
-        set1.setColor(Color.BLACK);
-        set1.setCircleColor(Color.BLACK);
+   //     set1.enableDashedLine(10f, 5f, 0f);
+   //     set1.enableDashedHighlightLine(10f, 5f, 0f);
+        set1.setDrawCubic(true);
+
         set1.setLineWidth(1f);
         set1.setCircleRadius(3f);
-        set1.setDrawCircleHole(false);
+        set1.setDrawCircleHole(true);
         set1.setValueTextSize(9f);
-        Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.chart_fade_red);
-        set1.setFillDrawable(drawable);
+    //    Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.chart_fade_red);
+     //   set1.setFillDrawable(drawable);
+
         set1.setDrawFilled(true);
+
+        setChartColor(set1);
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
         dataSets.add(set1); // add the datasets
@@ -227,6 +287,12 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
         // set data
         mChart.setData(data);
+    }
+
+    private void setChartColor(LineDataSet set) {
+        set.setColor(getResources().getColor(R.color.pig_chart_weight_line));
+        set.setCircleColor(getResources().getColor(R.color.pig_chart_weight_line));
+        set.setFillColor(getResources().getColor(R.color.pig_chart_weight_fill));
     }
 
 }

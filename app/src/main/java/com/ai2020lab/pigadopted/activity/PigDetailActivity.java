@@ -1,5 +1,6 @@
 package com.ai2020lab.pigadopted.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +10,8 @@ import android.view.View;
 
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class PigDetailActivity extends AIBaseActivity {
 
@@ -33,5 +36,7 @@ public class PigDetailActivity extends AIBaseActivity {
             }
         });*/
     }
+
+
 
 }
