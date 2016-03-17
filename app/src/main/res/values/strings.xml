@@ -17,6 +17,10 @@
     <string name="pig_detail_label_fat">体脂:</string>
     <string name="pig_detail_label_steps">步数:</string>
 
+    <string name="pig_chart_title_weight">体重</string>
+    <string name="pig_chart_title_steps">步数</string>
+    <string name="pig_chart_title_temperature">体温</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_pig_detail">PigDetailActivity</string>

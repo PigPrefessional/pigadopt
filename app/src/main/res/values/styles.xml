@@ -41,8 +41,8 @@
     </style>
 
     <style name="ChartsButton">
-        <item name="android:layout_width">25dp</item>
-        <item name="android:layout_height">25dp</item>
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
         <item name="android:layout_marginLeft">15dp</item>
         <item name="android:layout_weight">0</item>
         <item name="android:background">@drawable/pig_detail_charts_button_selector</item>
