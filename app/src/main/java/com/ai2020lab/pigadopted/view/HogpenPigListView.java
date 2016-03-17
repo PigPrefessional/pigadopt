@@ -56,6 +56,10 @@ public class HogpenPigListView extends LinearLayout {
 	 * 猪详情Item点击事件接口
 	 */
 	private onClickPigItemListener onClickPigItemListener;
+	/**
+	 * 添加猪动画完成事件监听接口
+	 */
+	private OnAddPigAnimListener onAddPigAnimListener;
 
 
 	public HogpenPigListView(Context context) {
@@ -94,6 +98,15 @@ public class HogpenPigListView extends LinearLayout {
 	 */
 	public void setOnClickPigItemListener(onClickPigItemListener onClickPigItemListener) {
 		this.onClickPigItemListener = onClickPigItemListener;
+	}
+
+	/**
+	 * 绑定添加猪动画事件监听
+	 *
+	 * @param onAddPigAnimListener OnAddPigAnimListener
+	 */
+	public void setOnAddPigAnimListener(OnAddPigAnimListener onAddPigAnimListener) {
+		this.onAddPigAnimListener = onAddPigAnimListener;
 	}
 
 	/**
@@ -207,6 +220,14 @@ public class HogpenPigListView extends LinearLayout {
 		anim.setInterpolator(new AnticipateOvershootInterpolator());
 		view.setVisibility(View.VISIBLE);
 		view.startAnimation(anim);
+		anim.setAnimationListener(new AnimSimpleListener() {
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				//TODO：猪添加动画完成事件监听
+				if (onAddPigAnimListener != null)
+					onAddPigAnimListener.onEnd();
+			}
+		});
 	}
 
 	/**
@@ -321,6 +342,13 @@ public class HogpenPigListView extends LinearLayout {
 	public interface onClickPigItemListener {
 
 		void onClickPigItem(PigDetailInfoForSeller pigInfo);
+	}
+
+	/**
+	 * 添加猪动画执行完成事件监听接口
+	 */
+	public interface OnAddPigAnimListener {
+		void onEnd();
 	}
 
 

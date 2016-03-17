@@ -1,5 +1,6 @@
 package com.ai2020lab.pigadopted.activity;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.system.DisplayUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
+import com.ai2020lab.pigadopted.fragment.AddPigSuccessDialog;
 import com.ai2020lab.pigadopted.model.hogpen.SellerHogpenInfo;
 import com.ai2020lab.pigadopted.model.order.OrderInfoForSeller;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
@@ -131,6 +133,13 @@ public class SellerMainActivity extends AIBaseActivity {
 				skipToPigDetailActivity(hogpenInfo, pigInfo);
 			}
 		});
+		hogpenViewPager.setOnPigAddListener(new HogpenViewPager.OnPigAddListener() {
+			@Override
+			public void onEnd() {
+				// 猪添加事件监听
+				showAddPigSuccessDialog();
+			}
+		});
 	}
 
 	/**
@@ -181,6 +190,27 @@ public class SellerMainActivity extends AIBaseActivity {
 		sellerInfoTv.setText(userInfo.userName);
 		sellerInfoTv.setVisibility(View.VISIBLE);
 		sellerInfoTv.startAnimation(animIn);
+	}
+
+	/**
+	 * 弹出添加猪成功提示对话框
+	 */
+	private void showAddPigSuccessDialog() {
+		AddPigSuccessDialog addPigSuccessDialog = AddPigSuccessDialog.newInstance(true,
+				new AddPigSuccessDialog.OnClickDialogBtnListener() {
+					@Override
+					public void onClickEnsure(Dialog dialog) {
+						LogUtils.i(TAG, "跳转到猪拍照界面");
+					}
+
+					@Override
+					public void onClickCancel(Dialog dialog) {
+						LogUtils.i(TAG, "残忍拒绝");
+						dialog.dismiss();
+
+					}
+				});
+		addPigSuccessDialog.show(getSupportFragmentManager(), null);
 	}
 
 	/**

@@ -69,4 +69,16 @@
         <item name="android:textColor">@color/text_light</item>
     </style>
 
+    <!--自定义警告对话框窗口样式-->
+    <style name="BaseAlertDialog" parent="BaseDialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@style/AnimBottom</item>
+    </style>
+
+    <style name="AnimScale" parent="@android:style/Animation.Dialog">
+        <!--窗口动画-->
+        <item name="android:windowEnterAnimation">@anim/scale_alpha_in</item>
+        <item name="android:windowExitAnimation">@anim/scale_alpha_out</item>
+    </style>
+
 </resources>

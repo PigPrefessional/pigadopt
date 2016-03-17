@@ -70,6 +70,10 @@ public class HogpenViewPager extends LinearLayout {
 	 * 猪点击事件监听
 	 */
 	private OnPigClickListener onPigClickListener;
+	/**
+	 * 猪添加事件监听
+	 */
+	private OnPigAddListener onPigAddListener;
 
 	public HogpenViewPager(Context context) {
 		super(context);
@@ -123,6 +127,15 @@ public class HogpenViewPager extends LinearLayout {
 	 */
 	public void setOnPigClickListener(OnPigClickListener onPigClickListener) {
 		this.onPigClickListener = onPigClickListener;
+	}
+
+	/**
+	 * 绑定猪添加事件监听
+	 *
+	 * @param onPigAddListener OnPigAddListener
+	 */
+	public void setOnPigAddListener(OnPigAddListener onPigAddListener) {
+		this.onPigAddListener = onPigAddListener;
 	}
 
 	/**
@@ -247,6 +260,15 @@ public class HogpenViewPager extends LinearLayout {
 		if (hogpenInfo.pigInfos == null)
 			hogpenInfo.pigInfos = new ArrayList<>();
 		hogpenInfo.pigInfos.add(pigInfo);
+		// 绑定添加猪动画监听
+		pigListView.setOnAddPigAnimListener(new HogpenPigListView.OnAddPigAnimListener() {
+			@Override
+			public void onEnd() {
+				if (onPigAddListener != null) {
+					onPigAddListener.onEnd();
+				}
+			}
+		});
 		// 绑定猪Item的点击事件
 		pigListView.setOnClickPigItemListener(new HogpenPigListView.onClickPigItemListener() {
 			@Override
@@ -322,6 +344,10 @@ public class HogpenViewPager extends LinearLayout {
 	 */
 	public interface OnPigClickListener {
 		void onPigClick(SellerHogpenInfo hogpenInfo, PigDetailInfoForSeller pigInfo);
+	}
+
+	public interface OnPigAddListener {
+		void onEnd();
 	}
 
 

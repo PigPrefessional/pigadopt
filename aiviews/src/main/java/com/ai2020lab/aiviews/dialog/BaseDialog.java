@@ -2,7 +2,6 @@ package com.ai2020lab.aiviews.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -14,18 +13,18 @@ import android.view.WindowManager;
  * Created by Justin on 2016/1/20.
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
-public class CustomDialog extends Dialog {
+public class BaseDialog extends Dialog {
 
-	private CustomDialog(Context context) {
+	private BaseDialog(Context context) {
 		super(context);
 	}
 
-	private CustomDialog(Context context, boolean cancelable,
-	                     OnCancelListener cancelListener) {
+	private BaseDialog(Context context, boolean cancelable,
+	                   OnCancelListener cancelListener) {
 		super(context, cancelable, cancelListener);
 	}
 
-	private CustomDialog(Context context, int theme) {
+	private BaseDialog(Context context, int theme) {
 		super(context, theme);
 	}
 
@@ -191,16 +190,16 @@ public class CustomDialog extends Dialog {
 		 *
 		 * @return 返回对话框对象
 		 */
-		public CustomDialog create() {
+		public BaseDialog create() {
 			// 参数检查
 			if (this.context == null) {
 				throw new IllegalArgumentException("上下文引用不能为空");
 			}
-			CustomDialog dialog;
+			BaseDialog dialog;
 			if (style == -1)
-				dialog = new CustomDialog(context);
+				dialog = new BaseDialog(context);
 			else
-				dialog = new CustomDialog(context, style);
+				dialog = new BaseDialog(context, style);
 			// 设置内容View
 			if (contentView != null) {
 				dialog.setContentView(contentView);
