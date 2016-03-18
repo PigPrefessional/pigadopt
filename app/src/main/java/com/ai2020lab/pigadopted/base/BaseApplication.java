@@ -4,10 +4,8 @@ import android.app.Application;
 
 import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.common.ResourcesUtils;
-import com.ai2020lab.pigadopted.common.ImageLoaderManager;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.ai2020lab.pigadopted.R;
+import com.ai2020lab.pigadopted.common.ImageLoaderManager;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -45,7 +43,7 @@ public class BaseApplication extends Application {
 		ImageLoaderManager.initConfig(this);
 		// 初始化资源工具类
 		ResourcesUtils.initContext(this);
-
+		// 加载全局字体格式
 		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
 						.setDefaultFontPath("fonts/HYQingKongTiJ.ttf")
 						.setFontAttrId(R.attr.fontPath)

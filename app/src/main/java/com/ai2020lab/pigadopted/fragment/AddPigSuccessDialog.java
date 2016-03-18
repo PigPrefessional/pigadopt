@@ -47,7 +47,7 @@ public class AddPigSuccessDialog extends DialogFragment {
 
 
 	public static AddPigSuccessDialog newInstance(boolean loadAnim,
-	                                              OnClickDialogBtnListener onClickDialogBtnListener) {
+                                          OnClickDialogBtnListener onClickDialogBtnListener) {
 		AddPigSuccessDialog addPigFragment = new AddPigSuccessDialog();
 		addPigFragment.onClickDialogBtnListener = onClickDialogBtnListener;
 		addPigFragment.loadAnim = loadAnim;
@@ -58,13 +58,13 @@ public class AddPigSuccessDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// 警告对话框的内容
-		View contentView = ViewUtils.makeView(getActivity(), R.layout.dialog_alert);
+		View contentView = ViewUtils.makeView(getActivity(), R.layout.dialog_add_pig);
 		BaseDialog.Builder builder = new BaseDialog.Builder(getActivity(), contentView);
 		builder.setWidth(DisplayUtils.getScreenWidth(getActivity()));
 		builder.setHeight(DisplayUtils.getScreenHeight(getActivity()));
 		builder.setGravity(Gravity.CENTER);
 		builder.setStyle(R.style.BaseAlertDialog);
-		builder.setAnimStyle(R.style.AnimScale);
+		builder.setAnimStyle(R.style.DialogWindowAnimation_Scale);
 		BaseDialog dialog = builder.create();
 		dialog.setCanceledOnTouchOutside(true);
 		setDialogContent(dialog, contentView);

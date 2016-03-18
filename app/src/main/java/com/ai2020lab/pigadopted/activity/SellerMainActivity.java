@@ -187,6 +187,8 @@ public class SellerMainActivity extends AIBaseActivity {
 	private void loadSellerInfoAnim(UserInfo userInfo) {
 		Animation animIn = AnimationUtils.loadAnimation(this, R.anim.push_bottom_in);
 		animIn.setInterpolator(new BounceInterpolator());
+		// 中文字体加粗,xml中设置无效
+		sellerInfoTv.getPaint().setFakeBoldText(true);
 		sellerInfoTv.setText(userInfo.userName);
 		sellerInfoTv.setVisibility(View.VISIBLE);
 		sellerInfoTv.startAnimation(animIn);

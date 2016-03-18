@@ -11,8 +11,6 @@
     <color name="popupview_bg">#cccccc</color>
     <drawable name="popupview_bg">#cccccc</drawable>
     <!---->
-    <color name="text_normal">#a15737</color>
-    <color name="text_light">#c7a295</color>
 
     <color name="pig_chart_weight_line">#ff3f4953</color>
     <color name="pig_chart_weight_fill">#198d9ea6</color>

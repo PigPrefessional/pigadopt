@@ -42,8 +42,12 @@
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentRight="true"
 		android:background="@drawable/seller_info_bg"
-		tools:text="周雪梅家"
-		android:visibility="gone"/>
+		android:shadowColor="@color/aiview_text_shadow"
+		android:shadowDx="3"
+		android:shadowDy="3"
+		android:shadowRadius="3"
+		android:visibility="gone"
+		tools:text="周雪梅家"/>
 
 
 </RelativeLayout>
