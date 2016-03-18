@@ -12,12 +12,13 @@
         android:layout_gravity="center_horizontal"/>
 
     <TextView
+        style="@style/TextLittle.Light"
         android:id="@+id/buyer_name"
         android:gravity="center"
         android:singleLine="true"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:textColor="#50840b"
-        android:textSize="11sp"/>
+        />
 
 </LinearLayout>

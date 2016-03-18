@@ -1,5 +1,8 @@
 package com.ai2020lab.pigadopted.model.order;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * 猪订单基础信息实体类
  * Created by Justin on 2016/3/7.
@@ -7,5 +10,11 @@ package com.ai2020lab.pigadopted.model.order;
  */
 public class OrderInfo {
 
+    /**
+     * 买家总数
+     */
+    @Expose
+    @SerializedName("buyer_number")
+    public float buyerNumber;
 
 }

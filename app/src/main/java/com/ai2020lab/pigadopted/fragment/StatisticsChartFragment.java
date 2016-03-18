@@ -18,7 +18,9 @@ import android.view.WindowManager;
 import com.ai2020lab.pigadopted.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.ai2020lab.pigadopted.model.statistic.WeightData;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -43,6 +45,8 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
     private LineChart mChart;
     private int mWidth = -1;
     private int mHeight = -1;
+
+    private float mMaxYValue;
 
     static StatisticsChartFragment newInstance() {
         return newInstance(-1, -1);
@@ -84,7 +88,9 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         //mChart.getViewPortHandler().setMaximumScaleX(2f);
 
         // add data
-        setData(45, 100);
+
+        setChartData();
+    //    setData(45, 100);
 
 //        mChart.setVisibleXRange(20);
 //        mChart.setVisibleYRange(20f, AxisDependency.LEFT);
@@ -293,6 +299,91 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         set.setColor(getResources().getColor(R.color.pig_chart_weight_line));
         set.setCircleColor(getResources().getColor(R.color.pig_chart_weight_line));
         set.setFillColor(getResources().getColor(R.color.pig_chart_weight_fill));
+    }
+
+    private void setChartData() {
+        List<WeightData> list = loadWeightData();
+        LineData data = createChartData(list);
+
+        YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setAxisMaxValue(mMaxYValue + 5);
+        mChart.setData(data);
+    }
+
+    private LineData createChartData(List<WeightData> dataList) {
+        ArrayList<String> xVals = new ArrayList<String>();
+        ArrayList<Entry> yVals = new ArrayList<Entry>();
+
+
+        for (int i = 0; i < dataList.size(); i++) {
+            final WeightData data = dataList.get(i);
+
+            xVals.add(data.date);
+            yVals.add(new Entry(data.weight, i));
+
+            if (mMaxYValue < data.weight) {
+                mMaxYValue = data.weight;
+            }
+        }
+
+
+        LineDataSet set1 = new LineDataSet(yVals, "Weight data set");
+
+        set1.setDrawCubic(true);
+
+        set1.setLineWidth(1f);
+        set1.setCircleRadius(3f);
+        set1.setDrawCircleHole(true);
+        set1.setValueTextSize(9f);
+
+
+        set1.setDrawFilled(true);
+
+        setChartColor(set1);
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(set1);
+
+
+        return new LineData(xVals, dataSets);
+
+    }
+
+    private List<WeightData> loadWeightData() {
+        List<WeightData> list = new ArrayList<>();
+
+        WeightData data = new WeightData();
+
+        data.date = "周一";
+        data.weight = 10;
+        list.add(data);
+
+        data = new WeightData();
+        data.date = "周二";
+        data.weight = 13;
+        list.add(data);
+
+        data = new WeightData();
+        data.date = "周三";
+        data.weight = 15;
+        list.add(data);
+
+        data = new WeightData();
+        data.date = "周四";
+        data.weight = 19;
+        list.add(data);
+
+        data = new WeightData();
+        data.date = "周五";
+        data.weight = 18;
+        list.add(data);
+
+        data = new WeightData();
+        data.date = "周六";
+        data.weight = 24;
+        list.add(data);
+
+        return list;
     }
 
 }
