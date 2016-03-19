@@ -15,7 +15,10 @@ import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.system.DisplayUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
+import com.ai2020lab.pigadopted.common.DataManager;
+import com.ai2020lab.pigadopted.fragment.AddPigDialog;
 import com.ai2020lab.pigadopted.fragment.AddPigSuccessDialog;
+import com.ai2020lab.pigadopted.fragment.OnClickDialogBtnListener;
 import com.ai2020lab.pigadopted.model.hogpen.SellerHogpenInfo;
 import com.ai2020lab.pigadopted.model.order.OrderInfoForSeller;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
@@ -87,6 +90,8 @@ public class SellerMainActivity extends AIBaseActivity {
 		// 载入测试数据
 		loadTestData();
 
+		// TODO:加入角色切换界面之后，将数据初始化放在界面初始化
+		DataManager.getInstance().init();
 
 	}
 
@@ -150,7 +155,8 @@ public class SellerMainActivity extends AIBaseActivity {
 			@Override
 			public void onClick(View v) {
 				LogUtils.i(TAG, "--添加猪--");
-				addPig();
+				// 弹出添加猪对话框
+				showAddPigDialog();
 			}
 		});
 	}
@@ -194,14 +200,36 @@ public class SellerMainActivity extends AIBaseActivity {
 		sellerInfoTv.startAnimation(animIn);
 	}
 
+
+	/**
+	 * 弹出添加猪对话框
+	 */
+	private void showAddPigDialog() {
+		AddPigDialog addPigDialog = AddPigDialog.newInstance(true,
+				new OnClickDialogBtnListener<PigInfo>() {
+					@Override
+					public void onClickEnsure(Dialog dialog, PigInfo pigInfo) {
+						dialog.dismiss();
+						//添加猪
+						addPig();
+					}
+
+					@Override
+					public void onClickCancel(Dialog dialog) {
+						dialog.dismiss();
+					}
+		});
+		addPigDialog.show(getSupportFragmentManager(), null);
+	}
+
 	/**
 	 * 弹出添加猪成功提示对话框
 	 */
 	private void showAddPigSuccessDialog() {
 		AddPigSuccessDialog addPigSuccessDialog = AddPigSuccessDialog.newInstance(true,
-				new AddPigSuccessDialog.OnClickDialogBtnListener() {
+				new OnClickDialogBtnListener<Void>() {
 					@Override
-					public void onClickEnsure(Dialog dialog) {
+					public void onClickEnsure(Dialog dialog, Void aVoid) {
 						LogUtils.i(TAG, "跳转到猪拍照界面");
 					}
 

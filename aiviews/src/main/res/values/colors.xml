@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-	<color name="colorPrimary">#00a0e9</color>
-	<color name="colorPrimaryDark">#4389f3</color>
+	<!--主色-->
+	<color name="colorPrimary">#c7a295</color>
+	<!--辅色-->
+	<color name="colorPrimaryDark">#a15737</color>
+	<!--控件颜色-->
 	<color name="colorAccent">#99daf7</color>
 	<color name="colorControlNormal">#99daf7</color>
 
@@ -14,6 +17,11 @@
 	<color name="aiview_toolbar_title_text">#ffffffff</color>
 	<color name="aiview_toolbar_bottom_divider">#d2d2d2</color>
 	<color name="aiview_toolbar_activity_bg">#ffffff</color>
+
+	<!--popupview背景色-->
+	<color name="popupview_text">#ffffff</color>
+	<color name="popupview_bg">#cccccc</color>
+	<drawable name="popupview_bg">#cccccc</drawable>
 
 	<color name="aiview_dialog_window_bg">#00000000</color>
 

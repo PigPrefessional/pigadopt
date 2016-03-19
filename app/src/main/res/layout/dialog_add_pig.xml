@@ -1,148 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--添加猪圈成功对话框布局-->
-<!--补间动画执行的时候，特别是位移动画，找寻的是元素对父容器的相对位置-->
-<RelativeLayout
+<!--添加猪对话框布局-->
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
-
-	<!--对话框最外层布局-->
-	<RelativeLayout
+	android:layout_height="match_parent"
+	android:gravity="center"
+	android:orientation="vertical">
+	<!--对话框标题-->
+	<ImageView
+		android:id="@+id/add_pig_title_iv"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_centerInParent="true">
-
-		<RelativeLayout
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="25dp"
-			android:layout_marginRight="25dp"
-			android:layout_marginTop="50dp"
-			android:background="@mipmap/dialog_content_bg"
-			android:padding="15dp">
-
-			<ImageView
-				android:id="@+id/dialog_title_top_iv"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_centerHorizontal="true"
-				android:src="@mipmap/symbol_right"
-				android:visibility="invisible"
-				tools:ignore="contentDescription"/>
-
-			<ImageView
-				android:id="@+id/dialog_title_iv"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@+id/dialog_title_top_iv"
-				android:layout_centerHorizontal="true"
-				android:layout_marginTop="10dp"
-				android:src="@mipmap/add_pig_success"
-				android:visibility="invisible"
-				tools:ignore="contentDescription"/>
-
-			<TextView
-				android:id="@+id/dialog_content_tv"
-				style="@style/TextLittle"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@+id/dialog_title_iv"
-				android:layout_centerHorizontal="true"
-				android:layout_marginTop="10dp"
-				android:text="@string/record_pig_growth_info"
-				android:visibility="invisible"/>
-
-		</RelativeLayout>
-
-		<ImageView
-			android:id="@+id/pig_logo"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@mipmap/pig_cheer_up"
-			android:visibility="invisible"
-			tools:ignore="contentDescription"/>
-	</RelativeLayout>
-
-	<RelativeLayout
-		android:layout_width="match_parent"
+		android:background="@mipmap/add_pig_dialog_title"
+		tools:ignore="contentDescription"/>
+	<!--对话框内容-->
+	<LinearLayout
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_centerInParent="true">
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp"
+		android:background="@mipmap/add_dialog_bg"
+		android:gravity="center_horizontal"
+		android:orientation="vertical">
 
-		<RelativeLayout
-			android:layout_width="match_parent"
+		<!--添加猪信息布局-->
+		<LinearLayout
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_centerHorizontal="true"
-			android:layout_marginTop="50dp">
+			android:layout_marginTop="5dp"
+			android:background="@mipmap/add_dialog_content_bg"
+			android:orientation="vertical"
+			android:padding="10dp">
 
-			<ImageView
-				android:id="@+id/dialog_title_top_iv1"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_centerHorizontal="true"
-				android:src="@mipmap/symbol_right"
-				android:visibility="invisible"
-				tools:ignore="contentDescription"/>
-
-			<ImageView
-				android:id="@+id/dialog_title_iv1"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@+id/dialog_title_top_iv1"
-				android:layout_centerHorizontal="true"
-				android:layout_marginTop="10dp"
-				android:src="@mipmap/add_pig_success"
-				android:visibility="invisible"
-				tools:ignore="contentDescription"/>
-
-			<TextView
-				android:id="@+id/dialog_content_tv1"
-				style="@style/TextLittle"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@+id/dialog_title_iv1"
-				android:layout_centerHorizontal="true"
-				android:layout_marginTop="10dp"
-				android:text="@string/record_pig_growth_info"
-				android:visibility="invisible"/>
-
-			<!--底部按钮-->
+			<!--猪品种选择-->
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_below="@+id/dialog_content_tv1"
-				android:layout_centerHorizontal="true"
-				android:layout_marginTop="15dp"
-				android:gravity="center"
+				android:gravity="center_vertical"
 				android:orientation="horizontal">
-
-				<ImageView
-					android:id="@+id/dialog_cancel_iv"
+				<TextView
+					android:id="@+id/pig_add_category_tv"
+					style="@style/TextNormal"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:src="@drawable/cancel_btn_selector"
-					android:visibility="invisible"
-					tools:ignore="contentDescription"/>
-				<ImageView
-					android:id="@+id/dialog_ensure_iv"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
+					android:text="@string/pig_add_category"/>
+				<!--选择猪品种滚轮-->
+				<com.ai2020lab.aiviews.wheelview.WheelView
+					android:id="@+id/pig_add_category_wv"
+					android:layout_width="80dp"
+					android:layout_height="40dp"
 					android:layout_marginLeft="10dp"
-					android:src="@drawable/add_pig_btn1_selector"
-					android:visibility="invisible"
-					tools:ignore="contentDescription"/>
+					app:dividerColor="@android:color/white"
+					app:textColorCenter="@color/aiview_text_normal"
+					app:textColorOut="@color/aiview_text_light"
+					app:textSize="16sp"
+					app:gravity="center"/>
+
 			</LinearLayout>
 
-		</RelativeLayout>
+			<!--入栏年龄选择-->
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="10dp"
+				android:gravity="center_vertical"
+				android:orientation="horizontal">
+				<TextView
+					android:id="@+id/pig_add_age_tv"
+					style="@style/TextNormal"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/pig_add_age"/>
+				<!--选择猪品种滚轮
+				<com.bigkoo.pickerview.lib.WheelView
+					android:id="@+id/pig_category_wv"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="5dp"/>-->
 
-		<ImageView
-			android:id="@+id/pig_logo1"
+			</LinearLayout>
+
+			<!--入栏体重选择-->
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="10dp"
+				android:gravity="center_vertical"
+				android:orientation="horizontal">
+				<TextView
+					android:id="@+id/pig_add_weight_tv"
+					style="@style/TextNormal"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/pig_add_weight"/>
+				<!--选择猪品种滚轮
+				<com.bigkoo.pickerview.lib.WheelView
+					android:id="@+id/pig_category_wv"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="5dp"/>-->
+
+			</LinearLayout>
+
+			<!--入栏时间选择-->
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="10dp"
+				android:gravity="center_vertical"
+				android:orientation="horizontal">
+				<TextView
+					android:id="@+id/pig_add_time_tv"
+					style="@style/TextNormal"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/pig_add_time"/>
+				<!--选择猪品种滚轮
+				<com.bigkoo.pickerview.lib.WheelView
+					android:id="@+id/pig_category_wv"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="5dp"/>-->
+
+			</LinearLayout>
+
+		</LinearLayout>
+		<!--取消，确认按钮布局-->
+		<LinearLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:src="@mipmap/pig_cheer_up"
-			android:visibility="invisible"
-			tools:ignore="contentDescription"/>
-	</RelativeLayout>
+			android:layout_gravity="center_horizontal"
+			android:layout_marginTop="10dp"
+			android:gravity="center"
+			android:orientation="horizontal">
+			<Button
+				android:id="@+id/cancel_btn"
+				style="@style/TextNormal"
+				android:layout_width="80dp"
+				android:layout_height="40dp"
+				android:background="@drawable/cancel_btn_short_selector"
+				android:text="@string/cancel"
+				android:textColor="@android:color/white"/>
+			<Button
+				android:id="@+id/ensure_btn"
+				style="@style/TextNormal"
+				android:layout_width="80dp"
+				android:layout_height="40dp"
+				android:layout_marginLeft="10dp"
+				android:background="@drawable/ensure_btn_short_selector"
+				android:text="@string/ensure"
+				android:textColor="@android:color/white"/>
 
+		</LinearLayout>
 
-</RelativeLayout>
+	</LinearLayout>
+
+</LinearLayout>

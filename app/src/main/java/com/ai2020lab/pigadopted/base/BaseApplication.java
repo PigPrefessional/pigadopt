@@ -17,6 +17,7 @@ public class BaseApplication extends Application {
 
 	private final static String TAG = BaseApplication.class.getSimpleName();
 
+	public final static String FONT_PATH = "fonts/HYQingKongTiJ.ttf";
 	/**
 	 * 自定义Application对象的引用
 	 */
@@ -45,7 +46,7 @@ public class BaseApplication extends Application {
 		ResourcesUtils.initContext(this);
 		// 加载全局字体格式
 		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-						.setDefaultFontPath("fonts/HYQingKongTiJ.ttf")
+						.setDefaultFontPath(FONT_PATH)
 						.setFontAttrId(R.attr.fontPath)
 						.build()
 		);

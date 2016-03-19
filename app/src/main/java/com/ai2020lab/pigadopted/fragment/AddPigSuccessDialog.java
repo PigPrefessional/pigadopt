@@ -26,7 +26,7 @@ import com.ai2020lab.aiviews.dialog.BaseDialog;
 import com.ai2020lab.pigadopted.R;
 
 /**
- * 添加猪圈成功对话框
+ * 添加猪成功对话框
  * Created by Justin Z on 2016/3/17.
  * 502953057@qq.com
  */
@@ -41,13 +41,13 @@ public class AddPigSuccessDialog extends DialogFragment {
 	private ImageView dialogEnsureIv;
 	private ImageView pigLogo;
 
-	private boolean loadAnim;
+	private boolean loadAnim = false;
 
-	private OnClickDialogBtnListener onClickDialogBtnListener;
+	private OnClickDialogBtnListener<Void> onClickDialogBtnListener;
 
 
 	public static AddPigSuccessDialog newInstance(boolean loadAnim,
-                                          OnClickDialogBtnListener onClickDialogBtnListener) {
+	                                              OnClickDialogBtnListener<Void> onClickDialogBtnListener) {
 		AddPigSuccessDialog addPigFragment = new AddPigSuccessDialog();
 		addPigFragment.onClickDialogBtnListener = onClickDialogBtnListener;
 		addPigFragment.loadAnim = loadAnim;
@@ -58,7 +58,7 @@ public class AddPigSuccessDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// 警告对话框的内容
-		View contentView = ViewUtils.makeView(getActivity(), R.layout.dialog_add_pig);
+		View contentView = ViewUtils.makeView(getActivity(), R.layout.dialog_add_pig_success);
 		BaseDialog.Builder builder = new BaseDialog.Builder(getActivity(), contentView);
 		builder.setWidth(DisplayUtils.getScreenWidth(getActivity()));
 		builder.setHeight(DisplayUtils.getScreenHeight(getActivity()));
@@ -98,11 +98,13 @@ public class AddPigSuccessDialog extends DialogFragment {
 		dialogContentTv.setText(getString(R.string.record_pig_growth_info));
 		dialogEnsureIv.setImageDrawable(ResourcesUtils.getDrawable(R.drawable.take_pic_btn_selector));
 		dialogCancelIv.setImageDrawable(ResourcesUtils.getDrawable(R.drawable.refuse_btn_selector));
+
+
 		dialogEnsureIv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (onClickDialogBtnListener != null)
-					onClickDialogBtnListener.onClickEnsure(dialog);
+					onClickDialogBtnListener.onClickEnsure(dialog, null);
 			}
 		});
 		dialogCancelIv.setOnClickListener(new View.OnClickListener() {
@@ -151,12 +153,6 @@ public class AddPigSuccessDialog extends DialogFragment {
 		pigLogo.startAnimation(scaleIn);
 		dialogCancelIv.startAnimation(slideInLeft);
 		dialogEnsureIv.startAnimation(slideInRight);
-	}
-
-	public interface OnClickDialogBtnListener {
-		void onClickEnsure(Dialog dialog);
-
-		void onClickCancel(Dialog dialog);
 	}
 
 
