@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Justin on 2016/3/8.
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
-public class OrderInfoForBuyer extends OrderInfo{
+public class OrderInfoForBuyer extends OrderInfo {
 	/**
 	 * 买家已经订购的部位列表,只包含当前买家订购的部位列表
 	 */
