@@ -29,6 +29,8 @@
 		<LinearLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
 			android:layout_marginTop="5dp"
 			android:background="@mipmap/add_dialog_content_bg"
 			android:orientation="vertical"
@@ -46,17 +48,17 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/pig_add_category"/>
-				<!--选择猪品种滚轮-->
+				<!--选择猪品种-->
 				<com.ai2020lab.aiviews.wheelview.WheelView
 					android:id="@+id/pig_add_category_wv"
 					android:layout_width="80dp"
-					android:layout_height="40dp"
+					android:layout_height="wrap_content"
 					android:layout_marginLeft="10dp"
 					app:dividerColor="@android:color/white"
+					app:gravity="center"
 					app:textColorCenter="@color/aiview_text_normal"
 					app:textColorOut="@color/aiview_text_light"
-					app:textSize="16sp"
-					app:gravity="center"/>
+					app:textSize="16sp"/>
 
 			</LinearLayout>
 
@@ -73,12 +75,12 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/pig_add_age"/>
-				<!--选择猪品种滚轮
-				<com.bigkoo.pickerview.lib.WheelView
-					android:id="@+id/pig_category_wv"
+				<!--选择入栏猪龄-->
+				<com.ai2020lab.pigadopted.view.pickerview.PigAgePickerView
+					android:id="@+id/pig_add_age_pv"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginLeft="5dp"/>-->
+					android:layout_marginLeft="10dp"/>
 
 			</LinearLayout>
 
@@ -95,12 +97,12 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/pig_add_weight"/>
-				<!--选择猪品种滚轮
-				<com.bigkoo.pickerview.lib.WheelView
-					android:id="@+id/pig_category_wv"
+				<!--选择入栏体重-->
+				<com.ai2020lab.pigadopted.view.pickerview.PigWeightPickerView
+					android:id="@+id/pig_add_weight_pv"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginLeft="5dp"/>-->
+					android:layout_marginLeft="10dp"/>
 
 			</LinearLayout>
 
@@ -117,12 +119,12 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/pig_add_time"/>
-				<!--选择猪品种滚轮
-				<com.bigkoo.pickerview.lib.WheelView
-					android:id="@+id/pig_category_wv"
+				<!--选择入栏时间-->
+				<com.ai2020lab.pigadopted.view.pickerview.DatePickerView
+					android:id="@+id/pig_add_date_pv"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginLeft="5dp"/>-->
+					android:layout_marginLeft="10dp"/>
 
 			</LinearLayout>
 
@@ -132,6 +134,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_horizontal"
+			android:layout_marginBottom="10dp"
 			android:layout_marginTop="10dp"
 			android:gravity="center"
 			android:orientation="horizontal">

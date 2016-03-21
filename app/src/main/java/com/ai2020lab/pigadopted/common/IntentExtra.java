@@ -9,5 +9,5 @@ public interface IntentExtra {
 	/**
 	 * 解析结果
 	 */
-	String ANALYSIS_RESULT = "com.ai2020lab.textanalysis.AnalysisResult";
+	String USER_INFO = "com.ai2020lab.pigadopted.LoginActivity.userInfo";
 }

@@ -2,7 +2,7 @@
 
 <resources>
 	<!--主色-->
-	<color name="colorPrimary">#c7a295</color>
+	<color name="colorPrimary">#356734</color>
 	<!--辅色-->
 	<color name="colorPrimaryDark">#a15737</color>
 	<!--控件颜色-->

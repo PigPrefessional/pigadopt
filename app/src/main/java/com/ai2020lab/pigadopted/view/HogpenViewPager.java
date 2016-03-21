@@ -173,7 +173,17 @@ public class HogpenViewPager extends LinearLayout {
 		int tabSize = hogpenTabs.size();
 		for (int i = 0; i < tabSize; i++) {
 			HogpenPigListView pigListView = hogpenTabs.get(i).hogpenPigListView;
-			pigListView.setPigs(hogpenInfos.get(i).pigInfos, i == currentIndex);
+			final SellerHogpenInfo hogpenInfo = hogpenInfos.get(i);
+			pigListView.setPigs(hogpenInfo.pigInfos, i == currentIndex);
+			// 绑定猪Item的点击事件
+			pigListView.setOnClickPigItemListener(new HogpenPigListView.onClickPigItemListener() {
+				@Override
+				public void onClickPigItem(PigDetailInfoForSeller pigInfo) {
+					if (onPigClickListener != null) {
+						onPigClickListener.onPigClick(hogpenInfo, pigInfo);
+					}
+				}
+			});
 		}
 
 	}

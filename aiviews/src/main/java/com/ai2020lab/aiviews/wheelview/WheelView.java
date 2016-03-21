@@ -30,7 +30,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 3d滚轮控件,原作不能更改字体样式，所以重新定义
- *
  */
 public class WheelView extends View {
 
@@ -461,7 +460,8 @@ public class WheelView extends View {
 		try {
 			Class<?> clz = item.getClass();
 			Method m = clz.getMethod(GETPICKERVIEWTEXT);
-			contentText = m.invoke(item, new Object[0]).toString();
+			if (m != null)
+				contentText = m.invoke(item, new Object[0]).toString();
 		} catch (Exception e) {
 			LogUtils.e(TAG, "getContentText Exception", e);
 		}

@@ -1,6 +1,7 @@
 package com.ai2020lab.pigadopted.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -15,7 +16,7 @@ import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.system.DisplayUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
-import com.ai2020lab.pigadopted.common.DataManager;
+import com.ai2020lab.pigadopted.common.IntentExtra;
 import com.ai2020lab.pigadopted.fragment.AddPigDialog;
 import com.ai2020lab.pigadopted.fragment.AddPigSuccessDialog;
 import com.ai2020lab.pigadopted.fragment.OnClickDialogBtnListener;
@@ -50,7 +51,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	/**
 	 * 猪圈ViewPager
 	 */
-	private HogpenViewPager hogpenViewPager;
+	private HogpenViewPager hogpenVp;
 	/**
 	 * 卖家信息TextView
 	 */
@@ -60,11 +61,12 @@ public class SellerMainActivity extends AIBaseActivity {
 	 */
 	private ImageView addPigIv;
 
-
 	/**
 	 * 卖家猪圈列表数据
 	 */
 	private List<SellerHogpenInfo> sellerHogpenInfos;
+	private UserInfo userInfo;
+
 
 	/**
 	 * 程序入口
@@ -72,27 +74,24 @@ public class SellerMainActivity extends AIBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		init();
-
-	}
-
-	private void init() {
+		userInfo = (UserInfo) getIntent().getExtras().get(IntentExtra.USER_INFO);
+		setContentView(R.layout.activity_main_seller);
 		// 不展示工具栏
 		supportToolbar(false);
-		setContentView(R.layout.activity_seller_main);
-		hogpenViewPager = (HogpenViewPager) findViewById(R.id.hogpen_viewPager);
-		birdIndicator = (BirdIndicator) findViewById(R.id.hogpen_indicator);
-		sellerInfoTv = (TextView) findViewById(R.id.seller_info_tv);
-		addPigIv = (ImageView) findViewById(R.id.add_pig_iv);
+		// 分配各个View
+		assignViews();
 		initHogpenViewPager();
 		initBirdIndicator();
 		initAddPigBtn();
 		// 载入测试数据
 		loadTestData();
+	}
 
-		// TODO:加入角色切换界面之后，将数据初始化放在界面初始化
-		DataManager.getInstance().init();
-
+	private void assignViews() {
+		hogpenVp = (HogpenViewPager) findViewById(R.id.hogpen_viewPager);
+		birdIndicator = (BirdIndicator) findViewById(R.id.hogpen_indicator);
+		sellerInfoTv = (TextView) findViewById(R.id.seller_info_tv);
+		addPigIv = (ImageView) findViewById(R.id.add_pig_iv);
 	}
 
 	// 初始化鸟页卡指示器
@@ -101,7 +100,7 @@ public class SellerMainActivity extends AIBaseActivity {
 			@Override
 			public void onSelect(int index) {
 				LogUtils.i(TAG, "当前选中的游标下标是:" + index);
-				hogpenViewPager.setCurrentIndex(index);
+				hogpenVp.setCurrentIndex(index);
 			}
 		});
 		birdIndicator.setOnClickAddListener(new BirdIndicator.OnClickAddListener() {
@@ -117,20 +116,20 @@ public class SellerMainActivity extends AIBaseActivity {
 	// 初始化猪圈
 	private void initHogpenViewPager() {
 		RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)
-				hogpenViewPager.getLayoutParams();
+				hogpenVp.getLayoutParams();
 		lp.height = (int) (DisplayUtils.getScreenHeight(this) * 0.62);
-		hogpenViewPager.setLayoutParams(lp);
-		hogpenViewPager.setOnHogpenChangeListener(new HogpenViewPager.OnHogpenChangeListener() {
+		hogpenVp.setLayoutParams(lp);
+		hogpenVp.setOnHogpenChangeListener(new HogpenViewPager.OnHogpenChangeListener() {
 			@Override
 			public void onHogpenSelected(int index) {
 				// 猪圈切换，游标跟随移动
 				birdIndicator.setCurrentIndex(index);
 				// 根据当前猪圈中的猪决定是否隐藏添加猪按钮
-				setAddPigBtnVisibility(hogpenViewPager.getPigNumber(index)
+				setAddPigBtnVisibility(hogpenVp.getPigNumber(index)
 						< HogpenViewPager.PIG_LIMIT);
 			}
 		});
-		hogpenViewPager.setOnPigClickListener(new HogpenViewPager.OnPigClickListener() {
+		hogpenVp.setOnPigClickListener(new HogpenViewPager.OnPigClickListener() {
 			@Override
 			public void onPigClick(SellerHogpenInfo hogpenInfo, PigDetailInfoForSeller pigInfo) {
 				// 猪点击监听
@@ -138,11 +137,13 @@ public class SellerMainActivity extends AIBaseActivity {
 				skipToPigDetailActivity(hogpenInfo, pigInfo);
 			}
 		});
-		hogpenViewPager.setOnPigAddListener(new HogpenViewPager.OnPigAddListener() {
+		// 猪添加动画执行完毕监听
+		hogpenVp.setOnPigAddListener(new HogpenViewPager.OnPigAddListener() {
 			@Override
 			public void onEnd() {
-				// 猪添加事件监听
+
 				showAddPigSuccessDialog();
+
 			}
 		});
 	}
@@ -167,6 +168,9 @@ public class SellerMainActivity extends AIBaseActivity {
 	private void skipToPigDetailActivity(SellerHogpenInfo hogpenInfo,
 	                                     PigDetailInfoForSeller pigInfo) {
 		LogUtils.i(TAG, "跳转到猪详情界面");
+		// TODO:还需要将猪的基本数据传递过去
+		Intent intent = new Intent(this, PigDetailActivity.class);
+		startActivity(intent);
 	}
 
 	/**
@@ -190,37 +194,39 @@ public class SellerMainActivity extends AIBaseActivity {
 	/**
 	 * 动画显示卖家用户名
 	 */
-	private void loadSellerInfoAnim(UserInfo userInfo) {
+	private void loadSellerInfoAnim() {
 		Animation animIn = AnimationUtils.loadAnimation(this, R.anim.push_bottom_in);
 		animIn.setInterpolator(new BounceInterpolator());
 		// 中文字体加粗,xml中设置无效
 		sellerInfoTv.getPaint().setFakeBoldText(true);
-		sellerInfoTv.setText(userInfo.userName);
+		sellerInfoTv.setText(String.format(getString(R.string.seller_main_seller_name), userInfo.userName));
 		sellerInfoTv.setVisibility(View.VISIBLE);
 		sellerInfoTv.startAnimation(animIn);
 	}
-
 
 	/**
 	 * 弹出添加猪对话框
 	 */
 	private void showAddPigDialog() {
-		AddPigDialog addPigDialog = AddPigDialog.newInstance(true,
-				new OnClickDialogBtnListener<PigInfo>() {
-					@Override
-					public void onClickEnsure(Dialog dialog, PigInfo pigInfo) {
-						dialog.dismiss();
-						//添加猪
-						addPig();
-					}
-
-					@Override
-					public void onClickCancel(Dialog dialog) {
-						dialog.dismiss();
-					}
-		});
-		addPigDialog.show(getSupportFragmentManager(), null);
+		AddPigDialog.newInstance(true, onClickDialogBtnListener)
+				.show(getSupportFragmentManager(), null);
 	}
+
+	// 添加猪对话框点击监听
+	private OnClickDialogBtnListener<PigInfo> onClickDialogBtnListener =
+			new OnClickDialogBtnListener<PigInfo>() {
+				@Override
+				public void onClickEnsure(Dialog dialog, PigInfo pigInfo) {
+					dialog.dismiss();
+					//添加猪
+					addPig();
+				}
+
+				@Override
+				public void onClickCancel(Dialog dialog) {
+					dialog.dismiss();
+				}
+			};
 
 	/**
 	 * 弹出添加猪成功提示对话框
@@ -248,13 +254,13 @@ public class SellerMainActivity extends AIBaseActivity {
 	 */
 	private void addHogpen() {
 		birdIndicator.addIndicator();
-		hogpenViewPager.addHogpen(new SellerHogpenInfo());
+		hogpenVp.addHogpen(new SellerHogpenInfo());
 		// 选中新添加的猪圈
-		hogpenViewPager.setCurrentIndex(birdIndicator.getIndicatorNumber() - 1);
+		hogpenVp.setCurrentIndex(birdIndicator.getIndicatorNumber() - 1);
 		// TODO:为何ViewPager的第一项刚添加的时候无法响应页面切换事件??
 		if (birdIndicator.getIndicatorNumber() == 1) {
 			birdIndicator.setCurrentIndex(0);
-			setAddPigBtnVisibility(hogpenViewPager.getPigNumber()
+			setAddPigBtnVisibility(hogpenVp.getPigNumber()
 					< HogpenViewPager.PIG_LIMIT);
 		}
 	}
@@ -263,16 +269,14 @@ public class SellerMainActivity extends AIBaseActivity {
 	 * 添加测试猪
 	 */
 	private void addPig() {
-		hogpenViewPager.addPig(getPigTestData());
-		setAddPigBtnVisibility(hogpenViewPager.getPigNumber()
+		hogpenVp.addPig(getPigTestData());
+		setAddPigBtnVisibility(hogpenVp.getPigNumber()
 				< HogpenViewPager.PIG_LIMIT);
 	}
 
 	// 加入测试数据，这里模拟测试数据，初始为0个猪圈
 	private void loadTestData() {
 		sellerHogpenInfos = getHogpenInfos();
-		final UserInfo userInfo = new UserInfo();
-		userInfo.userName = "刘司机家";
 		final int size = sellerHogpenInfos.size();
 		// 初始化数据
 		new Handler().postDelayed(new Runnable() {
@@ -282,16 +286,16 @@ public class SellerMainActivity extends AIBaseActivity {
 				birdIndicator.setIndicators(size);
 				LogUtils.i(TAG, "当前鸟个数：" + birdIndicator.getIndicatorNumber());
 				// 初始化猪圈数据
-				hogpenViewPager.setHogpenTabs(sellerHogpenInfos);
+				hogpenVp.setHogpenTabs(sellerHogpenInfos);
 				// 让游标选中第一项,初始化猪圈的时候，页面选择事件是无效的？
 				birdIndicator.setCurrentIndex(0);
 				// 判断添加猪按钮是否显示
-				setAddPigBtnVisibility(hogpenViewPager.getPigNumber()
+				setAddPigBtnVisibility(hogpenVp.getPigNumber()
 						< HogpenViewPager.PIG_LIMIT);
 				// 动画显示卖家信息
-				loadSellerInfoAnim(userInfo);
+				loadSellerInfoAnim();
 			}
-		}, 2000);
+		}, 1000);
 	}
 
 	/**

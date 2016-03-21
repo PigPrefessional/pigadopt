@@ -234,6 +234,7 @@ public class HogpenPigListView extends LinearLayout {
 	 * 设置猪信息
 	 */
 	private void setPigInfo(View pigInfoView, final PigDetailInfoForSeller pigInfo) {
+		LogUtils.i(TAG, "设置添加的猪信息");
 		ImageView pigIv = (ImageView) pigInfoView.findViewById(R.id.pig_iv);
 		TextView pigWeightTv = (TextView) pigInfoView.findViewById(R.id.pig_weight_tv);
 		TextView pigTemperatureTv = (TextView) pigInfoView.findViewById(R.id.pig_temperature_tv);
@@ -250,8 +251,11 @@ public class HogpenPigListView extends LinearLayout {
 		pigInfoView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (onClickPigItemListener != null)
+				LogUtils.i(TAG, "点击了猪列表item");
+				if (onClickPigItemListener != null) {
+					LogUtils.i(TAG, "猪项点击事件");
 					onClickPigItemListener.onClickPigItem(pigInfo);
+				}
 			}
 		});
 

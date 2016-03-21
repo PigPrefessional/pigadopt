@@ -158,6 +158,7 @@ public class ToolbarActivity extends AppCompatActivity {
 	 */
 	public void setToolbarTitle(String title) {
 		TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+		toolbarTitle.getPaint().setFakeBoldText(true);
 		toolbarTitle.setText(title);
 	}
 

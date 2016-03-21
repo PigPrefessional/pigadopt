@@ -9,7 +9,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -124,14 +123,6 @@ public class AddPigSuccessDialog extends DialogFragment {
 		dialogCancelIv.setVisibility(View.VISIBLE);
 		dialogEnsureIv.setVisibility(View.VISIBLE);
 		pigLogo.setVisibility(View.VISIBLE);
-	}
-
-
-	@Override
-	public void show(FragmentManager manager, String tag) {
-		super.show(manager, tag);
-
-
 	}
 
 	/**

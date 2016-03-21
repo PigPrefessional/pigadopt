@@ -106,38 +106,53 @@ public class DataManager {
 	private ArrayList<PigCategory> getPigCategories() {
 		ArrayList<PigCategory> pigCategories = new ArrayList<>();
 		PigCategory pigCategory;
+
 		pigCategory = new PigCategory();
 		pigCategory.categoryID = "1";
 		pigCategory.categoryName = "长白猪";
 		pigCategories.add(pigCategory);
+
 		pigCategory = new PigCategory();
 		pigCategory.categoryID = "2";
 		pigCategory.categoryName = "荣昌猪";
 		pigCategories.add(pigCategory);
+
 		pigCategory = new PigCategory();
 		pigCategory.categoryID = "3";
 		pigCategory.categoryName = "内江猪";
 		pigCategories.add(pigCategory);
+
 		pigCategory = new PigCategory();
 		pigCategory.categoryID = "4";
 		pigCategory.categoryName = "香猪";
 		pigCategories.add(pigCategory);
+
 		pigCategory = new PigCategory();
 		pigCategory.categoryID = "5";
 		pigCategory.categoryName = "藏猪";
 		pigCategories.add(pigCategory);
+
+		pigCategory = new PigCategory();
 		pigCategory.categoryID = "6";
 		pigCategory.categoryName = "太湖猪";
 		pigCategories.add(pigCategory);
+
+		pigCategory = new PigCategory();
 		pigCategory.categoryID = "7";
 		pigCategory.categoryName = "大白猪";
 		pigCategories.add(pigCategory);
+
+		pigCategory = new PigCategory();
 		pigCategory.categoryID = "8";
 		pigCategory.categoryName = "金华猪";
 		pigCategories.add(pigCategory);
+
+		pigCategory = new PigCategory();
 		pigCategory.categoryID = "9";
 		pigCategory.categoryName = "陆川猪";
 		pigCategories.add(pigCategory);
+
+		pigCategory = new PigCategory();
 		pigCategory.categoryID = "10";
 		pigCategory.categoryName = "民猪";
 		pigCategories.add(pigCategory);

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--猪重选择控件布局-->
+<LinearLayout
+    android:id="@+id/pig_weight_ll"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center">
+
+    <!--选择猪重的百位-->
+    <com.ai2020lab.aiviews.wheelview.WheelView
+        android:id="@+id/weight_hundred_wv"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        app:dividerColor="@android:color/white"
+        app:gravity="center"
+        app:textColorCenter="@color/aiview_text_normal"
+        app:textColorOut="@color/aiview_text_light"
+        app:textSize="16sp"/>
+	<!--选择猪重的十位-->
+    <com.ai2020lab.aiviews.wheelview.WheelView
+        android:id="@+id/weight_decade_wv"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        app:dividerColor="@android:color/white"
+        app:gravity="center"
+        app:textColorCenter="@color/aiview_text_normal"
+        app:textColorOut="@color/aiview_text_light"
+        app:textSize="16sp"/>
+	<!--选择猪重的个位-->
+    <com.ai2020lab.aiviews.wheelview.WheelView
+        android:id="@+id/weight_unit_wv"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        app:dividerColor="@android:color/white"
+        app:gravity="center"
+        app:textColorCenter="@color/aiview_text_normal"
+        app:textColorOut="@color/aiview_text_light"
+        app:textSize="16sp"/>
+    <TextView
+        android:id="@+id/weight_unit_tv"
+        style="@style/TextLittle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="@string/kilogram"/>
+</LinearLayout>

@@ -23,6 +23,9 @@ import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.common.DataManager;
 import com.ai2020lab.pigadopted.model.pig.PigCategory;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
+import com.ai2020lab.pigadopted.view.pickerview.DatePickerView;
+import com.ai2020lab.pigadopted.view.pickerview.PigAgePickerView;
+import com.ai2020lab.pigadopted.view.pickerview.PigWeightPickerView;
 import com.bigkoo.pickerview.adapter.ArrayWheelAdapter;
 
 import java.util.ArrayList;
@@ -47,6 +50,10 @@ public class AddPigDialog extends DialogFragment {
 	private Button cancelBtn;
 	private Button ensureBtn;
 	private WheelView pigAddCategoryWv;
+	private PigAgePickerView pigAddAgePv;
+	private PigWeightPickerView pigAddWeightPv;
+	private ArrayWheelAdapter<PigCategory> pigCategoryWvAdapter;
+	private DatePickerView pigAddDatePv;
 
 	/**
 	 * 创建对话框方法
@@ -66,12 +73,16 @@ public class AddPigDialog extends DialogFragment {
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		long startTime = System.currentTimeMillis();
 		View contentView = ViewUtils.makeView(getActivity(), R.layout.dialog_add_pig);
 		BaseDialog dialog = createDialog(contentView);
 		assignViews(contentView);
 		setTextFonts();
 		setPigAddCategoryWv();
+		setPigAddDatePv();
 		setDialogBtnClickListener(dialog);
+		long endTime = System.currentTimeMillis();
+		LogUtils.i(TAG, "消耗时间：" + (endTime - startTime) / 1000 + "秒");
 
 //		if (loadAnim) {
 //			setVisible();
@@ -106,7 +117,10 @@ public class AddPigDialog extends DialogFragment {
 		pigAddAgeTv = (TextView) contentView.findViewById(R.id.pig_add_age_tv);
 		pigAddWeightTv = (TextView) contentView.findViewById(R.id.pig_add_weight_tv);
 		pigAddCategoryWv = (WheelView) contentView.findViewById(R.id.pig_add_category_wv);
+		pigAddAgePv = (PigAgePickerView) contentView.findViewById(R.id.pig_add_age_pv);
+		pigAddWeightPv = (PigWeightPickerView) contentView.findViewById(R.id.pig_add_weight_pv);
 		pigAddTimeTv = (TextView) contentView.findViewById(R.id.pig_add_time_tv);
+		pigAddDatePv = (DatePickerView) contentView.findViewById(R.id.pig_add_date_pv);
 		cancelBtn = (Button) contentView.findViewById(R.id.cancel_btn);
 		ensureBtn = (Button) contentView.findViewById(R.id.ensure_btn);
 	}
@@ -129,11 +143,33 @@ public class AddPigDialog extends DialogFragment {
 	 */
 	private void setPigAddCategoryWv() {
 		ArrayList<PigCategory> pigCategories = DataManager.getInstance().getAllPigCategories();
-		LogUtils.i(TAG, "第一个猪品种：" + pigCategories.get(0).categoryName);
-		pigAddCategoryWv.setAdapter(new ArrayWheelAdapter<>(
-				getCategoryNames(), 2));
+		pigCategoryWvAdapter = new ArrayWheelAdapter<>(pigCategories, 2);
+		pigAddCategoryWv.setAdapter(pigCategoryWvAdapter);
+		// 设置选中第一项
 		pigAddCategoryWv.setCurrentItem(0);
-		pigAddCategoryWv.setCyclic(false);
+//		pigAddCategoryWv.setCyclic(false);
+	}
+
+	private void setPigAddDatePv() {
+		pigAddDatePv.setPickerView(2016, 1, 1);
+	}
+
+	private PigInfo getSelectPigInfo() {
+		PigInfo pigInfo = new PigInfo();
+		// 猪品种
+		pigInfo.pigCategory = (PigCategory) pigCategoryWvAdapter
+				.getItem(pigAddCategoryWv.getCurrentItem());
+		// 入栏猪龄
+		pigInfo.attendedAge = pigAddAgePv.getSelectPigAge();
+		// 入栏体重
+		pigInfo.attendedWeight = pigAddWeightPv.getSelectPigWeight();
+		// 入栏时间
+		pigInfo.attendedDate = pigAddDatePv.getSelectTime();
+		LogUtils.i(TAG, "入栏品种:" + pigInfo.pigCategory.toString());
+		LogUtils.i(TAG, "入栏猪龄:" + pigInfo.attendedAge);
+		LogUtils.i(TAG, "入栏体重:" + pigInfo.attendedWeight);
+		LogUtils.i(TAG, "入栏时间:" + pigInfo.attendedDate);
+		return pigInfo;
 	}
 
 	/**
@@ -143,6 +179,8 @@ public class AddPigDialog extends DialogFragment {
 		ensureBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				getSelectPigInfo();
+
 				if (onClickDialogBtnListener != null)
 					onClickDialogBtnListener.onClickEnsure(dialog, getPigInfo());
 			}

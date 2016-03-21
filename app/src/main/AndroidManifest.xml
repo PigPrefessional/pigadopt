@@ -1,124 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ai2020lab.pigadopted" >
+<manifest package="com.ai2020lab.pigadopted"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--适应所有的设备分辨率-->
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:resizeable="true"
-        android:smallScreens="true" />
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
+	<!--适应所有的设备分辨率-->
+	<supports-screens
+		android:anyDensity="true"
+		android:largeScreens="true"
+		android:normalScreens="true"
+		android:resizeable="true"
+		android:smallScreens="true"/>
+	<uses-feature android:name="android.hardware.camera"/>
+	<uses-feature android:name="android.hardware.camera.autofocus"/>
 
-    <!-- 基础权限  start -->
-    <!-- 联网权限 -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 在SDCard中创建与删除文件权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <!-- 往SDCard写入数据权限 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- 获取设备信息权限 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!-- 照相机权限 -->
-    <uses-permission android:name="android.permission.CAMERA" />
+	<!-- 基础权限  start -->
+	<!-- 联网权限 -->
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<!-- 在SDCard中创建与删除文件权限 -->
+	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+	<!-- 往SDCard写入数据权限 -->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<!-- 获取设备信息权限 -->
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	<!-- 照相机权限 -->
+	<uses-permission android:name="android.permission.CAMERA"/>
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
-    <!-- 使用系统下载管理器权限 -->
-    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
-    <!-- 允许程序禁用键盘锁 -->
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-    <!-- 允许程序修改当前设置 -->
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
-    <!-- 允许一个程序广播常用intents -->
-    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+	<!-- 使用系统下载管理器权限 -->
+	<uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
+	<uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
+	<!-- 允许程序禁用键盘锁 -->
+	<uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+	<!-- 允许程序修改当前设置 -->
+	<uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
+	<!-- 允许一个程序广播常用intents -->
+	<uses-permission android:name="android.permission.BROADCAST_STICKY"/>
 
-    <!-- 基础权限 end -->
-    <!-- 百度定位权限
-    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />-->
-    <uses-permission android:name="android.permission.ACCESS_GPS" />
-    <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_LOGS" />
-    <!-- 接受系统启动通知的权限 -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!-- 录音权限 -->
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!-- 内嵌视频接口浮动窗口权限 -->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <!-- 发送短信权限 -->
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <!-- 监听短信权限 -->
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <!-- 拨打电话权限 -->
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <!-- 允许程序监视、修改有关播出电话 -->
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-    <!-- 读取联系人权限 -->
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <!-- 震动权限 -->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- 蓝牙权限 -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- 程序读写系统安全敏感设置项 -->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <!-- 用来创建桌面快捷方式的权限 -->
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+	<!-- 基础权限 end -->
+	<!-- 百度定位权限
+	<uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />-->
+	<uses-permission android:name="android.permission.ACCESS_GPS"/>
+	<uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS"/>
+	<uses-permission android:name="android.permission.ACCESS_LOCATION"/>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	<uses-permission android:name="android.permission.READ_LOGS"/>
+	<!-- 接受系统启动通知的权限 -->
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+	<!-- 录音权限 -->
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+	<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+	<!-- 内嵌视频接口浮动窗口权限 -->
+	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+	<!-- 发送短信权限 -->
+	<uses-permission android:name="android.permission.SEND_SMS"/>
+	<!-- 监听短信权限 -->
+	<uses-permission android:name="android.permission.READ_SMS"/>
+	<uses-permission android:name="android.permission.RECEIVE_SMS"/>
+	<!-- 拨打电话权限 -->
+	<uses-permission android:name="android.permission.CALL_PHONE"/>
+	<!-- 允许程序监视、修改有关播出电话 -->
+	<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+	<!-- 读取联系人权限 -->
+	<uses-permission android:name="android.permission.READ_CONTACTS"/>
+	<!-- 震动权限 -->
+	<uses-permission android:name="android.permission.VIBRATE"/>
+	<!-- 蓝牙权限 -->
+	<uses-permission android:name="android.permission.BLUETOOTH"/>
+	<uses-permission android:name="android.permission.WAKE_LOCK"/>
+	<!-- 程序读写系统安全敏感设置项 -->
+	<uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+	<!-- 用来创建桌面快捷方式的权限 -->
+	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+	<uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>
+	<uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
+	<uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+	<uses-permission android:name="android.permission.GET_TASKS"/>
+	<uses-permission android:name="android.permission.RESTART_PACKAGES"/>
 
-    <uses-permission android:name="android.permission.SET_DEBUG_APP" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+	<uses-permission android:name="android.permission.SET_DEBUG_APP"/>
+	<uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+	<uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+	<uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
 
-    <application
-        android:name=".base.BaseApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+	<application
+		android:name=".base.BaseApplication"
+		android:allowBackup="true"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/app_name"
+		android:supportsRtl="true"
+		android:theme="@style/AppTheme">
 
-        <!--卖家主页，入口Activity-->
-        <activity
-            android:name=".activity.SellerMainActivity"
-            android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+		<!--登录页-->
+		<activity
+			android:name=".activity.LoginActivity"
+			android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
 
-        <activity
-            android:name=".activity.PigDetailActivity"
-            android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+		<!--卖家主页-->
+		<activity
+			android:name=".activity.SellerMainActivity"
+			android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+		</activity>
+		<!--买家主页-->
+		<activity
+			android:name=".activity.BuyerMainActivity"
+			android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+		</activity>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
-    </application>
+		<!--猪详情界面-->
+		<activity
+			android:name=".activity.PigDetailActivity"
+			android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+			<!--<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>-->
+		</activity>
+	</application>
 
 </manifest>
