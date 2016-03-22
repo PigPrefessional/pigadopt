@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiviews.textview.RotateTextView;
 import com.ai2020lab.pigadopted.R;
-import com.ai2020lab.pigadopted.model.pig.PigDetailInfoForBuyer;
+import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 
 /**
  * Created by Justin Z on 2016/3/21.
@@ -48,7 +48,7 @@ public class BuyerPigListRvAdapter extends BuyerPigListAdapter<BuyerPigListRvAda
 	@Override
 	public void onBindViewHolder(final ItemViewHolder holder, int position) {
 		LogUtils.i(TAG, "--onBindViewHolder--");
-		final PigDetailInfoForBuyer pigInfo = getItem(position);
+		final PigDetailInfoAndOrder pigInfo = getItem(position);
 
 
 	}

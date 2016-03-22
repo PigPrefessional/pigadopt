@@ -24,7 +24,7 @@ import com.ai2020lab.aiutils.common.ResourcesUtils;
 import com.ai2020lab.aiutils.common.ViewUtils;
 import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
-import com.ai2020lab.pigadopted.model.pig.PigDetailInfoForSeller;
+import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigStatus;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class HogpenPigListView extends LinearLayout {
 	/**
 	 * 卖家猪详情列表数据
 	 */
-	private List<PigDetailInfoForSeller> pigInfos = new ArrayList<>();
+	private List<PigDetailInfoAndOrder> pigInfos = new ArrayList<>();
 	/**
 	 * 猪详情Item点击事件接口
 	 */
@@ -113,7 +113,7 @@ public class HogpenPigListView extends LinearLayout {
 	 * 初始化设置猪列表数据<p>
 	 * 调用这个方法初始化数据
 	 */
-	public void setPigs(List<PigDetailInfoForSeller> pigInfos, boolean isLoadAnim) {
+	public void setPigs(List<PigDetailInfoAndOrder> pigInfos, boolean isLoadAnim) {
 		if (pigInfos == null || pigInfos.size() == 0) {
 			LogUtils.i(TAG, "没有猪列表数据，不刷新界面");
 			return;
@@ -132,7 +132,7 @@ public class HogpenPigListView extends LinearLayout {
 	 * 添加猪<p>
 	 * 调用这个方法添加猪
 	 */
-	public void addPig(PigDetailInfoForSeller pigInfo, boolean isLoadAnim) {
+	public void addPig(PigDetailInfoAndOrder pigInfo, boolean isLoadAnim) {
 		if (pigInfo == null) {
 			LogUtils.i(TAG, "要添加的猪信息不能为空");
 			return;
@@ -233,7 +233,7 @@ public class HogpenPigListView extends LinearLayout {
 	/**
 	 * 设置猪信息
 	 */
-	private void setPigInfo(View pigInfoView, final PigDetailInfoForSeller pigInfo) {
+	private void setPigInfo(View pigInfoView, final PigDetailInfoAndOrder pigInfo) {
 		LogUtils.i(TAG, "设置添加的猪信息");
 		ImageView pigIv = (ImageView) pigInfoView.findViewById(R.id.pig_iv);
 		TextView pigWeightTv = (TextView) pigInfoView.findViewById(R.id.pig_weight_tv);
@@ -264,7 +264,7 @@ public class HogpenPigListView extends LinearLayout {
 	/**
 	 * 猪体重
 	 */
-	private SpannableString getWeightStr(PigDetailInfoForSeller pigInfo) {
+	private SpannableString getWeightStr(PigDetailInfoAndOrder pigInfo) {
 		String weight = "--";
 		if (pigInfo.growthInfo != null && pigInfo.growthInfo.pigWeight > 0) {
 			weight = pigInfo.growthInfo.pigWeight + "";
@@ -280,7 +280,7 @@ public class HogpenPigListView extends LinearLayout {
 	/**
 	 * 猪体温
 	 */
-	private SpannableString getTemperatureStr(PigDetailInfoForSeller pigInfo) {
+	private SpannableString getTemperatureStr(PigDetailInfoAndOrder pigInfo) {
 		String tem = "--";
 		if (pigInfo.healthInfo != null && pigInfo.healthInfo.temperature > 0) {
 			tem = pigInfo.healthInfo.temperature + "";
@@ -296,7 +296,7 @@ public class HogpenPigListView extends LinearLayout {
 	/**
 	 * 买家数量
 	 */
-	private SpannableString getBuyerNumStr(PigDetailInfoForSeller pigInfo) {
+	private SpannableString getBuyerNumStr(PigDetailInfoAndOrder pigInfo) {
 		int buyerNum = 0;
 		if (pigInfo.orderInfo != null) {
 			buyerNum = pigInfo.orderInfo.buyerNumber;
@@ -324,9 +324,9 @@ public class HogpenPigListView extends LinearLayout {
 	/**
 	 * 根据猪状态获取猪的Drawable资源
 	 *
-	 * @param pigInfo PigDetailInfoForSeller
+	 * @param pigInfo PigDetailInfoAndOrder
 	 */
-	private Drawable getPigDrawable(PigDetailInfoForSeller pigInfo) {
+	private Drawable getPigDrawable(PigDetailInfoAndOrder pigInfo) {
 		int status = pigInfo.healthInfo != null ? pigInfo.healthInfo.status : PigStatus.WALKING;
 		switch (status) {
 			case PigStatus.WALKING:
@@ -345,7 +345,7 @@ public class HogpenPigListView extends LinearLayout {
 	 */
 	public interface onClickPigItemListener {
 
-		void onClickPigItem(PigDetailInfoForSeller pigInfo);
+		void onClickPigItem(PigDetailInfoAndOrder pigInfo);
 	}
 
 	/**

@@ -24,7 +24,7 @@ import com.ai2020lab.pigadopted.model.hogpen.SellerHogpenInfo;
 import com.ai2020lab.pigadopted.model.order.OrderInfoForSeller;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
 import com.ai2020lab.pigadopted.model.pig.HealthInfo;
-import com.ai2020lab.pigadopted.model.pig.PigDetailInfoForSeller;
+import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
 import com.ai2020lab.pigadopted.model.pig.PigStatus;
 import com.ai2020lab.pigadopted.model.user.UserInfo;
@@ -131,7 +131,7 @@ public class SellerMainActivity extends AIBaseActivity {
 		});
 		hogpenVp.setOnPigClickListener(new HogpenViewPager.OnPigClickListener() {
 			@Override
-			public void onPigClick(SellerHogpenInfo hogpenInfo, PigDetailInfoForSeller pigInfo) {
+			public void onPigClick(SellerHogpenInfo hogpenInfo, PigDetailInfoAndOrder pigInfo) {
 				// 猪点击监听
 				// TODO:跳转到猪详情界面
 				skipToPigDetailActivity(hogpenInfo, pigInfo);
@@ -166,7 +166,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	 * 跳转到猪详情界面
 	 */
 	private void skipToPigDetailActivity(SellerHogpenInfo hogpenInfo,
-	                                     PigDetailInfoForSeller pigInfo) {
+	                                     PigDetailInfoAndOrder pigInfo) {
 		LogUtils.i(TAG, "跳转到猪详情界面");
 		// TODO:还需要将猪的基本数据传递过去
 		Intent intent = new Intent(this, PigDetailActivity.class);
@@ -301,8 +301,8 @@ public class SellerMainActivity extends AIBaseActivity {
 	/**
 	 * 返回添加猪测试数据
 	 */
-	private PigDetailInfoForSeller getPigTestData() {
-		PigDetailInfoForSeller pigInfo = new PigDetailInfoForSeller();
+	private PigDetailInfoAndOrder getPigTestData() {
+		PigDetailInfoAndOrder pigInfo = new PigDetailInfoAndOrder();
 		pigInfo.orderInfo = new OrderInfoForSeller();
 		pigInfo.orderInfo.buyerNumber = 30;
 		pigInfo.growthInfo = new GrowthInfo();
@@ -326,8 +326,8 @@ public class SellerMainActivity extends AIBaseActivity {
 		hogpenInfo.hogpenLength = 4;
 		hogpenInfo.pigInfos = new ArrayList<>();
 		// 构造猪数据
-		PigDetailInfoForSeller pigDetail;
-		pigDetail = new PigDetailInfoForSeller();
+		PigDetailInfoAndOrder pigDetail;
+		pigDetail = new PigDetailInfoAndOrder();
 		pigDetail.growthInfo = new GrowthInfo();
 		pigDetail.growthInfo.pigWeight = 180;
 		pigDetail.healthInfo = new HealthInfo();
@@ -337,7 +337,7 @@ public class SellerMainActivity extends AIBaseActivity {
 		pigDetail.orderInfo.buyerNumber = 8;
 		hogpenInfo.pigInfos.add(pigDetail);
 		//
-		pigDetail = new PigDetailInfoForSeller();
+		pigDetail = new PigDetailInfoAndOrder();
 		pigDetail.growthInfo = new GrowthInfo();
 		pigDetail.growthInfo.pigWeight = 180;
 		pigDetail.healthInfo = new HealthInfo();

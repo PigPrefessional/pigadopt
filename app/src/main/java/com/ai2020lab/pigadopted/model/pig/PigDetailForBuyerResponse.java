@@ -12,7 +12,7 @@ public class PigDetailForBuyerResponse extends ResponseData<PigDetailForBuyerRes
 	/**
 	 * 返回结果只包含growth_info,health_info和order_info
 	 */
-	public class PigDetailForBuyerResult extends PigDetailInfoForBuyer {
+	public class PigDetailForBuyerResult extends PigDetailInfoAndOrder {
 
 	}
 }

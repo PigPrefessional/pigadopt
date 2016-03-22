@@ -26,6 +26,6 @@ public class PigListResponse extends ResponseData<PigListResponse.PigListResult>
 		 */
 		@Expose
 		@SerializedName("pig_list")
-		public List<PigDetailInfoForBuyer> pigInfos;
+		public List<PigDetailInfoAndOrder> pigInfos;
 	}
 }

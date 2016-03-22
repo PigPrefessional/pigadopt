@@ -7,7 +7,7 @@ package com.ai2020lab.pigadopted.activity;
 import android.support.v7.widget.RecyclerView;
 
 import com.ai2020lab.aiutils.common.LogUtils;
-import com.ai2020lab.pigadopted.model.pig.PigDetailInfoForBuyer;
+import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public abstract class BuyerPigListAdapter<VH extends RecyclerView.ViewHolder>
 
 	private final static String TAG = BuyerPigListAdapter.class.getSimpleName();
 
-	private List<PigDetailInfoForBuyer> items = new ArrayList<>();
+	private List<PigDetailInfoAndOrder> items = new ArrayList<>();
 
 	/**
 	 * 构造方法
@@ -33,25 +33,25 @@ public abstract class BuyerPigListAdapter<VH extends RecyclerView.ViewHolder>
 		setHasStableIds(true);
 	}
 
-	public void add(PigDetailInfoForBuyer object) {
+	public void add(PigDetailInfoAndOrder object) {
 		items.add(object);
 		notifyDataSetChanged();
 	}
 
-	public void add(int index, PigDetailInfoForBuyer object) {
+	public void add(int index, PigDetailInfoAndOrder object) {
 		items.add(index, object);
 		notifyItemInserted(index);
 		notifyDataSetChanged();
 	}
 
-	public void addAll(Collection<? extends PigDetailInfoForBuyer> collection) {
+	public void addAll(Collection<? extends PigDetailInfoAndOrder> collection) {
 		if (collection != null) {
 			items.addAll(collection);
 			notifyDataSetChanged();
 		}
 	}
 
-	public void addAll(PigDetailInfoForBuyer... items) {
+	public void addAll(PigDetailInfoAndOrder... items) {
 		addAll(Arrays.asList(items));
 	}
 
@@ -61,7 +61,7 @@ public abstract class BuyerPigListAdapter<VH extends RecyclerView.ViewHolder>
 		notifyDataSetChanged();
 	}
 
-	public void remove(PigDetailInfoForBuyer object) {
+	public void remove(PigDetailInfoAndOrder object) {
 		items.remove(object);
 		notifyDataSetChanged();
 	}
@@ -71,7 +71,7 @@ public abstract class BuyerPigListAdapter<VH extends RecyclerView.ViewHolder>
 		notifyItemRemoved(position);
 	}
 
-	public PigDetailInfoForBuyer getItem(int position) {
+	public PigDetailInfoAndOrder getItem(int position) {
 		return items.get(position);
 	}
 
