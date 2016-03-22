@@ -45,7 +45,7 @@ import java.util.Set;
 public class PigDetailForSellerFragment extends Fragment {
 
     private FrameLayout mPigPartsContainer;
-    private RecyclerView mBuyerRecyclerView;
+    protected RecyclerView mRecyclerView;
     private ImageView mWholePig;
     private Button mWeightChartBtn;
     private TextView mBuyerNumber;
@@ -103,7 +103,7 @@ public class PigDetailForSellerFragment extends Fragment {
     }
 
     protected void setupOtherViews(View rootView) {
-        mBuyerRecyclerView = (RecyclerView) rootView.findViewById(R.id.buyer_list);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.buyer_list);
         mBuyerNumber = (TextView) rootView.findViewById(R.id.buyer_number);
     }
 
@@ -142,6 +142,7 @@ public class PigDetailForSellerFragment extends Fragment {
         for (int i = 0; i < 6; i++) {
             PigPart part = new PigPart();
             part.partID = "" + (i + 1);
+            part.partName = "后腿肉";
 
             UserInfo userInfo = new UserInfo();
             userInfo.userID = "" + (i + 1);
@@ -226,13 +227,13 @@ public class PigDetailForSellerFragment extends Fragment {
 
         mBuyerNumber.setText(String.format(getResources().getString(R.string.pig_detail_buyer_number), buyers.size()));
 
-        mBuyerRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mBuyerRecyclerView.setLayoutManager(mLayoutManager);
-        mBuyerRecyclerView.setAdapter(new BuyerAdapter(getContext(), buyers));
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(new BuyerAdapter(getContext(), buyers));
     }
 
 
