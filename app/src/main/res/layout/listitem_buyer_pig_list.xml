@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--买家猪列表item布局-->
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="170dp">
+
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginBottom="5dp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
+		android:background="@mipmap/listitem_card_bg">
+
+		<!--猪图片展示-->
+		<ImageView
+			android:id="@+id/buyer_pig_iv"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:background="@mipmap/pig_status_walking"
+			tools:ignore="contentDescription"/>
+
+		<!--猪文字显示区域-->
+		<LinearLayout
+			android:id="@+id/buyer_pig_info_rl"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:layout_toRightOf="@+id/buyer_pig_iv"
+			android:background="@mipmap/pig_info_right_bg"
+			android:gravity="center_vertical"
+			android:orientation="vertical"
+			android:paddingBottom="15dp"
+			android:paddingLeft="25dp"
+			android:paddingRight="25dp"
+			android:paddingTop="15dp">
+
+			<TextView
+				android:id="@+id/buyer_pig_age_tv"
+				style="@style/TextNormal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				tools:text="年龄 : 4个月"/>
+
+			<TextView
+				android:id="@+id/buyer_pig_weight_tv"
+				style="@style/TextNormal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				tools:text="体重 : 150斤"/>
+		</LinearLayout>
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentRight="true"
+			android:layout_marginBottom="5dp"
+			android:layout_marginRight="7dp"
+			android:src="@mipmap/seller_name_bg"
+			tools:ignore="contentDescription"/>
+
+		<com.ai2020lab.aiviews.textview.RotateTextView
+			android:id="@+id/seller_name_tv"
+			style="@style/TextNormal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentRight="true"
+			android:layout_marginBottom="20dp"
+			android:layout_marginRight="20dp"
+			tools:text="老张家"/>
+	</RelativeLayout>
+
+	<!--左上的绳子-->
+	<ImageView
+		android:id="@+id/line_left_up_iv"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="15dp"
+		android:src="@mipmap/line_down_half"
+		tools:ignore="contentDescription"/>
+
+	<!--左下的绳子-->
+	<ImageView
+		android:id="@+id/line_left_down_iv"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_marginLeft="15dp"
+		android:src="@mipmap/line_up_half"
+		tools:ignore="contentDescription"/>
+
+	<!--右上的绳子-->
+	<ImageView
+		android:id="@+id/line_right_up_iv"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_marginRight="20dp"
+		android:src="@mipmap/line_down_half"
+		tools:ignore="contentDescription"/>
+
+	<!--右下的绳子-->
+	<ImageView
+		android:id="@+id/line_right_down_iv"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:layout_marginRight="20dp"
+		android:src="@mipmap/line_up_half"
+		tools:ignore="contentDescription"/>
+
+
+</RelativeLayout>

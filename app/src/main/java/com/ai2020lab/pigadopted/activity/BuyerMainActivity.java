@@ -1,6 +1,7 @@
 package com.ai2020lab.pigadopted.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
@@ -17,8 +18,15 @@ public class BuyerMainActivity extends AIBaseActivity {
 	 * 日志标题
 	 */
 	private final static String TAG = BuyerMainActivity.class.getSimpleName();
-
+	/**
+	 * 买家用户信息
+	 */
 	private UserInfo userInfo;
+	/**
+	 * 买家猪列表RecyclerView
+	 */
+	private RecyclerView buyerPigListRv;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +34,21 @@ public class BuyerMainActivity extends AIBaseActivity {
 		userInfo = (UserInfo) getIntent().getExtras().get(IntentExtra.USER_INFO);
 		setContentView(R.layout.activity_main_buyer);
 		setToolbar();
+		assignViews();
 	}
 
 	private void setToolbar() {
 		supportToolbar(true);
-		setToolbarTitle(String.format(getString(R.string.activity_title_buyer_main),
-				userInfo.userName));
+		setToolbarTitle(String.format(getString(R.string.activity_title_buyer_main), userInfo.userName));
 	}
+
+
+	private void assignViews() {
+		buyerPigListRv = (RecyclerView) findViewById(R.id.buyer_pig_list_rv);
+	}
+
+
+
 
 
 }

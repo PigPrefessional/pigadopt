@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--买家主页界面布局-->
-
-<LinearLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="vertical">
+	android:background="@mipmap/main_bg">
 
-</LinearLayout>
+	<!--买家猪列表-->
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/buyer_pig_list_rv"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:clipToPadding="true"
+		android:saveEnabled="false"/>
+
+</RelativeLayout>
