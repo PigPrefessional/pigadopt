@@ -299,7 +299,7 @@ public class HogpenPigListView extends LinearLayout {
 	private SpannableString getBuyerNumStr(PigDetailInfoForSeller pigInfo) {
 		int buyerNum = 0;
 		if (pigInfo.orderInfo != null) {
-			buyerNum = pigInfo.orderInfo.buyerNums;
+			buyerNum = pigInfo.orderInfo.buyerNumber;
 		}
 		SpannableString str = new SpannableString(String.format(context
 				.getString(R.string.seller_main_pig_buyers_number), buyerNum));

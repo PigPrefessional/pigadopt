@@ -1,5 +1,6 @@
 package com.ai2020lab.pigadopted.model.pig;
 
+import com.ai2020lab.pigadopted.model.order.OrderInfo;
 import com.ai2020lab.pigadopted.model.order.OrderInfoForBuyer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -12,5 +13,5 @@ import com.google.gson.annotations.SerializedName;
 public class PigDetailInfoForBuyer extends PigDetailInfo {
 	@Expose
 	@SerializedName("order_info")
-	public OrderInfoForBuyer orderInfo;
+	public OrderInfo orderInfo;
 }

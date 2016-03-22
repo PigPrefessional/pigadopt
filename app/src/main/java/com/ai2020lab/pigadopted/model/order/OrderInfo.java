@@ -3,6 +3,8 @@ package com.ai2020lab.pigadopted.model.order;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * 猪订单基础信息实体类
  * Created by Justin on 2016/3/7.
@@ -15,6 +17,13 @@ public class OrderInfo {
      */
     @Expose
     @SerializedName("buyer_number")
-    public float buyerNumber;
+    public int buyerNumber;
+
+    /**
+     * 买家已经订购的部位列表
+     */
+    @Expose
+    @SerializedName("order_part_list")
+    public List<PigPart> pigParts;
 
 }

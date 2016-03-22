@@ -11,12 +11,7 @@ import java.util.List;
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
 public class OrderInfoForSeller extends OrderInfo {
-	/**
-	 * 买家总数量
-	 */
-	@Expose
-	@SerializedName("buyers_number")
-	public int buyerNums;
+
 	/**
 	 * 买家已经订购的部位列表
 	 */

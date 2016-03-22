@@ -12,28 +12,39 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
+import com.ai2020lab.pigadopted.model.base.ResponseData;
+import com.ai2020lab.pigadopted.model.order.OrderInfo;
 import com.ai2020lab.pigadopted.model.order.OrderInfoForBuyer;
+import com.ai2020lab.pigadopted.model.order.OrderInfoForSeller;
 import com.ai2020lab.pigadopted.model.order.PigPart;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
 import com.ai2020lab.pigadopted.model.pig.HealthInfo;
 import com.ai2020lab.pigadopted.model.pig.PigCategory;
 import com.ai2020lab.pigadopted.model.pig.PigDetailForBuyerResponse;
+import com.ai2020lab.pigadopted.model.pig.PigDetailForSellerResponse;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfo;
+import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
+import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrderResponse;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
 import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -65,21 +76,11 @@ public class PigDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_pig_detail, container, false);
 
-        mPigPartsContainer = (FrameLayout) rootView.findViewById(R.id.pig_parts_container);
-        mBuyerRecyclerView = (RecyclerView) rootView.findViewById(R.id.buyer_list);
-        mWholePig = (ImageView) rootView.findViewById(R.id.whole_pig);
-        mWeightChartBtn = (Button) rootView.findViewById(R.id.weight_chart);
-        mBuyerNumber = (TextView) rootView.findViewById(R.id.buyer_number);
-        mIncreaseWeight = (TextView) rootView.findViewById(R.id.pig_detail_increase_weight);
-        mPigTypeName = (TextView) rootView.findViewById(R.id.pig_type_name);
-        mPigAge = (TextView) rootView.findViewById(R.id.pig_age);
-        mPigWeight = (TextView) rootView.findViewById(R.id.pig_weight);
-        mPigTemperature = (TextView) rootView.findViewById(R.id.pig_temperature);
-        mPigFatRate = (TextView) rootView.findViewById(R.id.pig_fat_rate);
-        mPigSteps = (TextView) rootView.findViewById(R.id.pig_steps);
+        setupMainLayout(rootView);
+        setupOtherViews(rootView);
 
-        final PigDetailForBuyerResponse response = loadData();
-        final PigDetailForBuyerResponse.PigDetailForBuyerResult result = response.data;
+        final PigDetailInfoAndOrderResponse response = loadData();
+        final PigDetailInfoAndOrder result = response.data;
 
         setupPigInfo(result);
         displayPig(result.orderInfo.pigParts);
@@ -90,8 +91,27 @@ public class PigDetailFragment extends Fragment {
         return rootView;
     }
 
-    private PigDetailForBuyerResponse loadData() {
-        PigDetailForBuyerResponse response = new PigDetailForBuyerResponse();
+    protected void setupMainLayout(View rootView) {
+        mPigPartsContainer = (FrameLayout) rootView.findViewById(R.id.pig_parts_container);
+        mWholePig = (ImageView) rootView.findViewById(R.id.whole_pig);
+        mWeightChartBtn = (Button) rootView.findViewById(R.id.weight_chart);
+
+        mIncreaseWeight = (TextView) rootView.findViewById(R.id.pig_detail_increase_weight);
+        mPigTypeName = (TextView) rootView.findViewById(R.id.pig_type_name);
+        mPigAge = (TextView) rootView.findViewById(R.id.pig_age);
+        mPigWeight = (TextView) rootView.findViewById(R.id.pig_weight);
+        mPigTemperature = (TextView) rootView.findViewById(R.id.pig_temperature);
+        mPigFatRate = (TextView) rootView.findViewById(R.id.pig_fat_rate);
+        mPigSteps = (TextView) rootView.findViewById(R.id.pig_steps);
+    }
+
+    protected void setupOtherViews(View rootView) {
+        mBuyerRecyclerView = (RecyclerView) rootView.findViewById(R.id.buyer_list);
+        mBuyerNumber = (TextView) rootView.findViewById(R.id.buyer_number);
+    }
+
+    protected PigDetailInfoAndOrderResponse loadData() {
+        PigDetailInfoAndOrderResponse response = new PigDetailInfoAndOrderResponse();
 
         PigDetailInfo detailInfo = new PigDetailInfo();
 
@@ -118,7 +138,7 @@ public class PigDetailFragment extends Fragment {
         detailInfo.healthInfo = healthInfo;
 
 
-        OrderInfoForBuyer orderInfoForBuyer = new OrderInfoForBuyer();
+        OrderInfo orderInfo = new OrderInfo();
 
         List<PigPart> partList = new ArrayList<>();
 
@@ -136,20 +156,79 @@ public class PigDetailFragment extends Fragment {
             partList.add(part);
         }
 
-        orderInfoForBuyer.pigParts = partList;
+        orderInfo.pigParts = partList;
 
-        PigDetailForBuyerResponse.PigDetailForBuyerResult result = response.new PigDetailForBuyerResult();
+        PigDetailInfoAndOrder result = new PigDetailInfoAndOrder();
         result.pigInfo = pigInfo;
         result.growthInfo = growthInfo;
         result.healthInfo = healthInfo;
-        result.orderInfo = orderInfoForBuyer;
+        result.orderInfo = orderInfo;
 
         response.data = result;
 
         return response;
     }
 
-    private void setupPigInfo(PigDetailForBuyerResponse.PigDetailForBuyerResult result) {
+    private PigDetailForSellerResponse loadSellerResponseData() {
+        PigDetailForSellerResponse response = new PigDetailForSellerResponse();
+
+        PigDetailInfo detailInfo = new PigDetailInfo();
+
+        PigInfo pigInfo = new PigInfo();
+        pigInfo.attendedAge = 2;
+        detailInfo.pigInfo = pigInfo;
+
+        PigCategory category = new PigCategory();
+        category.categoryName = "内江猪";
+        pigInfo.pigCategory = category;
+
+        GrowthInfo growthInfo = new GrowthInfo();
+        growthInfo.increasedWeight = 10;
+        growthInfo.pigWeight = 20;
+
+
+        detailInfo.growthInfo = growthInfo;
+
+        HealthInfo healthInfo = new HealthInfo();
+        healthInfo.fatRate = 24;
+        healthInfo.steps = 46;
+        healthInfo.temperature = 38.2f;
+
+        detailInfo.healthInfo = healthInfo;
+
+
+        OrderInfoForSeller orderInfoForSeller = new OrderInfoForSeller();
+
+        List<PigPart> partList = new ArrayList<>();
+
+        for (int i = 0; i < 6; i++) {
+            PigPart part = new PigPart();
+            part.partID = "" + (i + 1);
+
+            UserInfo userInfo = new UserInfo();
+            userInfo.userID = "" + (i + 1);
+            userInfo.userName = "买家" + (i + 1);
+            userInfo.userPortrait = "http://tse4.mm.bing.net/th?id=OIP.Md7bcb36c7db90393682b4bf44487d9f2o0&pid=15.1";
+
+            part.userInfo = userInfo;
+
+            partList.add(part);
+        }
+
+        orderInfoForSeller.pigParts = partList;
+
+        PigDetailForSellerResponse.PigDetailForSellerResult result = response.new PigDetailForSellerResult();
+        result.pigInfo = pigInfo;
+        result.growthInfo = growthInfo;
+        result.healthInfo = healthInfo;
+        result.orderInfo = orderInfoForSeller;
+
+        response.data = result;
+
+        return response;
+    }
+
+    private void setupPigInfo(PigDetailInfoAndOrder result) {
         mIncreaseWeight.setText(String.format(getResources().getString(R.string.pig_detail_weight_increase), result.growthInfo.increasedWeight / 2));
         mPigTypeName.setText(result.pigInfo.pigCategory.categoryName);
         mPigSteps.setText(String.format(getResources().getString(R.string.pig_detail_steps), result.healthInfo.steps));
@@ -213,7 +292,36 @@ public class PigDetailFragment extends Fragment {
             image.setImageResource(partImageId);
 
             mPigPartsContainer.addView(image);
+            startPigPartAnim(image);
         }
+    }
+
+    private void startPigPartAnim(View animatedView) {
+        Random random = new Random();
+
+        int animationId = 0;
+
+        switch (random.nextInt(4)) {
+            case 0:
+                animationId = R.anim.push_left_in;
+                break;
+            case 1:
+                animationId = R.anim.push_top_in;
+                break;
+            case 2:
+                animationId = R.anim.push_right_in;
+                break;
+            case 3:
+                animationId = R.anim.push_bottom_in;
+                break;
+            default:
+                animationId = R.anim.push_left_in;
+        }
+
+        Animation anim = AnimationUtils.loadAnimation(getContext(), animationId);
+        anim.setDuration(1000);
+        animatedView.startAnimation(anim);
+
     }
 
     private void setChartsButtonListener() {
@@ -236,8 +344,9 @@ public class PigDetailFragment extends Fragment {
                 ft.addToBackStack(null);
 
                 final float scale = metric.density;
+                // dp to px
                 int marginWidth = (int) (15 * scale + 0.5f);
-                int marginHeight = (int) (140 * scale + 0.5f);
+                int marginHeight = (int) (300 * scale + 0.5f);
 
                 DialogFragment newFragment = StatisticsChartFragment.newInstance(width - marginWidth, height - marginHeight);
 

@@ -304,7 +304,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	private PigDetailInfoForSeller getPigTestData() {
 		PigDetailInfoForSeller pigInfo = new PigDetailInfoForSeller();
 		pigInfo.orderInfo = new OrderInfoForSeller();
-		pigInfo.orderInfo.buyerNums = 30;
+		pigInfo.orderInfo.buyerNumber = 30;
 		pigInfo.growthInfo = new GrowthInfo();
 		pigInfo.growthInfo.pigWeight = 150;
 		pigInfo.healthInfo = new HealthInfo();
@@ -334,7 +334,7 @@ public class SellerMainActivity extends AIBaseActivity {
 		pigDetail.healthInfo.status = PigStatus.EATING;
 		pigDetail.healthInfo.temperature = 37.5f;
 		pigDetail.orderInfo = new OrderInfoForSeller();
-		pigDetail.orderInfo.buyerNums = 8;
+		pigDetail.orderInfo.buyerNumber = 8;
 		hogpenInfo.pigInfos.add(pigDetail);
 		//
 		pigDetail = new PigDetailInfoForSeller();
@@ -344,7 +344,7 @@ public class SellerMainActivity extends AIBaseActivity {
 		pigDetail.healthInfo.status = PigStatus.EATING;
 		pigDetail.healthInfo.temperature = 37.5f;
 		pigDetail.orderInfo = new OrderInfoForSeller();
-		pigDetail.orderInfo.buyerNums = 8;
+		pigDetail.orderInfo.buyerNumber = 8;
 		hogpenInfo.pigInfos.add(pigDetail);
 
 		hogpenInfos.add(hogpenInfo);
