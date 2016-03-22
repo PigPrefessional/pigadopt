@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@mipmap/card_background"
-        tools:context=".fragment.PigDetailFragment">
+        tools:context=".fragment.PigDetailForSellerFragment">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +31,7 @@
                         android:scaleType="centerInside"
                         android:layout_width="250dp"
                         android:layout_height="150dp"
-                        android:src="@mipmap/pig_whole"/>
+                        android:src="@mipmap/pig_whole_has_number"/>
                 </FrameLayout>
                 <TextView
                     style="@style/TextLittle.Light"
@@ -57,25 +57,15 @@
                 android:background="@mipmap/buyers_background"
                 android:layout_marginRight="40dp"
                 android:layout_marginLeft="40dp">
-                <TextView
-                    android:id="@+id/buyer_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="164dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="28dp"
-                    android:textColor="#85aa4c"
-                    android:textSize="12sp"
-                    android:text="@string/pig_detail_buyer_number" />
+
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/buyer_list"
+                    android:id="@+id/part_list"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="50dp"
                     android:layout_marginBottom="5dp"
                     android:layout_marginLeft="65dp"
                     android:layout_marginRight="10dp"
-                    android:layout_height="50dp"
-                    android:layout_below="@id/buyer_number">
+                    android:layout_height="50dp">
 
                 </android.support.v7.widget.RecyclerView>
             </RelativeLayout>
@@ -168,6 +158,16 @@
                             android:text="1333步"/>
                         <Button
                             style="@style/ChartsButton" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/LabelLayout">
+                        <TextView
+                            style="@style/Label"
+                            android:text="@string/pig_detail_label_environment" />
+                        <Button
+                            style="@style/ChartsButton"
+                            android:background="@mipmap/button_for_image"/>
                     </LinearLayout>
                 </LinearLayout>
 

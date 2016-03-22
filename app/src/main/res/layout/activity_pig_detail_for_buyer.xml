@@ -23,7 +23,7 @@
 
     <!--</android.support.design.widget.AppBarLayout>-->
 
-    <include layout="@layout/content_pig_detail" />
+    <include layout="@layout/content_pig_detail_for_buyer" />
 
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:id="@+id/fab"-->

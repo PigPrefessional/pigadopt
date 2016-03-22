@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.model.order.OrderInfo;
-import com.ai2020lab.pigadopted.model.order.OrderInfoForSeller;
 import com.ai2020lab.pigadopted.model.order.PigPart;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
 import com.ai2020lab.pigadopted.model.pig.HealthInfo;
@@ -43,7 +42,7 @@ import java.util.Set;
 /**
  * Created by Rocky on 16/3/7.
  */
-public class PigDetailFragment extends Fragment {
+public class PigDetailForSellerFragment extends Fragment {
 
     private FrameLayout mPigPartsContainer;
     private RecyclerView mBuyerRecyclerView;
@@ -59,7 +58,7 @@ public class PigDetailFragment extends Fragment {
     private TextView mPigSteps;
 
 
-    public PigDetailFragment() {
+    public PigDetailForSellerFragment() {
         // Required empty public constructor
     }
 
@@ -67,7 +66,7 @@ public class PigDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_pig_detail, container, false);
+        final View rootView = inflateRootView(inflater, container, savedInstanceState);
 
         setupMainLayout(rootView);
         setupOtherViews(rootView);
@@ -77,11 +76,16 @@ public class PigDetailFragment extends Fragment {
 
         setupPigInfo(result);
         displayPig(result.orderInfo.pigParts);
-        loadBuyerList(result.orderInfo.pigParts);
+        loadBuyersData(result.orderInfo.pigParts);
         setChartsButtonListener();
 
 
         return rootView;
+    }
+
+    protected View inflateRootView(LayoutInflater inflater, ViewGroup container,
+                                   Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_pig_detail_for_seller, container, false);
     }
 
     protected void setupMainLayout(View rootView) {
@@ -173,10 +177,34 @@ public class PigDetailFragment extends Fragment {
 
     private void displayPig(List<PigPart> partList) {
 
-        assemblePigParts(partList);
+        if (partList == null || partList.size() == 0) {
+            return;
+        }
+
+
+        for (PigPart part : partList) {
+
+            final int partImageId = getPigPartImageResID(part.partID);
+
+            ImageView image = new ImageView(getContext());
+            image.setLayoutParams(mWholePig.getLayoutParams());
+            image.setScaleType(mWholePig.getScaleType());
+
+            image.setImageResource(partImageId);
+
+            mPigPartsContainer.addView(image);
+            startPigPartAnim(image);
+        }
     }
 
-    private void loadBuyerList(List<PigPart> pigParts) {
+    protected int getPigPartImageResID(String partID) {
+        final int firstPartId = 1;
+        final int firstPartImageId = R.mipmap.pig_part_01;
+
+        return firstPartImageId + (Integer.parseInt(partID) - firstPartId);
+    }
+
+    protected void loadBuyersData(List<PigPart> pigParts) {
 
         List<UserInfo> buyers = new ArrayList<>();
         Map<String, UserInfo> userMap = new HashMap<>();
@@ -207,30 +235,8 @@ public class PigDetailFragment extends Fragment {
         mBuyerRecyclerView.setAdapter(new BuyerAdapter(getContext(), buyers));
     }
 
-    private void assemblePigParts(List<PigPart> partList) {
-        if (partList == null || partList.size() == 0) {
-            return;
-        }
 
-        final int firstPartId = 1;
-        final int firstPartImageId = R.mipmap.pig_part_01;
-
-        for (PigPart part : partList) {
-
-            final int partImageId = firstPartImageId + (Integer.parseInt(part.partID) - firstPartId);
-
-            ImageView image = new ImageView(getContext());
-            image.setLayoutParams(mWholePig.getLayoutParams());
-            image.setScaleType(mWholePig.getScaleType());
-
-            image.setImageResource(partImageId);
-
-            mPigPartsContainer.addView(image);
-            startPigPartAnim(image);
-        }
-    }
-
-    private void startPigPartAnim(View animatedView) {
+    protected void startPigPartAnim(View animatedView) {
         Random random = new Random();
 
         int animationId = 0;

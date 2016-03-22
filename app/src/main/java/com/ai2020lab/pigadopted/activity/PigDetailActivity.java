@@ -10,7 +10,8 @@ public class PigDetailActivity extends AIBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pig_detail);
+     //   setContentView(R.layout.activity_pig_detail_for_seller);
+        setContentView(R.layout.activity_pig_detail_for_buyer);
 
         supportToolbar(true);
         setToolbarTitle("详细信息");
