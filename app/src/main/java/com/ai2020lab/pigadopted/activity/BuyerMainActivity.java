@@ -11,7 +11,7 @@ import com.ai2020lab.pigadopted.common.IntentExtra;
 import com.ai2020lab.pigadopted.model.hogpen.HogpenInfo;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
 import com.ai2020lab.pigadopted.model.pig.HealthInfo;
-import com.ai2020lab.pigadopted.model.pig.PigDetailInfoForBuyer;
+import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
 import com.ai2020lab.pigadopted.model.pig.PigStatus;
 import com.ai2020lab.pigadopted.model.user.UserInfo;
@@ -40,7 +40,7 @@ public class BuyerMainActivity extends AIBaseActivity {
 
 	private BuyerPigListRvAdapter buyerPigListRvAdapter;
 
-	private List<PigDetailInfoForBuyer> pigDetailInfos = new ArrayList<>();
+	private List<PigDetailInfoAndOrder> pigDetailInfos = new ArrayList<>();
 
 
 	@Override
@@ -90,9 +90,9 @@ public class BuyerMainActivity extends AIBaseActivity {
 	// TODO:加载买家猪列表测试数据
 	private void loadTestListData() {
 		pigDetailInfos.clear();
-		PigDetailInfoForBuyer pigDetailForBuyer;
+		PigDetailInfoAndOrder pigDetailForBuyer;
 
-		pigDetailForBuyer = new PigDetailInfoForBuyer();
+		pigDetailForBuyer = new PigDetailInfoAndOrder();
 		pigDetailForBuyer.pigInfo = new PigInfo();
 		// 初始化卖家名字
 		pigDetailForBuyer.pigInfo.hogpenInfo = new HogpenInfo();
@@ -110,7 +110,7 @@ public class BuyerMainActivity extends AIBaseActivity {
 		pigDetailForBuyer.growthInfo.pigWeight = 140;
 		pigDetailInfos.add(pigDetailForBuyer);
 		///////////////////////////////////////////////////////////
-		pigDetailForBuyer = new PigDetailInfoForBuyer();
+		pigDetailForBuyer = new PigDetailInfoAndOrder();
 		pigDetailForBuyer.pigInfo = new PigInfo();
 		// 初始化卖家名字
 		pigDetailForBuyer.pigInfo.hogpenInfo = new HogpenInfo();
@@ -128,7 +128,7 @@ public class BuyerMainActivity extends AIBaseActivity {
 		pigDetailForBuyer.growthInfo.pigWeight = 100;
 		pigDetailInfos.add(pigDetailForBuyer);
 		///////////////////////////////////////////////////////////
-		pigDetailForBuyer = new PigDetailInfoForBuyer();
+		pigDetailForBuyer = new PigDetailInfoAndOrder();
 		pigDetailForBuyer.pigInfo = new PigInfo();
 		// 初始化卖家名字
 		pigDetailForBuyer.pigInfo.hogpenInfo = new HogpenInfo();
