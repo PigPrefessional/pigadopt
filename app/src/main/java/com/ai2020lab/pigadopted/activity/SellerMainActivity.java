@@ -199,7 +199,7 @@ public class SellerMainActivity extends AIBaseActivity {
 		animIn.setInterpolator(new BounceInterpolator());
 		// 中文字体加粗,xml中设置无效
 		sellerInfoTv.getPaint().setFakeBoldText(true);
-		sellerInfoTv.setText(String.format(getString(R.string.seller_main_seller_name), userInfo.userName));
+		sellerInfoTv.setText(String.format(getString(R.string.pig_seller_name), userInfo.userName));
 		sellerInfoTv.setVisibility(View.VISIBLE);
 		sellerInfoTv.startAnimation(animIn);
 	}

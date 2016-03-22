@@ -4,6 +4,8 @@
 
 	<string name="ensure">确定</string>
 	<string name="cancel">取消</string>
+	<string name="display_none">--</string>
+	<string name="display_none1">-</string>
 
 	<string name="year">年</string>
 	<string name="month">月</string>
@@ -17,12 +19,21 @@
     <string name="pig_photo_take_photo">拍照</string>
     <string name="pig_photo_photo_album">相册</string>
     <string name="pig_photo_not_take_pic">还没有拍照!</string>
+
+	<!--猪体重-->
+	<string name="pig_weight" formatted="false">体重：%s斤</string>
+	<!--猪体温-->
+	<string name="pig_temperature" formatted="false">体温：%s℃</string>
+	<!--猪年龄-->
+	<string name="pig_age" formatted="false">年龄：%s月%s天</string>
+	<!--猪卖家名字-->
+	<string name="pig_seller_name" formatted="false">%s家</string>
     
-    <string name="pig_detail_label_varieties">品种:</string>
-    <string name="pig_detail_label_age">猪龄:</string>
-    <string name="pig_detail_label_weight">体重:</string>
-    <string name="pig_detail_label_temperature">体温:</string>
-    <string name="pig_detail_label_fat">体脂:</string>
+    <string name="pig_detail_label_varieties">品种：</string>
+    <string name="pig_detail_label_age">猪龄：</string>
+    <string name="pig_detail_label_weight">体重：</string>
+    <string name="pig_detail_label_temperature">体温：</string>
+    <string name="pig_detail_label_fat">体脂：</string>
     <string name="pig_detail_label_steps">步数:</string>
     <string name="pig_detail_buyer_number">已有%1$d人购买</string>
     <string name="pig_detail_weight_increase">我又胖%1$.0f斤了哦</string>
@@ -38,11 +49,6 @@
     <string name="title_activity_pig_detail">PigDetailActivity</string>
 
 	<!--卖家主页-->
-	<!--猪体重-->
-	<string name="seller_main_seller_name" formatted="false">%s家</string>
-	<string name="seller_main_pig_weight" formatted="false">体重：%s斤</string>
-	<!--猪体温-->
-	<string name="seller_main_pig_temperature" formatted="false">体温：%s℃</string>
 	<!--买家数量-->
 	<string name="seller_main_pig_buyers_number" formatted="false">已有%d家购买</string>
 	<string name="record_pig_growth_info">是否开始记录猪猪的成长历程？</string>

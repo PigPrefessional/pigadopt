@@ -19,9 +19,9 @@ public class RotateTextView extends TextView {
 
 	private final static String TAG = RotateTextView.class.getSimpleName();
 
-	private final static int DEGREES = 0;
+	private final static int DEFAULT_DEGREES = -30;
 
-	private int mDegrees;
+	private int mDegrees = DEFAULT_DEGREES;
 
 	public RotateTextView(Context context) {
 		super(context);

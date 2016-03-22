@@ -24,11 +24,15 @@ import com.ai2020lab.aiutils.common.ResourcesUtils;
 import com.ai2020lab.aiutils.common.ViewUtils;
 import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
+import com.ai2020lab.pigadopted.base.BaseApplication;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoForSeller;
 import com.ai2020lab.pigadopted.model.pig.PigStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 /**
  * 猪圈容器自定义View<p>
@@ -265,15 +269,18 @@ public class HogpenPigListView extends LinearLayout {
 	 * 猪体重
 	 */
 	private SpannableString getWeightStr(PigDetailInfoForSeller pigInfo) {
-		String weight = "--";
+		String weight = context.getString(R.string.display_none);
 		if (pigInfo.growthInfo != null && pigInfo.growthInfo.pigWeight > 0) {
 			weight = pigInfo.growthInfo.pigWeight + "";
 		}
-		String weightStr = String.format(context.getString(R.string.seller_main_pig_weight),
+		String weightStr = String.format(context.getString(R.string.pig_weight),
 				weight);
 		SpannableString str = new SpannableString(weightStr);
 		str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal_Light), 0, 2,
 				Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+		CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(
+				TypefaceUtils.load(context.getAssets(), BaseApplication.FONT_PATH));
+		str.setSpan(typefaceSpan, 0, 2, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 		return str;
 	}
 
@@ -281,15 +288,19 @@ public class HogpenPigListView extends LinearLayout {
 	 * 猪体温
 	 */
 	private SpannableString getTemperatureStr(PigDetailInfoForSeller pigInfo) {
-		String tem = "--";
+		String tem = context.getString(R.string.display_none);
 		if (pigInfo.healthInfo != null && pigInfo.healthInfo.temperature > 0) {
 			tem = pigInfo.healthInfo.temperature + "";
 		}
-		String temStr = String.format(context.getString(R.string.seller_main_pig_temperature),
+		String temStr = String.format(context.getString(R.string.pig_temperature),
 				tem);
 		SpannableString str = new SpannableString(temStr);
 		str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal_Light), 0, 2,
 				Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+		// 要重新设置一下字体样式，否则会使用系统默认字体
+		CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(
+				TypefaceUtils.load(context.getAssets(), BaseApplication.FONT_PATH));
+		str.setSpan(typefaceSpan, 0, 2, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 		return str;
 	}
 
@@ -304,19 +315,28 @@ public class HogpenPigListView extends LinearLayout {
 		SpannableString str = new SpannableString(String.format(context
 				.getString(R.string.seller_main_pig_buyers_number), buyerNum));
 		if (buyerNum < 10) {
-			LogUtils.i(TAG, "使用购买者数小于10的策略");
+//			LogUtils.i(TAG, "使用购买者数小于10的策略");
 			str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal), 2, 3,
 					Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(
+					TypefaceUtils.load(context.getAssets(), BaseApplication.FONT_PATH));
+			str.setSpan(typefaceSpan, 2, 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 		} else if (buyerNum >= 10 && buyerNum < 100) {
-			LogUtils.i(TAG, "使用购买者数大于10小于100的策略");
+//			LogUtils.i(TAG, "使用购买者数大于10小于100的策略");
 			str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal), 2, 4,
 					Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(
+					TypefaceUtils.load(context.getAssets(), BaseApplication.FONT_PATH));
+			str.setSpan(typefaceSpan, 2, 4, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 		}
 		// TODO:不考虑单个猪的买家超过1000个人的情况
 		else if (buyerNum >= 100 && buyerNum < 1000) {
-			LogUtils.i(TAG, "使用购买者数大于100小于1000的策略");
+//			LogUtils.i(TAG, "使用购买者数大于100小于1000的策略");
 			str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal), 2, 5,
 					Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(
+					TypefaceUtils.load(context.getAssets(), BaseApplication.FONT_PATH));
+			str.setSpan(typefaceSpan, 2, 5, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 		}
 		return str;
 	}
