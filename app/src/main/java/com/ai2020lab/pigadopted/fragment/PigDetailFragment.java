@@ -19,18 +19,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
-import com.ai2020lab.pigadopted.model.base.ResponseData;
 import com.ai2020lab.pigadopted.model.order.OrderInfo;
-import com.ai2020lab.pigadopted.model.order.OrderInfoForBuyer;
 import com.ai2020lab.pigadopted.model.order.OrderInfoForSeller;
 import com.ai2020lab.pigadopted.model.order.PigPart;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
 import com.ai2020lab.pigadopted.model.pig.HealthInfo;
 import com.ai2020lab.pigadopted.model.pig.PigCategory;
-import com.ai2020lab.pigadopted.model.pig.PigDetailForBuyerResponse;
-import com.ai2020lab.pigadopted.model.pig.PigDetailForSellerResponse;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfo;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrderResponse;
@@ -39,8 +34,6 @@ import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,65 +156,6 @@ public class PigDetailFragment extends Fragment {
         result.growthInfo = growthInfo;
         result.healthInfo = healthInfo;
         result.orderInfo = orderInfo;
-
-        response.data = result;
-
-        return response;
-    }
-
-    private PigDetailForSellerResponse loadSellerResponseData() {
-        PigDetailForSellerResponse response = new PigDetailForSellerResponse();
-
-        PigDetailInfo detailInfo = new PigDetailInfo();
-
-        PigInfo pigInfo = new PigInfo();
-        pigInfo.attendedAge = 2;
-        detailInfo.pigInfo = pigInfo;
-
-        PigCategory category = new PigCategory();
-        category.categoryName = "内江猪";
-        pigInfo.pigCategory = category;
-
-        GrowthInfo growthInfo = new GrowthInfo();
-        growthInfo.increasedWeight = 10;
-        growthInfo.pigWeight = 20;
-
-
-        detailInfo.growthInfo = growthInfo;
-
-        HealthInfo healthInfo = new HealthInfo();
-        healthInfo.fatRate = 24;
-        healthInfo.steps = 46;
-        healthInfo.temperature = 38.2f;
-
-        detailInfo.healthInfo = healthInfo;
-
-
-        OrderInfoForSeller orderInfoForSeller = new OrderInfoForSeller();
-
-        List<PigPart> partList = new ArrayList<>();
-
-        for (int i = 0; i < 6; i++) {
-            PigPart part = new PigPart();
-            part.partID = "" + (i + 1);
-
-            UserInfo userInfo = new UserInfo();
-            userInfo.userID = "" + (i + 1);
-            userInfo.userName = "买家" + (i + 1);
-            userInfo.userPortrait = "http://tse4.mm.bing.net/th?id=OIP.Md7bcb36c7db90393682b4bf44487d9f2o0&pid=15.1";
-
-            part.userInfo = userInfo;
-
-            partList.add(part);
-        }
-
-        orderInfoForSeller.pigParts = partList;
-
-        PigDetailForSellerResponse.PigDetailForSellerResult result = response.new PigDetailForSellerResult();
-        result.pigInfo = pigInfo;
-        result.growthInfo = growthInfo;
-        result.healthInfo = healthInfo;
-        result.orderInfo = orderInfoForSeller;
 
         response.data = result;
 
