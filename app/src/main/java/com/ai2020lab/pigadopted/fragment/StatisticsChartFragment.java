@@ -78,7 +78,7 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
         View rootView = inflater.inflate(R.layout.fragment_statistics_chart, container, false);
 
-        mChart = (LineChart) rootView.findViewById(R.id.chart1);
+        mChart = (LineChart) rootView.findViewById(R.id.chart);
 
         setChartProperties();
         setChartAxis();
@@ -96,7 +96,7 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 //        mChart.setVisibleYRange(20f, AxisDependency.LEFT);
 //        mChart.centerViewTo(20, 50, AxisDependency.LEFT);
 
-        mChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
+        mChart.animateX(1000, Easing.EasingOption.EaseInOutQuart);
 //        mChart.invalidate();
 
         setChartLegend();
@@ -151,6 +151,7 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         llXAxis.setTextSize(10f);
 
         XAxis xAxis = mChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
         //xAxis.addLimitLine(llXAxis); // add x-axis limit line
 
@@ -189,10 +190,11 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
     private void setChartLegend() {
         // get the legend (only possible after setting data)
         Legend l = mChart.getLegend();
+        l.setEnabled(false);
 
         // modify the legend ...
         // l.setPosition(LegendPosition.LEFT_OF_CHART);
-        l.setForm(Legend.LegendForm.LINE);
+    //    l.setForm(Legend.LegendForm.LINE);
 
 
     }

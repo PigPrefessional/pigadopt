@@ -24,15 +24,11 @@ import com.ai2020lab.aiutils.common.ResourcesUtils;
 import com.ai2020lab.aiutils.common.ViewUtils;
 import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
-import com.ai2020lab.pigadopted.base.BaseApplication;
-import com.ai2020lab.pigadopted.model.pig.PigDetailInfoForSeller;
+import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigStatus;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 /**
  * 猪圈容器自定义View<p>
@@ -55,7 +51,7 @@ public class HogpenPigListView extends LinearLayout {
 	/**
 	 * 卖家猪详情列表数据
 	 */
-	private List<PigDetailInfoForSeller> pigInfos = new ArrayList<>();
+	private List<PigDetailInfoAndOrder> pigInfos = new ArrayList<>();
 	/**
 	 * 猪详情Item点击事件接口
 	 */
@@ -117,7 +113,7 @@ public class HogpenPigListView extends LinearLayout {
 	 * 初始化设置猪列表数据<p>
 	 * 调用这个方法初始化数据
 	 */
-	public void setPigs(List<PigDetailInfoForSeller> pigInfos, boolean isLoadAnim) {
+	public void setPigs(List<PigDetailInfoAndOrder> pigInfos, boolean isLoadAnim) {
 		if (pigInfos == null || pigInfos.size() == 0) {
 			LogUtils.i(TAG, "没有猪列表数据，不刷新界面");
 			return;
@@ -136,7 +132,7 @@ public class HogpenPigListView extends LinearLayout {
 	 * 添加猪<p>
 	 * 调用这个方法添加猪
 	 */
-	public void addPig(PigDetailInfoForSeller pigInfo, boolean isLoadAnim) {
+	public void addPig(PigDetailInfoAndOrder pigInfo, boolean isLoadAnim) {
 		if (pigInfo == null) {
 			LogUtils.i(TAG, "要添加的猪信息不能为空");
 			return;
@@ -237,14 +233,14 @@ public class HogpenPigListView extends LinearLayout {
 	/**
 	 * 设置猪信息
 	 */
-	private void setPigInfo(View pigInfoView, final PigDetailInfoForSeller pigInfo) {
+	private void setPigInfo(View pigInfoView, final PigDetailInfoAndOrder pigInfo) {
 		LogUtils.i(TAG, "设置添加的猪信息");
 		ImageView pigIv = (ImageView) pigInfoView.findViewById(R.id.pig_iv);
 		TextView pigWeightTv = (TextView) pigInfoView.findViewById(R.id.pig_weight_tv);
 		TextView pigTemperatureTv = (TextView) pigInfoView.findViewById(R.id.pig_temperature_tv);
 		TextView pigBuyersTv = (TextView) pigInfoView.findViewById(R.id.pig_buyers_tv);
 		// 设置猪的图片样式，可能是吃饭，散步，睡觉
-		pigIv.setBackgroundDrawable(getPigDrawable(pigInfo));
+		pigIv.setImageDrawable(getPigDrawable(pigInfo));
 		// 设置体重
 		pigWeightTv.setText(getWeightStr(pigInfo));
 		// 设置体温
@@ -268,8 +264,8 @@ public class HogpenPigListView extends LinearLayout {
 	/**
 	 * 猪体重
 	 */
-	private SpannableString getWeightStr(PigDetailInfoForSeller pigInfo) {
-		String weight = context.getString(R.string.display_none);
+	private SpannableString getWeightStr(PigDetailInfoAndOrder pigInfo) {
+		String weight = "--";
 		if (pigInfo.growthInfo != null && pigInfo.growthInfo.pigWeight > 0) {
 			weight = pigInfo.growthInfo.pigWeight + "";
 		}
@@ -278,17 +274,14 @@ public class HogpenPigListView extends LinearLayout {
 		SpannableString str = new SpannableString(weightStr);
 		str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal_Light), 0, 2,
 				Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-		CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(
-				TypefaceUtils.load(context.getAssets(), BaseApplication.FONT_PATH));
-		str.setSpan(typefaceSpan, 0, 2, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 		return str;
 	}
 
 	/**
 	 * 猪体温
 	 */
-	private SpannableString getTemperatureStr(PigDetailInfoForSeller pigInfo) {
-		String tem = context.getString(R.string.display_none);
+	private SpannableString getTemperatureStr(PigDetailInfoAndOrder pigInfo) {
+		String tem = "--";
 		if (pigInfo.healthInfo != null && pigInfo.healthInfo.temperature > 0) {
 			tem = pigInfo.healthInfo.temperature + "";
 		}
@@ -297,46 +290,33 @@ public class HogpenPigListView extends LinearLayout {
 		SpannableString str = new SpannableString(temStr);
 		str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal_Light), 0, 2,
 				Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-		// 要重新设置一下字体样式，否则会使用系统默认字体
-		CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(
-				TypefaceUtils.load(context.getAssets(), BaseApplication.FONT_PATH));
-		str.setSpan(typefaceSpan, 0, 2, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 		return str;
 	}
 
 	/**
 	 * 买家数量
 	 */
-	private SpannableString getBuyerNumStr(PigDetailInfoForSeller pigInfo) {
+	private SpannableString getBuyerNumStr(PigDetailInfoAndOrder pigInfo) {
 		int buyerNum = 0;
 		if (pigInfo.orderInfo != null) {
-			buyerNum = pigInfo.orderInfo.buyerNums;
+			buyerNum = pigInfo.orderInfo.buyerNumber;
 		}
 		SpannableString str = new SpannableString(String.format(context
 				.getString(R.string.seller_main_pig_buyers_number), buyerNum));
 		if (buyerNum < 10) {
-//			LogUtils.i(TAG, "使用购买者数小于10的策略");
+			LogUtils.i(TAG, "使用购买者数小于10的策略");
 			str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal), 2, 3,
 					Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-			CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(
-					TypefaceUtils.load(context.getAssets(), BaseApplication.FONT_PATH));
-			str.setSpan(typefaceSpan, 2, 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 		} else if (buyerNum >= 10 && buyerNum < 100) {
-//			LogUtils.i(TAG, "使用购买者数大于10小于100的策略");
+			LogUtils.i(TAG, "使用购买者数大于10小于100的策略");
 			str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal), 2, 4,
 					Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-			CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(
-					TypefaceUtils.load(context.getAssets(), BaseApplication.FONT_PATH));
-			str.setSpan(typefaceSpan, 2, 4, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 		}
 		// TODO:不考虑单个猪的买家超过1000个人的情况
 		else if (buyerNum >= 100 && buyerNum < 1000) {
-//			LogUtils.i(TAG, "使用购买者数大于100小于1000的策略");
+			LogUtils.i(TAG, "使用购买者数大于100小于1000的策略");
 			str.setSpan(new TextAppearanceSpan(context, R.style.TextNormal), 2, 5,
 					Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-			CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(
-					TypefaceUtils.load(context.getAssets(), BaseApplication.FONT_PATH));
-			str.setSpan(typefaceSpan, 2, 5, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 		}
 		return str;
 	}
@@ -344,9 +324,9 @@ public class HogpenPigListView extends LinearLayout {
 	/**
 	 * 根据猪状态获取猪的Drawable资源
 	 *
-	 * @param pigInfo PigDetailInfoForSeller
+	 * @param pigInfo PigDetailInfoAndOrder
 	 */
-	private Drawable getPigDrawable(PigDetailInfoForSeller pigInfo) {
+	private Drawable getPigDrawable(PigDetailInfoAndOrder pigInfo) {
 		int status = pigInfo.healthInfo != null ? pigInfo.healthInfo.status : PigStatus.WALKING;
 		switch (status) {
 			case PigStatus.WALKING:
@@ -365,7 +345,7 @@ public class HogpenPigListView extends LinearLayout {
 	 */
 	public interface onClickPigItemListener {
 
-		void onClickPigItem(PigDetailInfoForSeller pigInfo);
+		void onClickPigItem(PigDetailInfoAndOrder pigInfo);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package com.ai2020lab.pigadopted.model.hogpen;
 
-import com.ai2020lab.pigadopted.model.pig.PigDetailInfoForSeller;
+import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,5 +16,5 @@ public class SellerHogpenInfo extends HogpenInfo {
 	 */
 	@Expose
 	@SerializedName("pig_list")
-	public List<PigDetailInfoForSeller> pigInfos;
+	public List<PigDetailInfoAndOrder> pigInfos;
 }

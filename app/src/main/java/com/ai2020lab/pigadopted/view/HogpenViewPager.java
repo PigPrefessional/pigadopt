@@ -13,7 +13,7 @@ import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.common.ViewUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.model.hogpen.SellerHogpenInfo;
-import com.ai2020lab.pigadopted.model.pig.PigDetailInfoForSeller;
+import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,7 +178,7 @@ public class HogpenViewPager extends LinearLayout {
 			// 绑定猪Item的点击事件
 			pigListView.setOnClickPigItemListener(new HogpenPigListView.onClickPigItemListener() {
 				@Override
-				public void onClickPigItem(PigDetailInfoForSeller pigInfo) {
+				public void onClickPigItem(PigDetailInfoAndOrder pigInfo) {
 					if (onPigClickListener != null) {
 						onPigClickListener.onPigClick(hogpenInfo, pigInfo);
 					}
@@ -247,7 +247,7 @@ public class HogpenViewPager extends LinearLayout {
 	/**
 	 * 添加猪到当前选中的猪圈中
 	 */
-	public void addPig(PigDetailInfoForSeller pigInfo) {
+	public void addPig(PigDetailInfoAndOrder pigInfo) {
 		if (currentIndex == -1) {
 			LogUtils.i(TAG, "请先选中一个猪圈");
 			return;
@@ -282,7 +282,7 @@ public class HogpenViewPager extends LinearLayout {
 		// 绑定猪Item的点击事件
 		pigListView.setOnClickPigItemListener(new HogpenPigListView.onClickPigItemListener() {
 			@Override
-			public void onClickPigItem(PigDetailInfoForSeller pigInfo) {
+			public void onClickPigItem(PigDetailInfoAndOrder pigInfo) {
 				if (onPigClickListener != null) {
 					onPigClickListener.onPigClick(hogpenInfo, pigInfo);
 				}
@@ -353,7 +353,7 @@ public class HogpenViewPager extends LinearLayout {
 	 * 猪点击事件监听
 	 */
 	public interface OnPigClickListener {
-		void onPigClick(SellerHogpenInfo hogpenInfo, PigDetailInfoForSeller pigInfo);
+		void onPigClick(SellerHogpenInfo hogpenInfo, PigDetailInfoAndOrder pigInfo);
 	}
 
 	public interface OnPigAddListener {

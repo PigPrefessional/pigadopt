@@ -35,6 +35,7 @@
     <string name="pig_detail_label_temperature">体温：</string>
     <string name="pig_detail_label_fat">体脂：</string>
     <string name="pig_detail_label_steps">步数:</string>
+	<string name="pig_detail_label_environment">环境:</string>
     <string name="pig_detail_buyer_number">已有%1$d人购买</string>
     <string name="pig_detail_weight_increase">我又胖%1$.0f斤了哦</string>
     <string name="pig_detail_steps">%1$d步</string>
