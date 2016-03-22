@@ -14,7 +14,6 @@
 		android:id="@+id/pig_info_rl"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:background="@mipmap/pig_info_left_bg"
 		android:paddingBottom="15dp"
 		android:paddingLeft="25dp"
 		android:paddingRight="25dp"
