@@ -21,7 +21,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerVertical="true"
-			tools:ignore="contentDescription"/>
+			tools:ignore="contentDescription"
+			android:layout_marginLeft="16dp"/>
 
 		<!--猪文字显示区域-->
 		<LinearLayout
