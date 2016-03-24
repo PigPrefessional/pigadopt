@@ -172,6 +172,7 @@ public class SellerMainActivity extends AIBaseActivity {
 		LogUtils.i(TAG, "跳转到猪详情界面");
 		// TODO:还需要将猪的基本数据传递过去
 		Intent intent = new Intent(this, PigDetailActivity.class);
+		intent.putExtra(PigDetailActivity.KEY_DETAIL_TYPE, PigDetailActivity.TYPE_SELLER);
 		startActivity(intent);
 	}
 
