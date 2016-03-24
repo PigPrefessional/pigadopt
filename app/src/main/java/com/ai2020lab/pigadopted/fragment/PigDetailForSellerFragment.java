@@ -14,11 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.model.order.OrderInfo;
 import com.ai2020lab.pigadopted.model.order.PigPart;
@@ -168,6 +170,7 @@ public class PigDetailForSellerFragment extends Fragment {
     }
 
     private void setupPigInfo(PigDetailInfoAndOrder result) {
+        mIncreaseWeight.setVisibility(View.INVISIBLE);
         mIncreaseWeight.setText(String.format(getResources().getString(R.string.pig_detail_weight_increase), result.growthInfo.increasedWeight / 2));
         mPigTypeName.setText(result.pigInfo.pigCategory.categoryName);
         mPigSteps.setText(String.format(getResources().getString(R.string.pig_detail_steps), result.healthInfo.steps));
@@ -176,15 +179,22 @@ public class PigDetailForSellerFragment extends Fragment {
         mPigAge.setText(String.format(getResources().getString(R.string.pig_detail_age), result.pigInfo.attendedAge));
     }
 
+    private void startPigIncreaseWeightAnim() {
+        Animation anim;
+        anim = AnimationUtils.loadAnimation(getContext(), R.anim.scale_left_down_in);
+        anim.setInterpolator(new AnticipateOvershootInterpolator());
+        mIncreaseWeight.setVisibility(View.VISIBLE);
+        mIncreaseWeight.startAnimation(anim);
+    }
+
     private void displayPig(List<PigPart> partList) {
 
         if (partList == null || partList.size() == 0) {
             return;
         }
 
-
-        for (PigPart part : partList) {
-
+        for (int i = 0; i < partList.size(); i++) {
+            final PigPart part = partList.get(i);
             final int partImageId = getPigPartImageResID(part.partID);
 
             ImageView image = new ImageView(getContext());
@@ -194,8 +204,19 @@ public class PigDetailForSellerFragment extends Fragment {
             image.setImageResource(partImageId);
 
             mPigPartsContainer.addView(image);
-            startPigPartAnim(image);
+            Animation animation = startPigPartAnim(image);
+
+            if (i == partList.size() - 1) {
+                animation.setAnimationListener(new AnimSimpleListener() {
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        startPigIncreaseWeightAnim();
+                    }
+                });
+            }
         }
+
+
     }
 
     protected int getPigPartImageResID(String partID) {
@@ -237,7 +258,7 @@ public class PigDetailForSellerFragment extends Fragment {
     }
 
 
-    protected void startPigPartAnim(View animatedView) {
+    protected Animation startPigPartAnim(View animatedView) {
         Random random = new Random();
 
         int animationId = 0;
@@ -263,6 +284,7 @@ public class PigDetailForSellerFragment extends Fragment {
         anim.setDuration(1000);
         animatedView.startAnimation(anim);
 
+        return anim;
     }
 
     private void setChartsButtonListener() {

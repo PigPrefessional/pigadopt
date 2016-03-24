@@ -7,14 +7,23 @@ import com.ai2020lab.pigadopted.base.AIBaseActivity;
 
 public class PigDetailActivity extends AIBaseActivity {
 
+    public static final String KEY_DETAIL_TYPE = "KeyDetailType";
+    public static final int TYPE_SELLER = 1;
+    public static final int TYPE_BUYER = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-     //   setContentView(R.layout.activity_pig_detail_for_seller);
-        setContentView(R.layout.activity_pig_detail_for_buyer);
+
+        int type = getIntent().getExtras().getInt(KEY_DETAIL_TYPE, TYPE_BUYER);
+        if (type == TYPE_SELLER) {
+            setContentView(R.layout.activity_pig_detail_for_seller);
+        } else {
+            setContentView(R.layout.activity_pig_detail_for_buyer);
+        }
 
         supportToolbar(true);
-        setToolbarTitle("详细信息");
+        setToolbarTitle(getText(R.string.pig_detail_title).toString());
         setToolbarLeft(R.drawable.pig_detail_back_selector);
         setToolbarRight(R.drawable.pig_detail_grow_history_selector);
      /*   Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
