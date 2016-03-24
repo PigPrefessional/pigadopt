@@ -5,9 +5,9 @@
 package com.ai2020lab.pigadopted.fragment;
 
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -63,7 +63,7 @@ public class AddPigDialog extends DialogFragment {
 	 * @return AddPigDialog
 	 */
 	public static AddPigDialog newInstance(boolean loadAnim,
-	                                       OnClickDialogBtnListener onClickDialogBtnListener) {
+	                                       OnClickDialogBtnListener<PigInfo> onClickDialogBtnListener) {
 		AddPigDialog addPigFragment = new AddPigDialog();
 		addPigFragment.onClickDialogBtnListener = onClickDialogBtnListener;
 		addPigFragment.loadAnim = loadAnim;
@@ -126,7 +126,7 @@ public class AddPigDialog extends DialogFragment {
 	}
 
 	/**
-	 * 分配View
+	 * 设置字体
 	 */
 	private void setTextFonts() {
 		// 标题和按钮文字全部使用中文粗体
@@ -182,14 +182,14 @@ public class AddPigDialog extends DialogFragment {
 				getSelectPigInfo();
 
 				if (onClickDialogBtnListener != null)
-					onClickDialogBtnListener.onClickEnsure(dialog, getPigInfo());
+					onClickDialogBtnListener.onClickEnsure(AddPigDialog.this, getPigInfo());
 			}
 		});
 		cancelBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (onClickDialogBtnListener != null)
-					onClickDialogBtnListener.onClickCancel(dialog);
+					onClickDialogBtnListener.onClickCancel(AddPigDialog.this);
 
 			}
 		});
@@ -206,17 +206,6 @@ public class AddPigDialog extends DialogFragment {
 		pigInfo.pigCategory.categoryID = "2";
 		pigInfo.pigCategory.categoryName = "内江猪";
 		return pigInfo;
-	}
-
-
-	private ArrayList<String> getCategoryNames() {
-		ArrayList<String> categoryNames = new ArrayList<>();
-		categoryNames.add("长白猪");
-		categoryNames.add("荣昌猪");
-		categoryNames.add("内江猪");
-		categoryNames.add("香猪");
-		categoryNames.add("藏猪");
-		return categoryNames;
 	}
 
 

@@ -6,9 +6,9 @@ package com.ai2020lab.pigadopted.fragment;
 
 
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -103,14 +103,14 @@ public class AddPigSuccessDialog extends DialogFragment {
 			@Override
 			public void onClick(View v) {
 				if (onClickDialogBtnListener != null)
-					onClickDialogBtnListener.onClickEnsure(dialog, null);
+					onClickDialogBtnListener.onClickEnsure(AddPigSuccessDialog.this, null);
 			}
 		});
 		dialogCancelIv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (onClickDialogBtnListener != null)
-					onClickDialogBtnListener.onClickCancel(dialog);
+					onClickDialogBtnListener.onClickCancel(AddPigSuccessDialog.this);
 
 			}
 		});

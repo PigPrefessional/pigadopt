@@ -4,7 +4,7 @@
 
 package com.ai2020lab.pigadopted.fragment;
 
-import android.app.Dialog;
+import android.app.DialogFragment;
 
 /**
  * 点击对话框按钮事件监听
@@ -17,12 +17,12 @@ public interface OnClickDialogBtnListener<T> {
 	 *
 	 * @param dialog Dialog
 	 */
-	void onClickEnsure(Dialog dialog, T t);
+	void onClickEnsure(DialogFragment df, T t);
 
 	/**
 	 * 点击取消按钮
 	 *
 	 * @param dialog Dialog
 	 */
-	void onClickCancel(Dialog dialog);
+	void onClickCancel(DialogFragment df);
 }

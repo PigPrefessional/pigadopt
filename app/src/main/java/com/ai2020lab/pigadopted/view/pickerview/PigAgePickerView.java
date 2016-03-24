@@ -10,9 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ai2020lab.aiutils.common.LogUtils;
+import com.ai2020lab.aiutils.common.StringUtils;
 import com.ai2020lab.aiutils.common.ViewUtils;
 import com.ai2020lab.aiviews.wheelview.WheelView;
 import com.ai2020lab.pigadopted.R;
+import com.ai2020lab.pigadopted.common.CommonUtils;
 import com.bigkoo.pickerview.adapter.NumericWheelAdapter;
 
 /**
@@ -94,7 +96,7 @@ public class PigAgePickerView extends LinearLayout {
 		int day = (int) dayWvAdapter.getItem(dayWv.getCurrentItem());
 		LogUtils.i(TAG, "当前选中：" + month + " 月");
 		LogUtils.i(TAG, "当前选中：" + day + " 天");
-		float dayMonth = (float) day / CONVERSION_FACTOR;
+		float dayMonth = CommonUtils.getMonth(day);
 		float selectMonth = month + dayMonth;
 		LogUtils.i(TAG, "换算成的猪龄为：" + selectMonth + " 月");
 		return selectMonth;
@@ -102,22 +104,9 @@ public class PigAgePickerView extends LinearLayout {
 
 	// TODO:还没有做完换算
 	public void setSelectPigAge(float month) {
-		if (month <= 0) {
-			LogUtils.i(TAG, "要设置的月份month不能小于等于0");
-			return;
-		}
-		// 得到整数部分作为月数显示
-		int monthNum = (int) month;
-		int dayNum = 0;
-		// 获取小数部分并换算为天数显示
-		String monthStr = String.valueOf(month);
-
-		int index = monthStr.indexOf(".");
-		if (index > 0) {
-			// 只获取小数点后一位
-			String dayStr = monthStr.substring(index, index + 1);
-			LogUtils.i(TAG, "小数部分的月份：" + dayStr);
-		}
+		String [] ageArr = CommonUtils.getPigAgeMonthDay(month);
+		int ageMonth = StringUtils.parseInt(ageArr[0]);
+		int ageDay = StringUtils.parseInt(ageArr[1]);
 
 
 	}

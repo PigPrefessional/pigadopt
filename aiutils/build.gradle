@@ -27,7 +27,7 @@ dependencies {
 	compile 'com.loopj.android:android-async-http:1.4.9'
 	compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 	compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3'
-	compile 'jp.wasabeef:recyclerview-animators:1.2.2'
+	compile 'jp.wasabeef:recyclerview-animators:2.2.1'
 	compile 'com.zhy:flowlayout-lib:1.0.0'
 	compile 'com.yqritc:recyclerview-flexibledivider:1.2.6'
 	compile 'com.github.rey5137:material:1.2.2'

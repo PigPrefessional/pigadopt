@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--添加猪对话框布局-->
+<!--添加猪圈对话框布局-->
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
@@ -10,10 +9,10 @@
 	android:orientation="vertical">
 	<!--对话框标题-->
 	<ImageView
-		android:id="@+id/add_pig_title_iv"
+		android:id="@+id/add_hogpen_title_iv"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:background="@mipmap/add_pig_dialog_title"
+		android:background="@mipmap/add_hogpen_dialog_title"
 		tools:ignore="contentDescription"/>
 	<!--对话框内容-->
 	<LinearLayout
@@ -21,7 +20,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="5dp"
 		android:layout_marginRight="5dp"
-		android:background="@mipmap/add_pig_dialog_bg"
+		android:background="@mipmap/add_hogpen_dialog_bg"
 		android:gravity="center_horizontal"
 		android:orientation="vertical">
 
@@ -34,35 +33,9 @@
 			android:layout_marginTop="5dp"
 			android:background="@mipmap/add_pig_dialog_content_bg"
 			android:orientation="vertical"
-			android:padding="10dp">
+			android:padding="20dp">
 
-			<!--猪品种选择-->
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:gravity="center_vertical"
-				android:orientation="horizontal">
-				<TextView
-					android:id="@+id/pig_add_category_tv"
-					style="@style/TextNormal"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="@string/pig_add_category"/>
-				<!--选择猪品种-->
-				<com.ai2020lab.aiviews.wheelview.WheelView
-					android:id="@+id/pig_add_category_wv"
-					android:layout_width="80dp"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="10dp"
-					app:dividerColor="@android:color/white"
-					app:gravity="center"
-					app:textColorCenter="@color/aiview_text_normal"
-					app:textColorOut="@color/aiview_text_light"
-					app:textSize="16sp"/>
-
-			</LinearLayout>
-
-			<!--入栏年龄选择-->
+			<!--猪圈长度选择-->
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -70,21 +43,20 @@
 				android:gravity="center_vertical"
 				android:orientation="horizontal">
 				<TextView
-					android:id="@+id/pig_add_age_tv"
+					android:id="@+id/hogpen_length_tv"
 					style="@style/TextNormal"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="@string/pig_add_age"/>
-				<!--选择入栏猪龄-->
-				<com.ai2020lab.pigadopted.view.pickerview.PigAgePickerView
-					android:id="@+id/pig_add_age_pv"
+					android:text="@string/length"/>
+				<com.ai2020lab.pigadopted.view.pickerview.DimensionPickerView
+					android:id="@+id/hogpen_length_pv"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginLeft="10dp"/>
 
 			</LinearLayout>
 
-			<!--入栏体重选择-->
+			<!--猪圈宽度选择-->
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -92,21 +64,21 @@
 				android:gravity="center_vertical"
 				android:orientation="horizontal">
 				<TextView
-					android:id="@+id/pig_add_weight_tv"
+					android:id="@+id/hogpen_width_tv"
 					style="@style/TextNormal"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="@string/pig_add_weight"/>
+					android:text="@string/width"/>
 				<!--选择入栏体重-->
-				<com.ai2020lab.pigadopted.view.pickerview.PigWeightPickerView
-					android:id="@+id/pig_add_weight_pv"
+				<com.ai2020lab.pigadopted.view.pickerview.DimensionPickerView
+					android:id="@+id/hogpen_width_pv"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginLeft="10dp"/>
 
 			</LinearLayout>
 
-			<!--入栏时间选择-->
+			<!--照片选择-->
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -114,17 +86,18 @@
 				android:gravity="center_vertical"
 				android:orientation="horizontal">
 				<TextView
-					android:id="@+id/pig_add_time_tv"
+					android:id="@+id/hogpen_photo_tv"
 					style="@style/TextNormal"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="@string/pig_add_time"/>
-				<!--选择入栏时间-->
-				<com.ai2020lab.pigadopted.view.pickerview.DatePickerView
-					android:id="@+id/pig_add_date_pv"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="10dp"/>
+					android:text="@string/hogpen_photo"/>
+				<ImageView
+					android:id="@+id/hogpen_photo_iv"
+					android:layout_width="100dp"
+					android:layout_height="100dp"
+					android:layout_marginLeft="10dp"
+					android:src="@mipmap/add_photo_bg"
+					tools:ignore="contentDescription"/>
 
 			</LinearLayout>
 

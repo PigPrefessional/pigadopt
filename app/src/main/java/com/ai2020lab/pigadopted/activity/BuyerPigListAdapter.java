@@ -40,8 +40,9 @@ public abstract class BuyerPigListAdapter<VH extends RecyclerView.ViewHolder>
 
 	public void add(int index, PigDetailInfoAndOrder object) {
 		items.add(index, object);
+		// 只有调用这个方法动画才能生效
 		notifyItemInserted(index);
-		notifyDataSetChanged();
+//		notifyDataSetChanged();
 	}
 
 	public void addAll(Collection<? extends PigDetailInfoAndOrder> collection) {

@@ -84,16 +84,16 @@ public class CommonUtils {
 	 * 根据天数换算月数
 	 */
 	public static float getMonth(int day) {
-		float month = roundFloat((float) day / MONTH_DAY_FACTOR);
+		float month = roundFloat((float) day / MONTH_DAY_FACTOR, 2);
 		LogUtils.i(TAG, "转换成月数为:" + month);
 		return month;
 	}
 
 	/**
-	 * 4舍5入并保留2位小数
+	 * 4舍5入并保留digits位小数
 	 */
-	public static float roundFloat(float num) {
-		return StringUtils.parseFloat(String.format("%.2f", num));
+	public static float roundFloat(float num, int digits) {
+		return StringUtils.parseFloat(String.format("%." + "" + digits + "f", num));
 	}
 
 	/**
@@ -102,5 +102,6 @@ public class CommonUtils {
 	public static int roundInt(float num) {
 		return (int) (num + 0.5);
 	}
+
 
 }

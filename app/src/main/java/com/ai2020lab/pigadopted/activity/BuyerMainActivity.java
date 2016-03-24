@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.animation.BounceInterpolator;
 
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
@@ -18,6 +19,9 @@ import com.ai2020lab.pigadopted.model.user.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
+
 
 /**
  * 买家主页
@@ -40,9 +44,6 @@ public class BuyerMainActivity extends AIBaseActivity {
 
 	private BuyerPigListRvAdapter buyerPigListRvAdapter;
 
-	private List<PigDetailInfoAndOrder> pigDetailInfos = new ArrayList<>();
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,7 +57,8 @@ public class BuyerMainActivity extends AIBaseActivity {
 
 	private void setToolbar() {
 		supportToolbar(true);
-		setToolbarTitle(String.format(getString(R.string.activity_title_buyer_main), userInfo.userName));
+		setToolbarTitle(String.format(getString(R.string.activity_title_buyer_main),
+				userInfo.userName));
 	}
 
 
@@ -73,6 +75,12 @@ public class BuyerMainActivity extends AIBaseActivity {
 		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 		buyerPigListRv.setLayoutManager(layoutManager);
 		buyerPigListRv.setAdapter(buyerPigListRvAdapter);
+		// 加入item动画效果
+		SlideInDownAnimator animator = new SlideInDownAnimator();
+//		LandingAnimator animator = new LandingAnimator();
+		animator.setAddDuration(500);
+		animator.setInterpolator(new BounceInterpolator());
+		buyerPigListRv.setItemAnimator(animator);
 	}
 
 
@@ -87,8 +95,19 @@ public class BuyerMainActivity extends AIBaseActivity {
 
 	}
 
-	// TODO:加载买家猪列表测试数据
+	// TODO:加载测试数据
 	private void loadTestListData() {
+		List<PigDetailInfoAndOrder> pigDetailInfos = getTestListData();
+		int size = pigDetailInfos.size();
+		for (int i = 0; i < size; i++) {
+			PigDetailInfoAndOrder pigInfoAndOrder = pigDetailInfos.get(i);
+			this.buyerPigListRvAdapter.add(i, pigInfoAndOrder);
+		}
+	}
+
+	// TODO:加载买家猪列表测试数据
+	private List<PigDetailInfoAndOrder> getTestListData() {
+		List<PigDetailInfoAndOrder> pigDetailInfos = new ArrayList<>();
 		pigDetailInfos.clear();
 		PigDetailInfoAndOrder pigDetailForBuyer;
 
@@ -145,8 +164,44 @@ public class BuyerMainActivity extends AIBaseActivity {
 		pigDetailForBuyer.growthInfo = new GrowthInfo();
 		pigDetailForBuyer.growthInfo.pigWeight = 110;
 		pigDetailInfos.add(pigDetailForBuyer);
-		// 刷新列表
-		buyerPigListRvAdapter.addAll(pigDetailInfos);
+		///////////////////////////////////////////////////////////
+		pigDetailForBuyer = new PigDetailInfoAndOrder();
+		pigDetailForBuyer.pigInfo = new PigInfo();
+		// 初始化卖家名字
+		pigDetailForBuyer.pigInfo.hogpenInfo = new HogpenInfo();
+		pigDetailForBuyer.pigInfo.hogpenInfo.userInfo = new UserInfo();
+		pigDetailForBuyer.pigInfo.hogpenInfo.userInfo.userName = "杰爷";
+		// 初始化入栏时间，入栏体重，入栏年龄
+		pigDetailForBuyer.pigInfo.attendedWeight = 40;
+		pigDetailForBuyer.pigInfo.attendedAge = 4.35f;
+		pigDetailForBuyer.pigInfo.attendedTime = 1451642452553l;
+		// 初始化猪状态
+		pigDetailForBuyer.healthInfo = new HealthInfo();
+		pigDetailForBuyer.healthInfo.status = PigStatus.EATING;
+		// 初始化猪成长历程
+		pigDetailForBuyer.growthInfo = new GrowthInfo();
+		pigDetailForBuyer.growthInfo.pigWeight = 80;
+		pigDetailInfos.add(pigDetailForBuyer);
+		///////////////////////////////////////////////////////////
+		pigDetailForBuyer = new PigDetailInfoAndOrder();
+		pigDetailForBuyer.pigInfo = new PigInfo();
+		// 初始化卖家名字
+		pigDetailForBuyer.pigInfo.hogpenInfo = new HogpenInfo();
+		pigDetailForBuyer.pigInfo.hogpenInfo.userInfo = new UserInfo();
+		pigDetailForBuyer.pigInfo.hogpenInfo.userInfo.userName = "先爷";
+		// 初始化入栏时间，入栏体重，入栏年龄
+		pigDetailForBuyer.pigInfo.attendedWeight = 20;
+		pigDetailForBuyer.pigInfo.attendedAge = 3.35f;
+		pigDetailForBuyer.pigInfo.attendedTime = 1451642452553l;
+		// 初始化猪状态
+		pigDetailForBuyer.healthInfo = new HealthInfo();
+		pigDetailForBuyer.healthInfo.status = PigStatus.SLEEPING;
+		// 初始化猪成长历程
+		pigDetailForBuyer.growthInfo = new GrowthInfo();
+		pigDetailForBuyer.growthInfo.pigWeight = 60;
+		pigDetailInfos.add(pigDetailForBuyer);
+		return pigDetailInfos;
+
 	}
 
 

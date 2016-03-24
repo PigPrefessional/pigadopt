@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--规格选择控件布局-->
+<LinearLayout
+	android:id="@+id/dimension_ll"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:gravity="center"
+	android:orientation="horizontal">
+
+	<!--选择数字的整数位,只支持一位数字-->
+	<com.ai2020lab.aiviews.wheelview.WheelView
+		android:id="@+id/int_wv"
+		android:layout_width="40dp"
+		android:layout_height="wrap_content"
+		app:dividerColor="@android:color/white"
+		app:gravity="center"
+		app:textColorCenter="@color/aiview_text_normal"
+		app:textColorOut="@color/aiview_text_light"
+		app:textSize="16sp"/>
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		tools:ignore="contentDescription"
+		android:src="@mipmap/point"
+		android:layout_marginLeft="10dp"/>
+	<!--选择数字的小数位,只支持一位数字-->
+	<com.ai2020lab.aiviews.wheelview.WheelView
+		android:id="@+id/decimal_wv"
+		android:layout_width="40dp"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="10dp"
+		app:dividerColor="@android:color/white"
+		app:gravity="center"
+		app:textColorCenter="@color/aiview_text_normal"
+		app:textColorOut="@color/aiview_text_light"
+		app:textSize="16sp"/>
+	<TextView
+		android:id="@+id/unit_tv"
+		style="@style/TextLittle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="10dp"
+		android:text="@string/meter"/>
+</LinearLayout>

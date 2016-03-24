@@ -1,6 +1,8 @@
 package com.ai2020lab.pigadopted.activity;
 
-import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +19,7 @@ import com.ai2020lab.aiutils.system.DisplayUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
 import com.ai2020lab.pigadopted.common.IntentExtra;
+import com.ai2020lab.pigadopted.fragment.AddHogpenDialog;
 import com.ai2020lab.pigadopted.fragment.AddPigDialog;
 import com.ai2020lab.pigadopted.fragment.AddPigSuccessDialog;
 import com.ai2020lab.pigadopted.fragment.OnClickDialogBtnListener;
@@ -107,8 +110,7 @@ public class SellerMainActivity extends AIBaseActivity {
 			@Override
 			public void onClickAdd() {
 				LogUtils.i(TAG, "添加鸟游标和猪圈");
-				//
-				addHogpen();
+				showAddHogpenDialog();
 			}
 		});
 	}
@@ -204,27 +206,69 @@ public class SellerMainActivity extends AIBaseActivity {
 		sellerInfoTv.startAnimation(animIn);
 	}
 
+	private final static String TAG_DIALOG_ADD_HOGPEN = "tag_dialog_add_hogpen";
+	private final static String TAG_DIALOG_ADD_PIG = "tag_dialog_add_pig";
+	private final static String TAG_DIALOG_ADD_PIG_SUCCESS = "tag_dialog_add_pig_success";
+	private FragmentTransaction ft;
+
+	private AddHogpenDialog hogpenDialog;
+	private AddPigDialog pigDialog;
+	private AddPigSuccessDialog addPigSuccessDialog;
+
+	/**
+	 * 弹出添加猪圈对话框
+	 */
+	private void showAddHogpenDialog() {
+		hogpenDialog = AddHogpenDialog.newInstance(true, onClickHogpenDialogListener);
+		Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DIALOG_ADD_HOGPEN);
+		ft = getFragmentManager().beginTransaction();
+		if (fragment != null)
+			ft.remove(fragment);
+		ft.addToBackStack(null);// 加入回退栈
+		hogpenDialog.show(ft, TAG_DIALOG_ADD_HOGPEN);
+	}
+
+	private OnClickDialogBtnListener<SellerHogpenInfo> onClickHogpenDialogListener =
+			new OnClickDialogBtnListener<SellerHogpenInfo>() {
+				@Override
+				public void onClickEnsure(DialogFragment df, SellerHogpenInfo hogpenInfo) {
+					df.dismiss();
+					//添加猪圈
+					addHogpen(hogpenInfo);
+				}
+
+				@Override
+				public void onClickCancel(DialogFragment df) {
+					df.dismiss();
+				}
+			};
+
 	/**
 	 * 弹出添加猪对话框
 	 */
 	private void showAddPigDialog() {
-		AddPigDialog.newInstance(true, onClickDialogBtnListener)
-				.show(getSupportFragmentManager(), null);
+		pigDialog = AddPigDialog.newInstance(true, onClickDialogBtnListener);
+		Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DIALOG_ADD_PIG);
+		ft = getFragmentManager().beginTransaction();
+		if (fragment != null)
+			ft.remove(fragment);
+		ft.addToBackStack(null);
+		pigDialog.show(ft, TAG_DIALOG_ADD_PIG);
 	}
 
 	// 添加猪对话框点击监听
 	private OnClickDialogBtnListener<PigInfo> onClickDialogBtnListener =
 			new OnClickDialogBtnListener<PigInfo>() {
 				@Override
-				public void onClickEnsure(Dialog dialog, PigInfo pigInfo) {
-					dialog.dismiss();
+				public void onClickEnsure(DialogFragment df, PigInfo pigInfo) {
+					df.dismiss();
 					//添加猪
 					addPig();
 				}
 
 				@Override
-				public void onClickCancel(Dialog dialog) {
-					dialog.dismiss();
+				public void onClickCancel(DialogFragment df) {
+					df.dismiss();
 				}
 			};
 
@@ -232,29 +276,35 @@ public class SellerMainActivity extends AIBaseActivity {
 	 * 弹出添加猪成功提示对话框
 	 */
 	private void showAddPigSuccessDialog() {
-		AddPigSuccessDialog addPigSuccessDialog = AddPigSuccessDialog.newInstance(true,
+		addPigSuccessDialog = AddPigSuccessDialog.newInstance(true,
 				new OnClickDialogBtnListener<Void>() {
 					@Override
-					public void onClickEnsure(Dialog dialog, Void aVoid) {
+					public void onClickEnsure(DialogFragment df, Void aVoid) {
 						LogUtils.i(TAG, "跳转到猪拍照界面");
+						df.dismiss();
 					}
 
 					@Override
-					public void onClickCancel(Dialog dialog) {
+					public void onClickCancel(DialogFragment df) {
 						LogUtils.i(TAG, "残忍拒绝");
-						dialog.dismiss();
+						df.dismiss();
 
 					}
 				});
-		addPigSuccessDialog.show(getSupportFragmentManager(), null);
+		Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DIALOG_ADD_PIG_SUCCESS);
+		ft = getFragmentManager().beginTransaction();
+		if (fragment != null)
+			ft.remove(fragment);
+		ft.addToBackStack(null);
+		addPigSuccessDialog.show(ft, TAG_DIALOG_ADD_PIG_SUCCESS);
 	}
 
 	/**
-	 * 添加测试鸟和猪圈
+	 * 添加猪圈
 	 */
-	private void addHogpen() {
+	private void addHogpen(SellerHogpenInfo sellerHogpenInfo) {
 		birdIndicator.addIndicator();
-		hogpenVp.addHogpen(new SellerHogpenInfo());
+		hogpenVp.addHogpen(sellerHogpenInfo);
 		// 选中新添加的猪圈
 		hogpenVp.setCurrentIndex(birdIndicator.getIndicatorNumber() - 1);
 		// TODO:为何ViewPager的第一项刚添加的时候无法响应页面切换事件??

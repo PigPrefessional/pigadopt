@@ -12,6 +12,9 @@
 	<string name="day">日</string>
 	<string name="day1">天</string>
 	<string name="kilogram">公斤</string>
+	<string name="meter">米</string>
+	<string name="length">长</string>
+	<string name="width">宽</string>
 
     <string name="prompt_check_network">世界上最遥远的距离就是没网。检查设置</string>
 
@@ -67,4 +70,5 @@
 
 	<!--买家主页-->
 	<string name="activity_title_buyer_main" formatted="false">%s的猪</string>
+	<string name="hogpen_photo">猪圈照片</string>
 </resources>

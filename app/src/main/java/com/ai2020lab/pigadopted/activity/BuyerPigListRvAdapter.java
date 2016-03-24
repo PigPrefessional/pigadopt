@@ -177,8 +177,8 @@ public class BuyerPigListRvAdapter extends BuyerPigListAdapter<BuyerPigListRvAda
 	                            ImageView lineRightDownIv) {
 		// 第一条数据，隐藏左上和右上的绳子
 		if (position == 0) {
-			lineLeftUpIv.setVisibility(View.GONE);
-			lineRightUpIv.setVisibility(View.GONE);
+			lineLeftUpIv.setVisibility(View.VISIBLE);
+			lineRightUpIv.setVisibility(View.VISIBLE);
 			lineLeftDownIv.setVisibility(View.VISIBLE);
 			lineRightDownIv.setVisibility(View.VISIBLE);
 		}
