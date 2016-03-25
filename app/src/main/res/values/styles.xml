@@ -49,10 +49,9 @@
     <!--自定义警告对话框窗口样式-->
     <style name="BaseAlertDialog" parent="BaseDialog">
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@style/AnimBottom</item>
     </style>
-    <!--对话框窗口动画-->
-    <style name="DialogWindowAnimation.Scale" parent="@android:style/Animation.Dialog">
+    <!--对话框窗口动画,缩放方式-->
+    <style name="windowAnimScale">
         <!--窗口动画-->
         <item name="android:windowEnterAnimation">@anim/scale_alpha_in</item>
         <item name="android:windowExitAnimation">@anim/scale_alpha_out</item>

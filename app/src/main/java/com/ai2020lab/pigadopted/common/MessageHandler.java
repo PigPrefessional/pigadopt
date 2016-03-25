@@ -56,41 +56,5 @@ public class MessageHandler extends Handler {
 		}
 	}
 
-//	private void showAddPigDialog(SellerMainActivity activity){
-//		AddPigDialog addPigDialog = AddPigDialog.newInstance(true,
-//				new OnClickDialogBtnListener<PigInfo>() {
-//					@Override
-//					public void onClickEnsure(Dialog dialog, PigInfo pigInfo) {
-//						dialog.dismiss();
-//						//添加猪
-////						addPig();
-//					}
-//
-//					@Override
-//					public void onClickCancel(Dialog dialog) {
-//						dialog.dismiss();
-//					}
-//				});
-//		addPigDialog.show(activity.getSupportFragmentManager(), null);
-//	}
-//
-//	public void showProgressDialog() {
-//		if (mProgressDialog == null) {
-//			mProgressDialog = new ProgressDialog(mContext);
-//			mProgressDialog.setIndeterminate(true);
-//			// 不能点击对话框窗体外部来终止对话框
-//			mProgressDialog.setCanceledOnTouchOutside(false);
-//			mProgressDialog.setMessage("请稍候.....");
-//		}
-//		if (!mProgressDialog.isShowing()) {
-//			mProgressDialog.show();
-//		}
-//	}
-//
-//	public void dismissProgressDialog() {
-//		if (mProgressDialog != null && mProgressDialog.isShowing()) {
-//			mProgressDialog.dismiss();
-//		}
-//	}
 
 }

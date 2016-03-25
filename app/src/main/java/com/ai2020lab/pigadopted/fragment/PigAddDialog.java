@@ -35,8 +35,8 @@ import java.util.ArrayList;
  * Created by Justin Z on 2016/3/18.
  * 502953057@qq.com
  */
-public class AddPigDialog extends DialogFragment {
-	private final static String TAG = AddPigDialog.class.getSimpleName();
+public class PigAddDialog extends DialogFragment {
+	private final static String TAG = PigAddDialog.class.getSimpleName();
 
 	private OnClickDialogBtnListener<PigInfo> onClickDialogBtnListener;
 
@@ -60,11 +60,11 @@ public class AddPigDialog extends DialogFragment {
 	 *
 	 * @param loadAnim                 是否加载动画
 	 * @param onClickDialogBtnListener 点击按钮事件监听
-	 * @return AddPigDialog
+	 * @return PigAddDialog
 	 */
-	public static AddPigDialog newInstance(boolean loadAnim,
+	public static PigAddDialog newInstance(boolean loadAnim,
 	                                       OnClickDialogBtnListener<PigInfo> onClickDialogBtnListener) {
-		AddPigDialog addPigFragment = new AddPigDialog();
+		PigAddDialog addPigFragment = new PigAddDialog();
 		addPigFragment.onClickDialogBtnListener = onClickDialogBtnListener;
 		addPigFragment.loadAnim = loadAnim;
 		return addPigFragment;
@@ -102,7 +102,8 @@ public class AddPigDialog extends DialogFragment {
 		builder.setHeight(DisplayUtils.getScreenHeight(getActivity()));
 		builder.setGravity(Gravity.CENTER);
 		builder.setStyle(R.style.BaseAlertDialog);
-		builder.setAnimStyle(R.style.DialogWindowAnimation_Scale);
+		if (loadAnim)
+			builder.setAnimStyle(R.style.windowAnimScale);
 		BaseDialog dialog = builder.create();
 		dialog.setCanceledOnTouchOutside(true);
 		return dialog;
@@ -182,14 +183,14 @@ public class AddPigDialog extends DialogFragment {
 				getSelectPigInfo();
 
 				if (onClickDialogBtnListener != null)
-					onClickDialogBtnListener.onClickEnsure(AddPigDialog.this, getPigInfo());
+					onClickDialogBtnListener.onClickEnsure(PigAddDialog.this, getPigInfo());
 			}
 		});
 		cancelBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (onClickDialogBtnListener != null)
-					onClickDialogBtnListener.onClickCancel(AddPigDialog.this);
+					onClickDialogBtnListener.onClickCancel(PigAddDialog.this);
 
 			}
 		});

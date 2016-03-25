@@ -9,8 +9,8 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +20,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ai2020lab.aiutils.common.LogUtils;
+import com.ai2020lab.aiutils.common.ToastUtils;
 import com.ai2020lab.aiutils.common.ViewUtils;
 import com.ai2020lab.aiutils.system.DisplayUtils;
 import com.ai2020lab.aiviews.dialog.BaseDialog;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.model.hogpen.SellerHogpenInfo;
 import com.ai2020lab.pigadopted.view.pickerview.DimensionPickerView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -34,13 +36,13 @@ import java.util.ArrayList;
  * Created by Justin Z on 2016/3/24.
  * 502953057@qq.com
  */
-public class AddHogpenDialog extends DialogFragment {
-	private final static String TAG = AddHogpenDialog.class.getSimpleName();
+public class HogpenAddDialog extends DialogFragment {
+	private final static String TAG = HogpenAddDialog.class.getSimpleName();
+
+	private boolean loadAnim;
 
 	private OnClickDialogBtnListener<SellerHogpenInfo> onClickDialogBtnListener;
-
-	private boolean loadAnim = false;
-
+	private OnClickHogpenPhotoIvListener onClickHogpenPhotoIvListener;
 
 	private ImageView addHogpenTitleIv;
 	private TextView hogpenLengthTv;
@@ -51,42 +53,41 @@ public class AddHogpenDialog extends DialogFragment {
 	private ImageView hogpenPhotoIv;
 	private Button cancelBtn;
 	private Button ensureBtn;
+	/**
+	 * 返回的卖家猪圈对象数据
+	 */
+	private SellerHogpenInfo selectHogpenInfo;
 
 	/**
 	 * 创建对话框方法
 	 *
-	 * @param loadAnim                 是否加载动画
-	 * @param onClickDialogBtnListener 点击按钮事件监听
-	 * @return AddHogpenDialog
+	 * @param loadAnim                     是否加载窗口动画
+	 * @param onClickDialogBtnListener     点击对话框按钮事件监听
+	 * @param onClickHogpenPhotoIvListener 点击猪圈图片事件监听
+	 * @return HogpenAddDialog
 	 */
-	public static AddHogpenDialog newInstance(boolean loadAnim,
-                          OnClickDialogBtnListener<SellerHogpenInfo> onClickDialogBtnListener) {
-		AddHogpenDialog addHogpenFragment = new AddHogpenDialog();
-		addHogpenFragment.onClickDialogBtnListener = onClickDialogBtnListener;
-		addHogpenFragment.loadAnim = loadAnim;
+	public static HogpenAddDialog newInstance(boolean loadAnim,
+	                                          OnClickDialogBtnListener<SellerHogpenInfo> onClickDialogBtnListener,
+	                                          OnClickHogpenPhotoIvListener onClickHogpenPhotoIvListener) {
 		LogUtils.i(TAG, "创建对话框");
+		HogpenAddDialog addHogpenFragment = new HogpenAddDialog();
+		addHogpenFragment.loadAnim = loadAnim;
+		addHogpenFragment.onClickDialogBtnListener = onClickDialogBtnListener;
+		addHogpenFragment.onClickHogpenPhotoIvListener = onClickHogpenPhotoIvListener;
+		// 初始化卖家猪圈对象
+		addHogpenFragment.selectHogpenInfo = new SellerHogpenInfo();
 		return addHogpenFragment;
 	}
 
-	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		LogUtils.i(TAG, "onCreateDialog");
-//		long startTime = System.currentTimeMillis();
 		View contentView = ViewUtils.makeView(getActivity(), R.layout.dialog_add_hogpen);
 		BaseDialog dialog = createDialog(contentView);
 		assignViews(contentView);
 		setTextFonts();
 		setDialogBtnClickListener(dialog);
-//		long endTime = System.currentTimeMillis();
-//		LogUtils.i(TAG, "消耗时间：" + (endTime - startTime) / 1000 + "秒");
-
-//		if (loadAnim) {
-//			setVisible();
-//			loadAnimation();
-//		} else {
-//			setVisible();
-//		}
+		setPhotoIvClickListener();
 		return dialog;
 	}
 
@@ -99,7 +100,8 @@ public class AddHogpenDialog extends DialogFragment {
 		builder.setHeight(DisplayUtils.getScreenHeight(getActivity()));
 		builder.setGravity(Gravity.CENTER);
 		builder.setStyle(R.style.BaseAlertDialog);
-		builder.setAnimStyle(R.style.DialogWindowAnimation_Scale);
+		if (loadAnim)
+			builder.setAnimStyle(R.style.windowAnimScale);
 		BaseDialog dialog = builder.create();
 		dialog.setCanceledOnTouchOutside(true);
 		return dialog;
@@ -126,18 +128,48 @@ public class AddHogpenDialog extends DialogFragment {
 		ensureBtn.getPaint().setFakeBoldText(true);
 	}
 
-
-	private SellerHogpenInfo getSelectHogpenInfo() {
-		SellerHogpenInfo hogpenInfo = new SellerHogpenInfo();
+	/**
+	 * 将选择的长宽返回
+	 */
+	private boolean setHogpenInfo() {
 		// 宽度
-		hogpenInfo.hogpenWidth = hogpenLengthPv.getSelectDimension();
+		selectHogpenInfo.hogpenWidth = hogpenLengthPv.getSelectDimension();
 		// 高度
-		hogpenInfo.hogpenLength = hogpenWidthPv.getSelectDimension();
-		hogpenInfo.pigInfos = new ArrayList<>();
-		LogUtils.i(TAG, "猪圈宽度:" + hogpenInfo.hogpenWidth);
-		LogUtils.i(TAG, "猪圈长度:" + hogpenInfo.hogpenLength);
-//		LogUtils.i(TAG, "入栏时间:" + pigInfo.attendedDate);
-		return hogpenInfo;
+		selectHogpenInfo.hogpenLength = hogpenWidthPv.getSelectDimension();
+		selectHogpenInfo.pigInfos = new ArrayList<>();
+		LogUtils.i(TAG, "猪圈宽度:" + selectHogpenInfo.hogpenWidth);
+		LogUtils.i(TAG, "猪圈长度:" + selectHogpenInfo.hogpenLength);
+		if(TextUtils.isEmpty(selectHogpenInfo.hogpenPhoto)){
+			ToastUtils.getInstance().showToast(getActivity(), R.string.prompt_select_hogpen_photo);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * 绑定照片点击选择监听
+	 */
+	private void setPhotoIvClickListener() {
+		hogpenPhotoIv.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (onClickHogpenPhotoIvListener != null)
+					onClickHogpenPhotoIvListener.onClickPhotoIv();
+			}
+		});
+	}
+
+	/**
+	 * 设置图片显示
+	 *
+	 * @param path 照片路径
+	 */
+	public void setHogpenPhotoPath(String path) {
+		LogUtils.i(TAG, "设置猪圈图片");
+		selectHogpenInfo.hogpenPhoto = path;
+		hogpenPhotoIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//		hogpenPhotoIv.setImageBitmap(ImageUtils.getBitmapFromSDCard(path, 4));
+		ImageLoader.getInstance().displayImage("file://" + path, hogpenPhotoIv);
 	}
 
 	/**
@@ -147,20 +179,23 @@ public class AddHogpenDialog extends DialogFragment {
 		ensureBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				getSelectHogpenInfo();
-				if (onClickDialogBtnListener != null)
-					onClickDialogBtnListener.onClickEnsure(AddHogpenDialog.this, getSelectHogpenInfo());
+				// 验证返回的卖家猪圈数据并返回
+				if (onClickDialogBtnListener != null && setHogpenInfo())
+					onClickDialogBtnListener.onClickEnsure(HogpenAddDialog.this, selectHogpenInfo);
 			}
 		});
 		cancelBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				AddHogpenDialog.this.dismiss();
 				if (onClickDialogBtnListener != null)
-					onClickDialogBtnListener.onClickCancel(AddHogpenDialog.this);
+					onClickDialogBtnListener.onClickCancel(HogpenAddDialog.this);
 
 			}
 		});
+	}
+
+	public interface OnClickHogpenPhotoIvListener {
+		void onClickPhotoIv();
 	}
 
 
@@ -176,6 +211,7 @@ public class AddHogpenDialog extends DialogFragment {
 		LogUtils.i(TAG, "onCreate");
 	}
 
+	// 测试生命周期
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

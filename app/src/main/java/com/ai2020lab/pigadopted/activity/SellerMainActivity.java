@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -14,15 +15,19 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ai2020lab.aimedia.SysCameraManager;
 import com.ai2020lab.aiutils.common.LogUtils;
+import com.ai2020lab.aiutils.common.ToastUtils;
+import com.ai2020lab.aiutils.image.ImageUtils;
 import com.ai2020lab.aiutils.system.DisplayUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
 import com.ai2020lab.pigadopted.common.IntentExtra;
-import com.ai2020lab.pigadopted.fragment.AddHogpenDialog;
-import com.ai2020lab.pigadopted.fragment.AddPigDialog;
-import com.ai2020lab.pigadopted.fragment.AddPigSuccessDialog;
+import com.ai2020lab.pigadopted.fragment.HogpenAddDialog;
 import com.ai2020lab.pigadopted.fragment.OnClickDialogBtnListener;
+import com.ai2020lab.pigadopted.fragment.PhotoSourceSelectDialog;
+import com.ai2020lab.pigadopted.fragment.PigAddDialog;
+import com.ai2020lab.pigadopted.fragment.PigAddSuccessDialog;
 import com.ai2020lab.pigadopted.model.hogpen.SellerHogpenInfo;
 import com.ai2020lab.pigadopted.model.order.OrderInfoForSeller;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
@@ -48,6 +53,31 @@ public class SellerMainActivity extends AIBaseActivity {
 	 */
 	private final static String TAG = SellerMainActivity.class.getSimpleName();
 	/**
+	 * 打开系统相册选取图片requestCode
+	 */
+	public static int RESULT_PICK_IMAGE = 0x0001;
+	/**
+	 * 打开系统相机拍照并返回图片的requestCode
+	 */
+	public static int RESULT_TAKE_PICTURE = 0x0003;
+	/**
+	 * 添加猪圈对话框TAG
+	 */
+	private final static String TAG_DIALOG_ADD_HOGPEN = "tag_dialog_add_hogpen";
+	/**
+	 * 添加猪对话框TAG
+	 */
+	private final static String TAG_DIALOG_ADD_PIG = "tag_dialog_add_pig";
+	/**
+	 * 添加猪成功提示对话框TAG
+	 */
+	private final static String TAG_DIALOG_ADD_PIG_SUCCESS = "tag_dialog_add_pig_success";
+	/**
+	 * 选取照片来源对话框TAG
+	 */
+	private final static String TAG_DIALOG_SELECT_PHOTO_SOURCE = "tag_dialog_select_photo_source";
+
+	/**
 	 * 猪圈屋顶鸟页卡指示器
 	 */
 	private BirdIndicator birdIndicator;
@@ -63,11 +93,13 @@ public class SellerMainActivity extends AIBaseActivity {
 	 * 添加猪按钮
 	 */
 	private ImageView addPigIv;
-
 	/**
 	 * 卖家猪圈列表数据
 	 */
 	private List<SellerHogpenInfo> sellerHogpenInfos;
+	/**
+	 * 卖家用户数据
+	 */
 	private UserInfo userInfo;
 
 
@@ -181,10 +213,9 @@ public class SellerMainActivity extends AIBaseActivity {
 	 */
 	//猪圈切换的时候监听猪圈中的猪是否达到上限，达到上限则隐藏添加猪按钮,否则显示添加猪按钮
 	private void setAddPigBtnVisibility(boolean isShow) {
-		Animation animIn = AnimationUtils.loadAnimation(this, R.anim.push_bottom_in);
-		Animation animOut = AnimationUtils.loadAnimation(this, R.anim.push_bottom_out);
+		Animation animIn = AnimationUtils.loadAnimation(this, R.anim.scale_bottom_in);
+		Animation animOut = AnimationUtils.loadAnimation(this, R.anim.slide_bottom_out);
 		animIn.setInterpolator(new BounceInterpolator());
-//		animOut.setInterpolator(new BounceInterpolator());
 		if (isShow && addPigIv.getVisibility() == View.GONE) {
 			addPigIv.setVisibility(View.VISIBLE);
 			addPigIv.startAnimation(animIn);
@@ -198,7 +229,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	 * 动画显示卖家用户名
 	 */
 	private void loadSellerInfoAnim() {
-		Animation animIn = AnimationUtils.loadAnimation(this, R.anim.push_bottom_in);
+		Animation animIn = AnimationUtils.loadAnimation(this, R.anim.scale_bottom_in);
 		animIn.setInterpolator(new BounceInterpolator());
 		// 中文字体加粗,xml中设置无效
 		sellerInfoTv.getPaint().setFakeBoldText(true);
@@ -207,28 +238,72 @@ public class SellerMainActivity extends AIBaseActivity {
 		sellerInfoTv.startAnimation(animIn);
 	}
 
-	private final static String TAG_DIALOG_ADD_HOGPEN = "tag_dialog_add_hogpen";
-	private final static String TAG_DIALOG_ADD_PIG = "tag_dialog_add_pig";
-	private final static String TAG_DIALOG_ADD_PIG_SUCCESS = "tag_dialog_add_pig_success";
-	private FragmentTransaction ft;
 
-	private AddHogpenDialog hogpenDialog;
-	private AddPigDialog pigDialog;
-	private AddPigSuccessDialog addPigSuccessDialog;
+	private HogpenAddDialog hogpenDialog;
+	private PhotoSourceSelectDialog photoSourceSelectDialog;
+
+	/**
+	 * 弹出照片来源选择对话框
+	 */
+	private void showPhotoSourceSelectDialog() {
+		photoSourceSelectDialog = PhotoSourceSelectDialog.newInstance(true,
+				onClickPhotoSelectListener);
+		Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DIALOG_SELECT_PHOTO_SOURCE);
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		if (fragment != null)
+			ft.remove(fragment);
+		ft.addToBackStack(null);// 加入回退栈
+		photoSourceSelectDialog.show(ft, TAG_DIALOG_SELECT_PHOTO_SOURCE);
+	}
+
+	/**
+	 * 照片来源选择对话框,选择相册，选择照相事件监听
+	 */
+	private PhotoSourceSelectDialog.OnClickPhotoSelectListener onClickPhotoSelectListener =
+			new PhotoSourceSelectDialog.OnClickPhotoSelectListener() {
+				@Override
+				public void onSelectAlbum(DialogFragment df) {
+					LogUtils.i(TAG, "打开系统相册");
+					df.dismiss();
+					ImageUtils.pickImageFromAlbum(getActivity(), RESULT_PICK_IMAGE);
+				}
+
+				@Override
+				public void onSelectCamera(DialogFragment df) {
+					LogUtils.i(TAG, "打开系统相机拍照");
+					df.dismiss();
+					SysCameraManager.getInstance().openCamera(getActivity(), RESULT_TAKE_PICTURE);
+				}
+			};
 
 	/**
 	 * 弹出添加猪圈对话框
 	 */
 	private void showAddHogpenDialog() {
-		hogpenDialog = AddHogpenDialog.newInstance(true, onClickHogpenDialogListener);
+		hogpenDialog = HogpenAddDialog.newInstance(true, onClickHogpenDialogListener,
+				onClickHogpenPhotoIvListener);
 		Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DIALOG_ADD_HOGPEN);
-		ft = getFragmentManager().beginTransaction();
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		if (fragment != null)
 			ft.remove(fragment);
 		ft.addToBackStack(null);// 加入回退栈
 		hogpenDialog.show(ft, TAG_DIALOG_ADD_HOGPEN);
 	}
 
+	/**
+	 * 添加猪圈对话框猪圈照片点击监听
+	 */
+	private HogpenAddDialog.OnClickHogpenPhotoIvListener onClickHogpenPhotoIvListener =
+			new HogpenAddDialog.OnClickHogpenPhotoIvListener() {
+				@Override
+				public void onClickPhotoIv() {
+					// 弹出照片来源选择，不关闭添加猪圈对话框
+					showPhotoSourceSelectDialog();
+				}
+			};
+	/**
+	 * 添加猪圈对话框确定，取消按钮事件监听
+	 */
 	private OnClickDialogBtnListener<SellerHogpenInfo> onClickHogpenDialogListener =
 			new OnClickDialogBtnListener<SellerHogpenInfo>() {
 				@Override
@@ -248,9 +323,9 @@ public class SellerMainActivity extends AIBaseActivity {
 	 * 弹出添加猪对话框
 	 */
 	private void showAddPigDialog() {
-		pigDialog = AddPigDialog.newInstance(true, onClickDialogBtnListener);
+		PigAddDialog pigDialog = PigAddDialog.newInstance(true, onClickDialogBtnListener);
 		Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DIALOG_ADD_PIG);
-		ft = getFragmentManager().beginTransaction();
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		if (fragment != null)
 			ft.remove(fragment);
 		ft.addToBackStack(null);
@@ -277,7 +352,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	 * 弹出添加猪成功提示对话框
 	 */
 	private void showAddPigSuccessDialog() {
-		addPigSuccessDialog = AddPigSuccessDialog.newInstance(true,
+		PigAddSuccessDialog addPigSuccessDialog = PigAddSuccessDialog.newInstance(true,
 				new OnClickDialogBtnListener<Void>() {
 					@Override
 					public void onClickEnsure(DialogFragment df, Void aVoid) {
@@ -293,11 +368,51 @@ public class SellerMainActivity extends AIBaseActivity {
 					}
 				});
 		Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DIALOG_ADD_PIG_SUCCESS);
-		ft = getFragmentManager().beginTransaction();
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		if (fragment != null)
 			ft.remove(fragment);
 		ft.addToBackStack(null);
 		addPigSuccessDialog.show(ft, TAG_DIALOG_ADD_PIG_SUCCESS);
+	}
+
+	/**
+	 * 处理相册选图和系统相机拍照返回图片逻辑
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		if (resultCode == RESULT_OK) {
+			// 处理相册返回照片
+			if (requestCode == RESULT_PICK_IMAGE && intent != null) {
+				String photoPath = ImageUtils.getPickedImagePath(this, intent.getData());
+				if (TextUtils.isEmpty(photoPath)) {
+					ToastUtils.getInstance().showToast(getActivity(),
+							R.string.prompt_select_hogpen_photo_again);
+					return;
+				}
+				// 设置猪圈照片
+				hogpenDialog.setHogpenPhotoPath(photoPath);
+			}
+			// 处理拍照返回
+			else if (requestCode == RESULT_TAKE_PICTURE) {
+				hogpenDialog.setHogpenPhotoPath(SysCameraManager.getInstance().getPhotoPath());
+//				SysCameraManager.getInstance().savePhoto();
+//				SysCameraManager.getInstance().setOnPhotoSavedListener(
+//						new SysCameraManager.OnPhotoSavedListener() {
+//							@Override
+//							public void onPhotoSaved(String photoPath) {
+//								LogUtils.i(TAG, "拍照照片路径->" + photoPath);
+//								if (TextUtils.isEmpty(photoPath)) {
+//									ToastUtils.getInstance().showToast(getActivity(),
+//											R.string.prompt_take_hogpen_photo_again);
+//									return;
+//								}
+//
+//							}
+//						});
+			}
+		}
+
 	}
 
 	/**

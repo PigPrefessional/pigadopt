@@ -29,9 +29,9 @@ import com.ai2020lab.pigadopted.R;
  * Created by Justin Z on 2016/3/17.
  * 502953057@qq.com
  */
-public class AddPigSuccessDialog extends DialogFragment {
+public class PigAddSuccessDialog extends DialogFragment {
 
-	private final static String TAG = AddPigSuccessDialog.class.getSimpleName();
+	private final static String TAG = PigAddSuccessDialog.class.getSimpleName();
 
 	private ImageView dialogTitleTopIv;
 	private ImageView dialogTitleIv;
@@ -45,9 +45,9 @@ public class AddPigSuccessDialog extends DialogFragment {
 	private OnClickDialogBtnListener<Void> onClickDialogBtnListener;
 
 
-	public static AddPigSuccessDialog newInstance(boolean loadAnim,
+	public static PigAddSuccessDialog newInstance(boolean loadAnim,
 	                                              OnClickDialogBtnListener<Void> onClickDialogBtnListener) {
-		AddPigSuccessDialog addPigFragment = new AddPigSuccessDialog();
+		PigAddSuccessDialog addPigFragment = new PigAddSuccessDialog();
 		addPigFragment.onClickDialogBtnListener = onClickDialogBtnListener;
 		addPigFragment.loadAnim = loadAnim;
 		return addPigFragment;
@@ -63,7 +63,8 @@ public class AddPigSuccessDialog extends DialogFragment {
 		builder.setHeight(DisplayUtils.getScreenHeight(getActivity()));
 		builder.setGravity(Gravity.CENTER);
 		builder.setStyle(R.style.BaseAlertDialog);
-		builder.setAnimStyle(R.style.DialogWindowAnimation_Scale);
+		if (loadAnim)
+			builder.setAnimStyle(R.style.windowAnimScale);
 		BaseDialog dialog = builder.create();
 		dialog.setCanceledOnTouchOutside(true);
 		setDialogContent(dialog, contentView);
@@ -97,20 +98,18 @@ public class AddPigSuccessDialog extends DialogFragment {
 		dialogContentTv.setText(getString(R.string.record_pig_growth_info));
 		dialogEnsureIv.setImageDrawable(ResourcesUtils.getDrawable(R.drawable.take_pic_btn_selector));
 		dialogCancelIv.setImageDrawable(ResourcesUtils.getDrawable(R.drawable.refuse_btn_selector));
-
-
 		dialogEnsureIv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (onClickDialogBtnListener != null)
-					onClickDialogBtnListener.onClickEnsure(AddPigSuccessDialog.this, null);
+					onClickDialogBtnListener.onClickEnsure(PigAddSuccessDialog.this, null);
 			}
 		});
 		dialogCancelIv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (onClickDialogBtnListener != null)
-					onClickDialogBtnListener.onClickCancel(AddPigSuccessDialog.this);
+					onClickDialogBtnListener.onClickCancel(PigAddSuccessDialog.this);
 
 			}
 		});

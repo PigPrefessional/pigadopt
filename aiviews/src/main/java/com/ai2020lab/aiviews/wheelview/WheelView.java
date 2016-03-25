@@ -17,7 +17,6 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiviews.R;
 import com.bigkoo.pickerview.adapter.WheelAdapter;
 import com.bigkoo.pickerview.listener.OnItemSelectedListener;
@@ -463,7 +462,7 @@ public class WheelView extends View {
 			if (m != null)
 				contentText = m.invoke(item, new Object[0]).toString();
 		} catch (Exception e) {
-			LogUtils.e(TAG, "getContentText Exception", e);
+//			LogUtils.e(TAG, "getContentText Exception", e);
 		}
 		return contentText;
 	}

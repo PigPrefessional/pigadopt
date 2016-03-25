@@ -274,7 +274,7 @@ public class PigDetailForSellerFragment extends Fragment {
                 animationId = R.anim.push_right_in;
                 break;
             case 3:
-                animationId = R.anim.push_bottom_in;
+                animationId = R.anim.slide_bottom_in;
                 break;
             default:
                 animationId = R.anim.push_left_in;

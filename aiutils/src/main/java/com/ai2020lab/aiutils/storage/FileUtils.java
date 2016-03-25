@@ -63,6 +63,38 @@ public class FileUtils {
 	}
 
 	/**
+	 * 在指定路径创建一个空文件
+	 * <p>
+	 * 文件所在的目录如果不存在会自动创建
+	 *
+	 * @param path 文件路径
+	 * @return 成功创建则返回true,创建失败则返回false
+	 */
+	public static boolean createNewFile(String path) {
+		if (TextUtils.isEmpty(path)) {
+			LogUtils.i(TAG, "文件路径不能为空");
+			return false;
+		}
+		if (path.endsWith(File.separator)) {
+			LogUtils.i(TAG, "创建文件目标不能是目录！");
+			return false;
+		}
+		File file = new File(path);
+		File filePath = file.getParentFile();
+		// 文件的父目录不存在就创建一个
+		if (!filePath.exists()) {
+			LogUtils.i(TAG, "目标文件的目录不存在，准备创建");
+			makeDir(filePath.getPath());
+		}
+		try {
+			return file.createNewFile();
+		} catch (IOException e) {
+			LogUtils.e(TAG, "创建文件异常", e);
+		}
+		return false;
+	}
+
+	/**
 	 * 根据路径检查文件是否存在
 	 *
 	 * @param path 文件路径

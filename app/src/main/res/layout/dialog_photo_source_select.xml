@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--照片来源选择对话框布局-->
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@color/dialog_content_bg"
+	android:gravity="center"
+	android:orientation="vertical">
+
+	<TextView
+		android:id="@+id/from_album_tv"
+		style="@style/TextNormal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/photo_source_btn_selector"
+		android:gravity="center"
+		android:paddingBottom="16dp"
+		android:paddingTop="16dp"
+		android:text="@string/photo_source_album"
+		android:textColor="@drawable/photo_source_btn_text_selector"/>
+
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:src="@color/colorPrimary"
+		tools:ignore="contentDescription"/>
+	<TextView
+		android:id="@+id/from_camera_tv"
+		style="@style/TextNormal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/photo_source_btn_selector"
+		android:gravity="center"
+		android:paddingBottom="16dp"
+		android:paddingTop="16dp"
+		android:text="@string/photo_source_camera"
+		android:textColor="@drawable/photo_source_btn_text_selector"/>
+
+</LinearLayout>

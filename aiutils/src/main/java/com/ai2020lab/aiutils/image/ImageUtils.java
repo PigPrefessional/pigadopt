@@ -16,12 +16,17 @@
 
 package com.ai2020lab.aiutils.image;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Base64;
 
 import com.ai2020lab.aiutils.common.LogUtils;
@@ -221,8 +226,7 @@ public class ImageUtils {
 	 */
 	public static Bitmap base64ToBitmap(String base64) {
 		byte[] bytes = Base64.decode(base64, Base64.NO_WRAP);
-		Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-		return bitmap;
+		return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 	}
 
 	/**
@@ -247,7 +251,7 @@ public class ImageUtils {
 			out = new ByteArrayOutputStream();
 			if (imgType == ImageType.JPG || imgType == ImageType.JPEG) {
 				bitmap.compress(Bitmap.CompressFormat.JPEG, quality, out);
-			} else if (imgType == ImageType.PNG) {
+			} else {
 				bitmap.compress(Bitmap.CompressFormat.PNG, quality, out);
 			}
 			out.flush();
@@ -318,6 +322,25 @@ public class ImageUtils {
 			return null;
 		}
 		Bitmap b = BitmapFactory.decodeStream(fis, null, getDefaultOptions(1));
+		// 使用完毕要关闭输入流对象
+		FileUtils.closeInputStream(fis);
+		return b;
+	}
+
+	/**
+	 * 根据SD卡上的路径获取图片的Bitmap对象
+	 *
+	 * @param path           图片文件在SD卡上的路径
+	 * @param compressedRate 压缩比例，大于等于1的整数，2为压缩到1/2,4为压缩到1/4
+	 * @return 返回SD卡上图片的Bitmap对象，失败则返回null
+	 */
+	public static Bitmap getBitmapFromSDCard(String path, int compressedRate) {
+		FileInputStream fis = FileUtils.getInputStreamFromSDCard(path);
+		if (fis == null) {
+			LogUtils.i(TAG, "getBitmapFromSDCard:文件输入流对象为空，不能获取Bitmap对象");
+			return null;
+		}
+		Bitmap b = BitmapFactory.decodeStream(fis, null, getDefaultOptions(compressedRate));
 		// 使用完毕要关闭输入流对象
 		FileUtils.closeInputStream(fis);
 		return b;
@@ -497,6 +520,45 @@ public class ImageUtils {
 		// be used in the future
 		opt.inTempStorage = new byte[32 * 1024];
 		return opt;
+	}
+
+	/**
+	 * 打开系统相册选择照片<p>
+	 * 返回的照片在onActivityResult方法中处理，请求码必须同传入的requestCode相等
+	 * @param activity Activity
+	 * @param requestCode 请求码
+	 */
+	public static void pickImageFromAlbum(Activity activity, int requestCode){
+		Intent intent = new Intent(Intent.ACTION_PICK,
+				MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		activity.startActivityForResult(intent, requestCode);
+	}
+
+	/**
+	 * 处理系统相册选取结果<p>
+	 * 这个方法必须放在onActivityResult中调用
+	 * @param context Context
+	 * @param imageUri
+	 * @return 返回选择的照片的文件路径，失败返回null
+	 */
+	public static String getPickedImagePath(Context context, Uri imageUri){
+		String picPath = null;
+		if ("file".equals(imageUri.getScheme())) {
+			String p = imageUri.toString();
+			picPath = p.substring(p.indexOf("file://") + "file://".length());
+		} else if ("content".equals(imageUri.getScheme())) {
+			String[] filePathColumn = {
+					MediaStore.Images.Media.DATA
+			};
+			Cursor cursor = context.getContentResolver().query(imageUri, filePathColumn, null,
+					null, null);
+			assert cursor != null;
+			cursor.moveToFirst();
+			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			picPath = cursor.getString(columnIndex);
+			cursor.close();
+		}
+		return picPath;
 	}
 
 	/**

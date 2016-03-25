@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--照片来源选择按钮背景shapeDrawable-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+	<solid android:color="@color/photo_source_btn_bg_normal" />
+</shape>
