@@ -143,6 +143,7 @@
                             android:text="38℃"/>
 
                         <Button
+                            android:id="@+id/temperture_chart"
                             style="@style/ChartsButton" />
                     </LinearLayout>
 
@@ -167,6 +168,7 @@
                             style="@style/LabelContent"
                             android:text="1333步"/>
                         <Button
+                            android:id="@+id/steps_chart"
                             style="@style/ChartsButton" />
                     </LinearLayout>
                 </LinearLayout>

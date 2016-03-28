@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ai2020lab.pigadopted.R;
 
@@ -41,23 +43,29 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
     private  static final String WIDTH = "width";
     private  static final String HEIGHT = "height";
+    private  static final String TYPE = "type";
+
+    public static final int CHART_TYPE_STEPS = 1;
+    public static final int CHART_TYPE_TEMPERATURE = 2;
+    public static final int CHART_TYPE_WEIGHT = 3;
 
     private LineChart mChart;
+    private ImageView mChartIcon;
+    private TextView mChartTitle;
+
     private int mWidth = -1;
     private int mHeight = -1;
+    private int mType = CHART_TYPE_STEPS;
 
     private float mMaxYValue;
 
-    static StatisticsChartFragment newInstance() {
-        return newInstance(-1, -1);
-    }
-
-    static StatisticsChartFragment newInstance(int width, int height) {
+    static StatisticsChartFragment newInstance(int width, int height, int chartType) {
         StatisticsChartFragment f = new StatisticsChartFragment();
 
         Bundle args = new Bundle();
         args.putInt(WIDTH, width);
         args.putInt(HEIGHT, height);
+        args.putInt(TYPE, chartType);
 
         f.setArguments(args);
         return f;
@@ -70,6 +78,8 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
         mWidth = getArguments().getInt(WIDTH);
         mHeight = getArguments().getInt(HEIGHT);
+        mType = getArguments().getInt(TYPE);
+
     }
 
     @Override
@@ -79,6 +89,10 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         View rootView = inflater.inflate(R.layout.fragment_statistics_chart, container, false);
 
         mChart = (LineChart) rootView.findViewById(R.id.chart);
+        mChartIcon = (ImageView) rootView.findViewById(R.id.chart_type_icon);
+        mChartTitle = (TextView) rootView.findViewById(R.id.chart_type_title);
+
+        setChartIconAndTitle(mType);
 
         setChartProperties();
         setChartAxis();
@@ -115,6 +129,33 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         if (mWidth > 0 && mHeight > 0) {
             getDialog().getWindow().setLayout(mWidth, mHeight);
         }
+    }
+
+    private void setChartIconAndTitle(int chartType) {
+        int iconID;
+        int titleID;
+
+        switch (chartType) {
+            case CHART_TYPE_STEPS:
+                iconID = R.mipmap.pig_chart_icon_steps;
+                titleID = R.string.pig_chart_title_steps;
+                break;
+            case CHART_TYPE_TEMPERATURE:
+                iconID = R.mipmap.pig_chart_icon_temperature;
+                titleID = R.string.pig_chart_title_temperature;
+                break;
+            case CHART_TYPE_WEIGHT:
+                iconID = R.mipmap.pig_chart_icon_weight;
+                titleID = R.string.pig_chart_title_weight;
+                break;
+            default:
+                iconID = R.mipmap.pig_chart_icon_weight;
+                titleID = R.string.pig_chart_title_weight;
+                break;
+        }
+
+        mChartIcon.setImageResource(iconID);
+        mChartTitle.setText(titleID);
     }
 
     private void setChartProperties() {
