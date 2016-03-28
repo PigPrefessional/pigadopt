@@ -78,4 +78,7 @@
 	<!--买家主页-->
 	<string name="activity_title_buyer_main" formatted="false">%s的猪</string>
 	<string name="hogpen_photo">猪圈照片</string>
+
+	<!--成长历程-->
+	<string name="activity_title_growth_history">成长历程</string>
 </resources>

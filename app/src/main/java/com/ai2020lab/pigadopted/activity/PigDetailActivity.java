@@ -24,8 +24,8 @@ public class PigDetailActivity extends AIBaseActivity {
 
         supportToolbar(true);
         setToolbarTitle(getText(R.string.pig_detail_title).toString());
-        setToolbarLeft(R.drawable.pig_detail_back_selector);
-        setToolbarRight(R.drawable.pig_detail_grow_history_selector);
+        setToolbarLeft(R.drawable.toolbar_back_selector);
+        setToolbarRight(R.drawable.growth_history_camera_selector);
      /*   Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
