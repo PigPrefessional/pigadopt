@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.animation.BounceInterpolator;
 
 import com.ai2020lab.pigadopted.R;
+import com.ai2020lab.pigadopted.adapter.BuyerPigListRvAdapter;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
 import com.ai2020lab.pigadopted.common.IntentExtra;
 import com.ai2020lab.pigadopted.model.hogpen.HogpenInfo;

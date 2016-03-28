@@ -2,7 +2,7 @@
  * Copyright (c) 2016. Justin Z All rights Reserved
  */
 
-package com.ai2020lab.pigadopted.activity;
+package com.ai2020lab.pigadopted.adapter;
 
 import android.support.v7.widget.RecyclerView;
 

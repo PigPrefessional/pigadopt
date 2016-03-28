@@ -39,6 +39,18 @@
         <attr name="rv_ripplePadding" format="dimension" />
         <attr name="rv_zoom" format="boolean" />
         <attr name="rv_zoomScale" format="float" />
-
     </declare-styleable>
+
+	<attr name="borderRadius" format="dimension" />
+	<attr name="type" format="enum">
+		<enum name="circle" value="0" />
+		<enum name="round" value="1" />
+	</attr>
+
+	<!--圆角ImageView自定义属性-->
+	<declare-styleable name="RoundImageView">
+		<attr name="borderRadius" />
+		<attr name="type" />
+	</declare-styleable>
+
 </resources>

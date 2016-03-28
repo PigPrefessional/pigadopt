@@ -26,6 +26,10 @@
 	<string name="pig_photo_photo_album">相册</string>
 	<string name="pig_photo_not_take_pic">还没有拍照!</string>
 
+	<string name="year_month_day" formatted="false">%s年%s月%s日</string>
+	<string name="pig_photo_date" formatted="false">时间：%s</string>
+	<!--猪增加体重-->
+	<string name="pig_increase_weight" formatted="false">增长：%s斤</string>
 	<!--猪体重-->
 	<string name="pig_weight" formatted="false">体重：%s斤</string>
 	<!--猪体温-->
@@ -81,4 +85,5 @@
 
 	<!--成长历程-->
 	<string name="activity_title_growth_history">成长历程</string>
+	<string name="activity_distance_camera">拍照记录</string>
 </resources>

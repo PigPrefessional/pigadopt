@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -520,6 +521,26 @@ public class ImageUtils {
 		// be used in the future
 		opt.inTempStorage = new byte[32 * 1024];
 		return opt;
+	}
+
+	/**
+	 * drawable转bitmap
+	 *
+	 * @param drawable Drawable对象
+	 * @return 返回Bitmap对象
+	 */
+	public static Bitmap drawable2Bitmap(Drawable drawable) {
+		if (drawable instanceof BitmapDrawable) {
+			BitmapDrawable bd = (BitmapDrawable) drawable;
+			return bd.getBitmap();
+		}
+		int w = drawable.getIntrinsicWidth();
+		int h = drawable.getIntrinsicHeight();
+		Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		drawable.setBounds(0, 0, w, h);
+		drawable.draw(canvas);
+		return bitmap;
 	}
 
 	/**

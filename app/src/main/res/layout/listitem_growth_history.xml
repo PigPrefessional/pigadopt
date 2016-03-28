@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--成长历程列表item header布局-->
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:gravity="center_vertical"
+	android:orientation="horizontal">
+
+	<!--左边竖线布局-->
+	<LinearLayout
+		android:id="@+id/growth_history_line_ll"
+		android:layout_width="32dp"
+		android:layout_height="match_parent"
+		android:gravity="center_horizontal"
+		android:orientation="vertical">
+		<ImageView
+			android:layout_width="2dp"
+			android:layout_height="match_parent"
+			android:src="@color/growth_info_line"
+			tools:ignore="contentDescription"/>
+	</LinearLayout>
+
+	<!--卡片布局-->
+	<LinearLayout
+		android:id="@+id/growth_history_rl"
+		android:layout_width="match_parent"
+		android:layout_height="150dp"
+		android:layout_marginRight="10dp"
+		android:background="@mipmap/growth_history_bg"
+		android:gravity="center_vertical"
+		android:orientation="horizontal"
+		android:padding="15dp">
+
+		<ImageView
+			android:id="@+id/pig_photo_riv"
+			android:layout_width="130dp"
+			android:layout_height="100dp"
+			android:layout_marginRight="10dp"
+			android:scaleType="centerCrop"
+			android:src="@mipmap/pig_photo_default"
+			tools:ignore="contentDescription"/>
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+			<TextView
+				android:id="@+id/date_tv"
+				style="@style/TextNormal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="5dp"
+				tools:text="体重"/>
+			<TextView
+				android:id="@+id/weight_tv"
+				style="@style/TextNormal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="5dp"
+				tools:text="体重"/>
+			<TextView
+				android:id="@+id/weight_increase_tv"
+				style="@style/TextNormal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="5dp"
+				android:layout_marginTop="5dp"
+				tools:text="体重"/>
+		</LinearLayout>
+	</LinearLayout>
+
+</LinearLayout>

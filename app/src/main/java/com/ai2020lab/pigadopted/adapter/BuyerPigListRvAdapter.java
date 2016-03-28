@@ -2,7 +2,7 @@
  * Copyright (c) 2016. Justin Z All rights Reserved
  */
 
-package com.ai2020lab.pigadopted.activity;
+package com.ai2020lab.pigadopted.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -44,7 +44,6 @@ public class BuyerPigListRvAdapter extends BuyerPigListAdapter<BuyerPigListRvAda
 	private Drawable pigWalkingDrawable;
 	private Drawable pigSleepingDrawable;
 	private Drawable pigEatingDrawable;
-
 
 	/**
 	 * 构造方法

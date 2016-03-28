@@ -269,7 +269,7 @@ public class HogpenPigListView extends LinearLayout {
 	 * 猪体重
 	 */
 	private SpannableString getWeightStr(PigDetailInfoAndOrder pigInfo) {
-		String weight = "--";
+		String weight = context.getString(R.string.display_none);
 		if (pigInfo.growthInfo != null && pigInfo.growthInfo.pigWeight > 0) {
 			weight = pigInfo.growthInfo.pigWeight + "";
 		}
@@ -289,7 +289,7 @@ public class HogpenPigListView extends LinearLayout {
 	 * 猪体温
 	 */
 	private SpannableString getTemperatureStr(PigDetailInfoAndOrder pigInfo) {
-		String tem = "--";
+		String tem = context.getString(R.string.display_none);
 		if (pigInfo.healthInfo != null && pigInfo.healthInfo.temperature > 0) {
 			tem = pigInfo.healthInfo.temperature + "";
 		}

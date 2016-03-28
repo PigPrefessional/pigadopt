@@ -139,6 +139,23 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>-->
 		</activity>
+
+		<!--成长历程-->
+		<activity
+			android:name=".activity.GrowthHistoryActivity"
+			android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+		</activity>
+		<!--定距离拍照-->
+		<activity
+			android:name=".activity.DistanceCameraActivity"
+			android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+		</activity>
 	</application>
 
 </manifest>

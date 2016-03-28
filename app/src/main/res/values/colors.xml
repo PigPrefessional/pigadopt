@@ -11,5 +11,7 @@
 	<color name="photo_source_btn_bg_normal">#ffc100</color>
 	<!--照片来源选择按钮背景色，按下-->
 	<color name="photo_source_btn_bg_pressed">#8e5339</color>
+	<!--成长历程时间线颜色-->
+	<color name="growth_info_line">#ffffff</color>
 
 </resources>

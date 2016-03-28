@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--成长历程列表item header布局-->
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="horizontal"
+	tools:background="@mipmap/main_bg">
+
+	<!--左边竖线布局-->
+	<LinearLayout
+		android:id="@+id/growth_history_line_ll"
+		android:layout_width="32dp"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:orientation="vertical">
+		<ImageView
+			android:layout_width="2dp"
+			android:layout_height="0dp"
+			android:layout_weight="1"
+			android:src="@color/growth_info_line"
+			tools:ignore="contentDescription"/>
+
+		<ImageView
+			android:layout_width="12dp"
+			android:layout_height="12dp"
+			android:src="@mipmap/point1"
+			tools:ignore="contentDescription"/>
+
+		<ImageView
+			android:layout_width="2dp"
+			android:layout_height="0dp"
+			android:layout_weight="1"
+			android:src="@color/growth_info_line"
+			tools:ignore="contentDescription"/>
+	</LinearLayout>
+
+	<!--展示分组的时间-->
+	<TextView
+		android:id="@+id/growth_history_time_tv"
+		style="@style/TextNormal"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical"
+		android:layout_marginBottom="5dp"
+		android:layout_marginTop="5dp"
+		android:textColor="@android:color/white"
+		tools:text="2016-03-28"/>
+</LinearLayout>
