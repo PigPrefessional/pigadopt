@@ -50,6 +50,8 @@ public class PigDetailForSellerFragment extends Fragment {
     protected RecyclerView mRecyclerView;
     private ImageView mWholePig;
     private Button mWeightChartBtn;
+    private Button mStepsChartBtn;
+    private Button mTemperatureBtn;
     private TextView mBuyerNumber;
     private TextView mIncreaseWeight;
     private TextView mPigTypeName;
@@ -94,6 +96,8 @@ public class PigDetailForSellerFragment extends Fragment {
         mPigPartsContainer = (FrameLayout) rootView.findViewById(R.id.pig_parts_container);
         mWholePig = (ImageView) rootView.findViewById(R.id.whole_pig);
         mWeightChartBtn = (Button) rootView.findViewById(R.id.weight_chart);
+        mTemperatureBtn = (Button) rootView.findViewById(R.id.temperture_chart);
+        mStepsChartBtn = (Button) rootView.findViewById(R.id.steps_chart);
 
         mIncreaseWeight = (TextView) rootView.findViewById(R.id.pig_detail_increase_weight);
         mPigTypeName = (TextView) rootView.findViewById(R.id.pig_type_name);
@@ -288,6 +292,12 @@ public class PigDetailForSellerFragment extends Fragment {
     }
 
     private void setChartsButtonListener() {
+        mWeightChartBtn.setOnClickListener(createChartButtonListener(StatisticsChartFragment.CHART_TYPE_WEIGHT));
+        mTemperatureBtn.setOnClickListener(createChartButtonListener(StatisticsChartFragment.CHART_TYPE_TEMPERATURE));
+        mStepsChartBtn.setOnClickListener(createChartButtonListener(StatisticsChartFragment.CHART_TYPE_STEPS));
+    }
+
+    private View.OnClickListener createChartButtonListener(final int chartType) {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -311,16 +321,15 @@ public class PigDetailForSellerFragment extends Fragment {
                 int marginWidth = (int) (15 * scale + 0.5f);
                 int marginHeight = (int) (300 * scale + 0.5f);
 
-                DialogFragment newFragment = StatisticsChartFragment.newInstance(width - marginWidth, height - marginHeight);
+                DialogFragment newFragment = StatisticsChartFragment
+                        .newInstance(width - marginWidth, height - marginHeight, chartType);
 
 
                 newFragment.show(ft, "dialog");
-
             }
         };
 
-        mWeightChartBtn.setOnClickListener(listener);
-
+        return listener;
     }
 
     private class BuyerAdapter extends
