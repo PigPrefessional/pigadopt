@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.BounceInterpolator;
 
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.adapter.GrowthHistoryRvAdapter;
@@ -89,7 +89,7 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 //		LandingAnimator animator = new LandingAnimator();
 		SlideInDownAnimator animator = new SlideInDownAnimator();
 		animator.setAddDuration(500);
-		animator.setInterpolator(new AccelerateDecelerateInterpolator());
+		animator.setInterpolator(new BounceInterpolator());
 		growthHistoryRv.setItemAnimator(animator);
 	}
 
