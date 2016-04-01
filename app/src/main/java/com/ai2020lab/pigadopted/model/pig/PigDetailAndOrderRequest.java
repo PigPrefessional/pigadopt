@@ -17,6 +17,12 @@ public class PigDetailAndOrderRequest {
 	@SerializedName("pig_id")
 	public String pigID;
 	/**
+	 * 用户id
+	 */
+	@Expose
+	@SerializedName("user_id")
+	public String userID;
+	/**
 	 * 用户信息
 	 */
 	@Expose

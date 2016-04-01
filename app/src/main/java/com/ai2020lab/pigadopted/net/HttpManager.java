@@ -24,7 +24,7 @@ import cz.msebera.android.httpclient.protocol.HTTP;
 public class HttpManager {
 
 	public static final String RSA = "rsa";
-	private static final int TIME_OUT = 30 * 1000;
+	private static final int TIME_OUT = 5 * 1000;
 	private final static String TAG = HttpManager.class.getSimpleName();
 	public static String HTTP_HEADER_HTTP_QUERY = "HttpQuery";
 	public static String USER_ID = "100000001872";
@@ -57,11 +57,13 @@ public class HttpManager {
 	                                ResponseHandlerInterface response) {
 		LogUtils.i(TAG, "----POST发送JSON数据----");
 		HashMap<String, String> headerParams = new HashMap<>();
-		headerParams.put(HTTP_HEADER_HTTP_QUERY, getVerifyString(USER_ID));
+		String verifyString = getVerifyString(USER_ID);
+		headerParams.put(HTTP_HEADER_HTTP_QUERY, verifyString);
 		// 设置HTTP请求体
 		StringEntity entity = null;
 		try {
-			entity = new StringEntity(getRequestJson(requestObj), HTTP.UTF_8);
+			String json = getRequestJson(requestObj);
+			entity = new StringEntity(json, HTTP.UTF_8);
 		} catch (UnsupportedCharsetException e) {
 			LogUtils.e(TAG, "UnsupportedCharsetException", e);
 		}

@@ -6,6 +6,6 @@ package com.ai2020lab.pigadopted.model.base;
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
 public interface DataMode {
-	int NORMAL = 0;
-	int BASE64 = 1;
+	String NORMAL = "0";
+	String BASE64 = "1";
 }

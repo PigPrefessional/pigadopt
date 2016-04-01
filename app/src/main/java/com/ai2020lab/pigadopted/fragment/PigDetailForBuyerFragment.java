@@ -4,22 +4,26 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ai2020lab.pigadopted.R;
+import com.ai2020lab.pigadopted.biz.PigDetailManager;
 import com.ai2020lab.pigadopted.model.order.PigPart;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrderResponse;
+import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
 
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Rocky on 16/3/22.
  */
 public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
-
 
     @Override
     protected void setupOtherViews(View rootView) {

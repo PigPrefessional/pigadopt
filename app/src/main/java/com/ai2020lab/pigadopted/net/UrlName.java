@@ -14,7 +14,9 @@ public enum UrlName {
     PIG_CATEGORIES("queryPigCategories"),
     PIG_LAIRAGE("pigLairage"),
     PIG_PHOTO_UPLOAD("uploadPigPhoto"),
-    HOGPEN_DETAIL("findHogpenDetail");
+    HOGPEN_DETAIL("findHogpenDetail"),
+    PIG_INFO_CUSTOMER("findCustomerPigInfo"),
+    PIG_INFO_SELLER("findSellerPigInfo");
 
 
 
@@ -28,8 +30,8 @@ public enum UrlName {
         return "http://" + HOST + ":" + PORT + "/" + name;
     }
 
-    private static final String HOST = "10.5.1.198";
-    private static final int PORT = 8282;
+    private static final String HOST = "10.5.1.249";
+    private static final int PORT = 3002;
     private static final String PIG_ADOPTED = "pigadopted";
 
 }
