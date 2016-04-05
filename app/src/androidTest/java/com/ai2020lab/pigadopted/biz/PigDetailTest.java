@@ -37,8 +37,8 @@ public class PigDetailTest extends AndroidTestCase {
         final CountDownLatch lock = new CountDownLatch(1);
         mPigDetailManager.findSellerPigDetailInfo("1", new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(getContext()) {
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.i(TAG, responseString);
+            public void onHandleFailure(String errorMsg) {
+                Log.i(TAG, errorMsg);
                 lock.countDown();
             }
 
@@ -51,7 +51,7 @@ public class PigDetailTest extends AndroidTestCase {
         });
 
         try {
-            lock.await(2000, TimeUnit.MILLISECONDS);
+            lock.await(10000, TimeUnit.MILLISECONDS);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
