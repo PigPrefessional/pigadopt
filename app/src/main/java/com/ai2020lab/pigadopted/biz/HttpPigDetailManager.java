@@ -2,10 +2,8 @@ package com.ai2020lab.pigadopted.biz;
 
 import android.content.Context;
 
-import com.ai2020lab.aiutils.net.HttpUtils;
 import com.ai2020lab.pigadopted.model.pig.PigDetailAndOrderRequest;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrderResponse;
-import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.ai2020lab.pigadopted.net.HttpManager;
 import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
 import com.ai2020lab.pigadopted.net.UrlName;

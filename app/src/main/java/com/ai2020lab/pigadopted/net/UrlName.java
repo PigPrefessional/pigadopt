@@ -16,7 +16,11 @@ public enum UrlName {
     PIG_PHOTO_UPLOAD("uploadPigPhoto"),
     HOGPEN_DETAIL("findHogpenDetail"),
     PIG_INFO_CUSTOMER("findCustomerPigInfo"),
-    PIG_INFO_SELLER("findSellerPigInfo");
+    PIG_INFO_SELLER("findSellerPigInfo"),
+    PIG_WEIGHT_LIST("queryWeightList"),
+    PIG_TEMPERATURE_LIST("queryTemperatureList"),
+    PIG_STEP_LIST("queryStepList");
+
 
 
 

@@ -21,6 +21,7 @@ import com.ai2020lab.pigadopted.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.ai2020lab.pigadopted.model.statistic.WeightData;
 import com.github.mikephil.charting.animation.Easing;
@@ -263,13 +264,14 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
     @Override
     public void onChartSingleTapped(MotionEvent me) {
-        if (mChart.getAlpha() < 0.01) {
-            mChart.animate().alpha(1f)
-                    .setDuration(1000);
-        } else {
-            mChart.animate().alpha(0f)
-                    .setDuration(1000);
-        }
+        changeDataSet();
+//        if (mChart.getAlpha() < 0.01) {
+//            mChart.animate().alpha(1f)
+//                    .setDuration(1000);
+//        } else {
+//            mChart.animate().alpha(0f)
+//                    .setDuration(1000);
+//        }
     }
 
     @Override
@@ -279,8 +281,8 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
     @Override
     public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-        mChart.animate().alpha(0f)
-                .setDuration(5000);
+//        mChart.animate().alpha(0f)
+//                .setDuration(5000);
     }
 
     @Override
@@ -345,12 +347,14 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
     }
 
     private void setChartData() {
-        List<WeightData> list = loadWeightData();
+        List<WeightData> list = loadWeightDataForWeeks();
         LineData data = createChartData(list);
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setAxisMaxValue(mMaxYValue + 5);
         mChart.setData(data);
+
+        mChart.setVisibleXRangeMaximum(5);
     }
 
     private LineData createChartData(List<WeightData> dataList) {
@@ -427,6 +431,35 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         list.add(data);
 
         return list;
+    }
+
+    private List<WeightData> loadWeightDataForWeeks() {
+        List<WeightData> list = new ArrayList<>();
+        Random r = new Random();
+
+        for (int i = 1; i < 11; ++i) {
+            WeightData data = new WeightData();
+
+            data.date = "第" + i + "周";
+            data.weight = 10 * i + 10 * r.nextFloat();
+            list.add(data);
+        }
+
+        return list;
+    }
+
+    private void changeDataSet() {
+        List<WeightData> list = loadWeightData();
+        LineData data = createChartData(list);
+
+        YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setAxisMaxValue(mMaxYValue + 5);
+        mChart.setData(data);
+
+        mChart.invalidate();
+
+        mChart.setVisibleXRangeMaximum(10);
+        mChart.setVisibleXRangeMinimum(5);
     }
 
 }
