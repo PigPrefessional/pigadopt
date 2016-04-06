@@ -1,0 +1,51 @@
+{
+  "data": {
+    "order_info": {
+      "order_part_list": [
+        {
+          "part_name": "梅花肉",
+          "part_id": 1,
+          "user_info": {
+            "user_id": 1,
+            "user_name": "吴波",
+            "user_portrait": "http://7xsdbd.com1.z0.glb.clouddn.com/%E5%90%B4%E6%B3%A2.jpg"
+          }
+        },
+        {
+          "part_name": "大里脊",
+          "part_id": 2,
+          "user_info": {
+            "user_id": 2,
+            "user_name": "张思",
+            "user_portrait": "http://7xsdbd.com1.z0.glb.clouddn.com/%E5%BC%A0%E6%80%9D.jpg"
+          }
+        },
+        {
+          "part_name": "五花肉",
+          "part_id": 5,
+          "user_info": {
+            "user_id": 3,
+            "user_name": "保罗",
+            "user_portrait": "http://7xsdbd.com1.z0.glb.clouddn.com/%E4%BF%9D%E7%BD%97.jpeg"
+          }
+        }
+      ],
+      "buyer_number": 3
+    },
+    "growth_info": {
+      "pig_weight": 0.06,
+      "increased_weight": 0.06
+    },
+    "health_info": {
+      "temperature": 38.9,
+      "fat_rate": 25.6,
+      "steps": 508
+    }
+  },
+  "desc": {
+    "result_code": 200,
+    "result_msg": "success",
+    "data_mode": "",
+    "digest": ""
+  }
+}

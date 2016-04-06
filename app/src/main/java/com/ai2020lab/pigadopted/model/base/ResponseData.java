@@ -25,7 +25,7 @@ public class ResponseData<T> {
 		/**
 		 * 数据模式，0:普通模式(明文)。1:加密模式(base64)
 		 */
-		public String data_mode;
+		public String data_mode = DataMode.NORMAL;
 
 		/**
 		 * 报文摘要：MD5,(body字段的密文)

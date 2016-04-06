@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,10 @@ import android.widget.TextView;
 
 import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
+import com.ai2020lab.pigadopted.biz.HttpPigDetailManager;
+import com.ai2020lab.pigadopted.biz.HttpStatisticDataManager;
+import com.ai2020lab.pigadopted.biz.PigDetailManager;
+import com.ai2020lab.pigadopted.biz.StatisticsDataManager;
 import com.ai2020lab.pigadopted.model.order.OrderInfo;
 import com.ai2020lab.pigadopted.model.order.PigPart;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
@@ -31,7 +36,9 @@ import com.ai2020lab.pigadopted.model.pig.PigDetailInfo;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrderResponse;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
+import com.ai2020lab.pigadopted.model.statistic.WeightStaticResponse;
 import com.ai2020lab.pigadopted.model.user.UserInfo;
+import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -41,10 +48,14 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import cz.msebera.android.httpclient.Header;
+
 /**
  * Created by Rocky on 16/3/7.
  */
 public class PigDetailForSellerFragment extends Fragment {
+
+    private static final String TAG = "PigDetailForSeller";
 
     private FrameLayout mPigPartsContainer;
     protected RecyclerView mRecyclerView;
@@ -114,6 +125,9 @@ public class PigDetailForSellerFragment extends Fragment {
     }
 
     protected PigDetailInfoAndOrderResponse loadData() {
+
+
+
         PigDetailInfoAndOrderResponse response = new PigDetailInfoAndOrderResponse();
 
         PigDetailInfo detailInfo = new PigDetailInfo();
@@ -298,9 +312,50 @@ public class PigDetailForSellerFragment extends Fragment {
     }
 
     private View.OnClickListener createChartButtonListener(final int chartType) {
+
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (chartType == StatisticsChartFragment.CHART_TYPE_WEIGHT) {
+                    HttpStatisticDataManager statisticsDataManager = new HttpStatisticDataManager(getContext());
+
+                    statisticsDataManager.queryWeightList("1", StatisticsDataManager.DataType.DAY,
+                            null, null, new JsonHttpResponseHandler<WeightStaticResponse>(getContext()) {
+                                @Override
+                                public void onHandleSuccess(int statusCode, Header[] headers, WeightStaticResponse jsonObj) {
+
+                                    Log.i(TAG, jsonObj.toString());
+                                }
+
+                                @Override
+                                public void onHandleFailure(String errorMsg) {
+                                    Log.i(TAG, errorMsg);
+                                }
+
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                    Log.i(TAG, responseString);
+                                }
+
+                            });
+                } else if (chartType == StatisticsChartFragment.CHART_TYPE_STEPS) {
+                    PigDetailManager mPigDetailManager;
+
+                    mPigDetailManager = new HttpPigDetailManager(getContext());
+
+                    mPigDetailManager.findSellerPigDetailInfo("1", new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(getContext()) {
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.i(TAG, responseString);
+                        }
+
+                        @Override
+                        public void onHandleSuccess(int statusCode, Header[] headers, PigDetailInfoAndOrderResponse jsonObj) {
+                            Log.i(TAG, jsonObj.toString());
+                        }
+                    });
+                }
 
                 DisplayMetrics metric = new DisplayMetrics();
                 getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -326,6 +381,8 @@ public class PigDetailForSellerFragment extends Fragment {
 
 
                 newFragment.show(ft, "dialog");
+
+
             }
         };
 

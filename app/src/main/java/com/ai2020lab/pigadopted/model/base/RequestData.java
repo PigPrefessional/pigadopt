@@ -16,7 +16,7 @@ public class RequestData<T> {
 		/**
 		 * 数据模式，0:普通模式(明文)。1:加密模式(base64)
 		 */
-		public int data_mode = DataMode.NORMAL;
+		public String data_mode = DataMode.NORMAL;
 
 		/**
 		 * 报文摘要：MD5,(body字段的密文)
@@ -26,7 +26,7 @@ public class RequestData<T> {
 		public Description() {
 		}
 
-		public Description(int data_mode, String digest) {
+		public Description(String data_mode, String digest) {
 			this.data_mode = data_mode;
 			this.digest = digest;
 		}
