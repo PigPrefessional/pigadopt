@@ -19,10 +19,13 @@ import android.widget.TextView;
 
 import com.ai2020lab.pigadopted.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.ai2020lab.pigadopted.model.statistic.BodyTemperatureData;
+import com.ai2020lab.pigadopted.model.statistic.StepData;
 import com.ai2020lab.pigadopted.model.statistic.WeightData;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -42,13 +45,18 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
  */
 public class StatisticsChartFragment extends DialogFragment implements OnChartGestureListener  {
 
-    private  static final String WIDTH = "width";
-    private  static final String HEIGHT = "height";
-    private  static final String TYPE = "type";
+    private static final String WIDTH = "width";
+    private static final String HEIGHT = "height";
+    private static final String TYPE = "type";
+    private static final String DATA_SET = "dataSet";
 
     public static final int CHART_TYPE_STEPS = 1;
     public static final int CHART_TYPE_TEMPERATURE = 2;
     public static final int CHART_TYPE_WEIGHT = 3;
+
+    private List<WeightData> mWeightDataSet;
+    private List<StepData> mStepDataSet;
+    private List<BodyTemperatureData> mTemperatureDataSet;
 
     private LineChart mChart;
     private ImageView mChartIcon;
@@ -80,6 +88,22 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         mWidth = getArguments().getInt(WIDTH);
         mHeight = getArguments().getInt(HEIGHT);
         mType = getArguments().getInt(TYPE);
+
+        Serializable list = getArguments().getSerializable(DATA_SET);
+
+        switch (mType) {
+            case CHART_TYPE_STEPS:
+                mStepDataSet = (List<StepData>) list;
+                break;
+            case CHART_TYPE_WEIGHT:
+                mWeightDataSet = (List<WeightData>) list;
+                break;
+            case CHART_TYPE_TEMPERATURE:
+                mTemperatureDataSet = (List<BodyTemperatureData>) list;
+                break;
+            default:
+                break;
+        }
 
     }
 
