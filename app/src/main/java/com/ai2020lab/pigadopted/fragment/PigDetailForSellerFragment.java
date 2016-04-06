@@ -170,7 +170,7 @@ public class PigDetailForSellerFragment extends Fragment {
 
         for (int i = 0; i < 6; i++) {
             PigPart part = new PigPart();
-            part.partID = "" + (i + 1);
+            part.partID = i + 1;
             part.partName = "后腿肉";
 
             UserInfo userInfo = new UserInfo();
@@ -246,11 +246,11 @@ public class PigDetailForSellerFragment extends Fragment {
 
     }
 
-    protected int getPigPartImageResID(String partID) {
+    protected int getPigPartImageResID(int partID) {
         final int firstPartId = 1;
         final int firstPartImageId = R.mipmap.pig_part_01;
 
-        return firstPartImageId + (Integer.parseInt(partID) - firstPartId);
+        return firstPartImageId + (partID - firstPartId);
     }
 
     protected void loadBuyersData(List<PigPart> pigParts) {

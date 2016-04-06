@@ -3,19 +3,21 @@ package com.ai2020lab.pigadopted.model.pig;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * 猪品种实体类
  * Created by Justin on 2015/12/7.
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
-public class PigCategory {
+public class PigCategory implements Serializable {
 
 	/**
 	 * 猪品种名
 	 */
 	@Expose
 	@SerializedName("category_id")
-	public String categoryID;
+	public int categoryID;
 	/**
 	 * 猪品种名
 	 */
@@ -26,7 +28,7 @@ public class PigCategory {
 	 * 猪品种照片地址链接
 	 */
 	@Expose
-	@SerializedName("category_photo")
+	@SerializedName("category_img")
 	public String categoryPhoto;
 
 	//这个用来显示在PickerView上面的字符串,PickerView会通过反射获取getPickerViewText方法显示出来。

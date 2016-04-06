@@ -3,18 +3,28 @@ package com.ai2020lab.pigadopted.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
+import com.ai2020lab.pigadopted.common.IntentExtra;
+import com.ai2020lab.pigadopted.model.pig.PigInfo;
 
 public class PigDetailActivity extends AIBaseActivity {
+
+	private final static String TAG = PigDetailActivity.class.getSimpleName();
 
 	public static final String KEY_DETAIL_TYPE = "KeyDetailType";
 	public static final int TYPE_SELLER = 1;
 	public static final int TYPE_BUYER = 2;
 
+	private PigInfo pigInfo;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		pigInfo = (PigInfo) getIntent().getSerializableExtra(IntentExtra.PIG_INFO);
+		LogUtils.i(TAG, "入栏体重->" + pigInfo.attendedWeight);
 
 		int type = getIntent().getExtras().getInt(KEY_DETAIL_TYPE, TYPE_BUYER);
 		if (type == TYPE_SELLER) {

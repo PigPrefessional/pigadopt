@@ -4,6 +4,8 @@
 
 package com.ai2020lab.pigadopted.base;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +24,7 @@ import com.ai2020lab.aiutils.system.NetworkUtils;
 import com.ai2020lab.aiviews.popupview.PromptView;
 import com.ai2020lab.aiviews.toolbar.ToolbarActivity;
 import com.ai2020lab.pigadopted.R;
+import com.ai2020lab.pigadopted.fragment.LoadingDialog;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -33,7 +36,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class AIBaseActivity extends ToolbarActivity {
 
 	private final static String TAG = AIBaseActivity.class.getSimpleName();
-//	private MaterialDialog progressDialog;
+
+	/**
+	 * 加载对话框TAG
+	 */
+	private final static String TAG_DIALOG_LOADING = "tag_dialog_ai_loading";
+
+	private LoadingDialog loadingDialog;
 
 	private PromptView checkNetPromptView;
 
@@ -78,30 +87,29 @@ public class AIBaseActivity extends ToolbarActivity {
 	}
 
 	/**
-	 * 显示进度条对话框
+	 * 显示加载对话框
 	 *
-	 * @param content    内容
-	 * @param cancelable 是否可取消
+	 * @param content          加载提示
 	 */
-	public void showProgressDialog(String content, boolean cancelable) {
-//		if (progressDialog == null)
-//			progressDialog = new MaterialDialog.Builder(this)
-//					.cancelable(cancelable)
-//					.widgetColor(ResourcesUtils.getColor(R.color.dialog_progress_bg))
-//					.content(content)
-//					.progress(true, 0)
-//					.show();
+	public void showLoading(String content) {
+		loadingDialog = LoadingDialog.newInstance(content);
+		Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DIALOG_LOADING);
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		if (fragment != null)
+			ft.remove(fragment);
+		ft.addToBackStack(null);// 加入回退栈
+		loadingDialog.show(ft, TAG_DIALOG_LOADING);
 	}
 
 	/**
 	 * 关闭进度条对话框
 	 */
-	public void dismissProgressDialog() {
-////		LogUtils.i(TAG, "关闭进度条对话框");
-//		if (progressDialog != null) {
-//			progressDialog.dismiss();
-//			progressDialog = null;
-//		}
+	public void dismissLoading() {
+		LogUtils.i(TAG, "关闭进度条对话框");
+		if (loadingDialog != null) {
+			loadingDialog.dismiss();
+			loadingDialog = null;
+		}
 	}
 
 	/**

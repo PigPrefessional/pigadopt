@@ -4,21 +4,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ai2020lab.pigadopted.R;
-import com.ai2020lab.pigadopted.biz.PigDetailManager;
 import com.ai2020lab.pigadopted.model.order.PigPart;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrderResponse;
-import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
 
 import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Rocky on 16/3/22.
@@ -51,11 +46,11 @@ public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
     }
 
     @Override
-    protected int getPigPartImageResID(String partID) {
+    protected int getPigPartImageResID(int partID) {
         final int firstPartId = 1;
         final int firstPartImageId = R.mipmap.pig_part_has_number_01;
 
-        return firstPartImageId + (Integer.parseInt(partID) - firstPartId);
+        return firstPartImageId + (partID - firstPartId);
     }
 
     private class PartsAdapter extends

@@ -11,9 +11,9 @@ import java.util.List;
  * Created by Justin on 2015/12/7.
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
-public class CategoriesListResponse extends ResponseData<CategoriesListResponse.CategoriesLisReult> {
+public class CategoriesListResponse extends ResponseData<CategoriesListResponse.CategoriesListResult> {
 
-	public class CategoriesLisReult {
+	public class CategoriesListResult {
 
 		@Expose
 		@SerializedName("category_list")

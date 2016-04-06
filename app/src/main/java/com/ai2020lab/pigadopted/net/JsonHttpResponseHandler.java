@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.ai2020lab.aiutils.common.JsonUtils;
 import com.ai2020lab.aiutils.common.LogUtils;
+import com.ai2020lab.aiutils.common.StringUtils;
 import com.ai2020lab.pigadopted.model.base.ResponseData;
 import com.loopj.android.http.TextHttpResponseHandler;
 
@@ -55,7 +56,7 @@ public abstract class JsonHttpResponseHandler<T extends ResponseData> extends Te
 			onHandleFailure("返回数据desc为空");
 			return;
 		}
-		if (data.desc.result_code != ResultCode.SUCCESS) {
+		if (StringUtils.parseInt(data.desc.result_code) != ResultCode.SUCCESS) {
 			LogUtils.i(TAG, "----返回数据desc.result_code不为success----");
 //			ToastUtils.getInstance().showToast(context, context.getString(R.string.request_failure));
 			onHandleFailure("返回数据desc.result_code不为success");

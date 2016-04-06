@@ -6,10 +6,11 @@ package com.ai2020lab.pigadopted.common;
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
 public interface DiskCacheMaxSize {
-	/**
-	 * 上传文本缓存的最大容量
-	 */
-	long ANALYSIS_SEND_DATA = (long) (0.1 * 1024 * 1024);
 
-	long ANALYSIS_LIST_DATA = (long) (0.1 * 1024 * 1024);
+	long PIG_BODY_PARTS_LIST = (long) (0.1 * 1024 * 1024);
+
+	long PIG_CATEGORIES_LIST = (long) (0.1 * 1024 * 1024);
+
+	long SELLER_INFO = (long) (0.01 * 1024 * 1024);
+	long BUYER_INFO = (long) (0.01 * 1024 * 1024);
 }

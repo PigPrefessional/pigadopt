@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
@@ -20,27 +19,37 @@ import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.common.ToastUtils;
 import com.ai2020lab.aiutils.image.ImageUtils;
 import com.ai2020lab.aiutils.system.DisplayUtils;
+import com.ai2020lab.aiutils.thread.ThreadUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
+import com.ai2020lab.pigadopted.common.DataManager;
 import com.ai2020lab.pigadopted.common.IntentExtra;
 import com.ai2020lab.pigadopted.fragment.HogpenAddDialog;
 import com.ai2020lab.pigadopted.fragment.OnClickDialogBtnListener;
 import com.ai2020lab.pigadopted.fragment.PhotoSourceSelectDialog;
 import com.ai2020lab.pigadopted.fragment.PigAddDialog;
 import com.ai2020lab.pigadopted.fragment.PigAddSuccessDialog;
+import com.ai2020lab.pigadopted.model.hogpen.HogpenListRequest;
+import com.ai2020lab.pigadopted.model.hogpen.HogpenListResponse;
 import com.ai2020lab.pigadopted.model.hogpen.SellerHogpenInfo;
 import com.ai2020lab.pigadopted.model.order.OrderInfoForSeller;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
 import com.ai2020lab.pigadopted.model.pig.HealthInfo;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
+import com.ai2020lab.pigadopted.model.pig.PigPhotoUploadResponse;
 import com.ai2020lab.pigadopted.model.pig.PigStatus;
 import com.ai2020lab.pigadopted.model.user.UserInfo;
+import com.ai2020lab.pigadopted.net.HttpManager;
+import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
+import com.ai2020lab.pigadopted.net.UrlName;
 import com.ai2020lab.pigadopted.view.BirdIndicator;
 import com.ai2020lab.pigadopted.view.HogpenViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * 卖家主页
@@ -109,7 +118,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		userInfo = (UserInfo) getIntent().getExtras().get(IntentExtra.USER_INFO);
+		userInfo = DataManager.getInstance().getSellerInfo();
 		setContentView(R.layout.activity_main_seller);
 		// 不展示工具栏
 		supportToolbar(false);
@@ -118,8 +127,8 @@ public class SellerMainActivity extends AIBaseActivity {
 		initHogpenViewPager();
 		initBirdIndicator();
 		initAddPigBtn();
-		// 载入测试数据
-		loadTestData();
+		// 请求猪圈列表
+		queryHogpensList();
 	}
 
 	private void assignViews() {
@@ -166,9 +175,9 @@ public class SellerMainActivity extends AIBaseActivity {
 		hogpenVp.setOnPigClickListener(new HogpenViewPager.OnPigClickListener() {
 			@Override
 			public void onPigClick(SellerHogpenInfo hogpenInfo, PigDetailInfoAndOrder pigInfo) {
+//				pigInfo.pigInfo.hogpenInfo = hogpenInfo;
 				// 猪点击监听
-				// TODO:跳转到猪详情界面
-				skipToPigDetailActivity(hogpenInfo, pigInfo);
+				skipToPigDetailActivity(pigInfo.pigInfo);
 			}
 		});
 		// 猪添加动画执行完毕监听
@@ -199,12 +208,13 @@ public class SellerMainActivity extends AIBaseActivity {
 	/**
 	 * 跳转到猪详情界面
 	 */
-	private void skipToPigDetailActivity(SellerHogpenInfo hogpenInfo,
-	                                     PigDetailInfoAndOrder pigInfo) {
+	private void skipToPigDetailActivity(PigInfo pigInfo) {
 		LogUtils.i(TAG, "跳转到猪详情界面");
-		// TODO:还需要将猪的基本数据传递过去
 		Intent intent = new Intent(this, PigDetailActivity.class);
 		intent.putExtra(PigDetailActivity.KEY_DETAIL_TYPE, PigDetailActivity.TYPE_SELLER);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(IntentExtra.PIG_INFO, pigInfo);
+		intent.putExtras(bundle);
 		startActivity(intent);
 	}
 
@@ -311,6 +321,7 @@ public class SellerMainActivity extends AIBaseActivity {
 					df.dismiss();
 					//添加猪圈
 					addHogpen(hogpenInfo);
+					executeAddHogpen(hogpenInfo);
 				}
 
 				@Override
@@ -431,6 +442,36 @@ public class SellerMainActivity extends AIBaseActivity {
 		}
 	}
 
+	// TODO:添加猪圈
+	private void executeAddHogpen(SellerHogpenInfo sellerHogpenInfo) {
+		HttpManager.postFile(this, UrlName.ADD_GROWTH_INFO.getUrl(),
+				sellerHogpenInfo.hogpenPhoto, sellerHogpenInfo,
+				new JsonHttpResponseHandler<PigPhotoUploadResponse>(this) {
+
+					@Override
+					public void onHandleSuccess(int statusCode, Header[] headers,
+					                            PigPhotoUploadResponse jsonObj) {
+
+					}
+
+					@Override
+					public void onCancel() {
+
+					}
+
+					@Override
+					public void onHandleFailure(String errorMsg) {
+
+					}
+
+					@Override
+					public void onFinish() {
+
+					}
+				});
+
+	}
+
 	/**
 	 * 添加测试猪
 	 */
@@ -440,29 +481,67 @@ public class SellerMainActivity extends AIBaseActivity {
 				< HogpenViewPager.PIG_LIMIT);
 	}
 
-	// 加入测试数据，这里模拟测试数据，初始为0个猪圈
-	private void loadTestData() {
-		sellerHogpenInfos = getHogpenInfos();
-		final int size = sellerHogpenInfos.size();
-		// 初始化数据
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				// 添加初始鸟
-				birdIndicator.setIndicators(size);
-				LogUtils.i(TAG, "当前鸟个数：" + birdIndicator.getIndicatorNumber());
-				// 初始化猪圈数据
-				hogpenVp.setHogpenTabs(sellerHogpenInfos);
-				// 让游标选中第一项,初始化猪圈的时候，页面选择事件是无效的？
-				birdIndicator.setCurrentIndex(0);
-				// 判断添加猪按钮是否显示
-				setAddPigBtnVisibility(hogpenVp.getPigNumber()
-						< HogpenViewPager.PIG_LIMIT);
-				// 动画显示卖家信息
-				loadSellerInfoAnim();
-			}
-		}, 1000);
+	/**
+	 * 请求卖家猪圈列表
+	 */
+	private void queryHogpensList() {
+		LogUtils.i(TAG, "--查询卖家猪圈列表--");
+		// 弹出提示
+		showLoading(getString(R.string.prompt_loading));
+		HogpenListRequest data = new HogpenListRequest();
+		data.userID = userInfo.userID;
+		HttpManager.postJson(this, UrlName.HOGPEN_LIST_FOR_BUYER.getUrl(), data,
+				new JsonHttpResponseHandler<HogpenListResponse>(this) {
+					/**
+					 * 成功回调
+					 *
+					 * @param statusCode 状态码
+					 * @param headers    Header
+					 * @param jsonObj    服务端返回的对象
+					 */
+					@Override
+					public void onHandleSuccess(int statusCode, Header[] headers,
+					                            final HogpenListResponse jsonObj) {
+						ThreadUtils.runOnUIThread(new Runnable() {
+							@Override
+							public void run() {
+								dismissLoading();
+								sellerHogpenInfos = jsonObj.data.hogpenInfos;
+								int size = sellerHogpenInfos.size();
+								// 添加初始鸟
+								birdIndicator.setIndicators(size);
+								LogUtils.i(TAG, "当前鸟个数：" + birdIndicator.getIndicatorNumber());
+								// 初始化猪圈数据
+								hogpenVp.setHogpenTabs(sellerHogpenInfos);
+								// 让游标选中第一项,初始化猪圈的时候，页面选择事件是无效的？
+								birdIndicator.setCurrentIndex(0);
+								// 判断添加猪按钮是否显示
+								setAddPigBtnVisibility(hogpenVp.getPigNumber()
+										< HogpenViewPager.PIG_LIMIT);
+								// 动画显示卖家信息
+								loadSellerInfoAnim();
+							}
+						}, 1000);
+
+					}
+
+					@Override
+					public void onCancel() {
+						dismissLoading();
+						// 没有网络的情况会终止请求
+						ToastUtils.getInstance().showToast(getActivity(),
+								R.string.prompt_loading_failure);
+					}
+
+					@Override
+					public void onHandleFailure(String errorMsg) {
+						dismissLoading();
+						ToastUtils.getInstance().showToast(getActivity(),
+								R.string.prompt_loading_failure);
+					}
+				});
 	}
+
 
 	/**
 	 * 返回添加猪测试数据

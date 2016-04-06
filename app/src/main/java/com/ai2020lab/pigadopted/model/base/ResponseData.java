@@ -15,7 +15,7 @@ public class ResponseData<T> {
 		/**
 		 * 服务器返回状态吗
 		 */
-		public int result_code;
+		public String result_code;
 
 		/**
 		 * 服务器返回状态信息
