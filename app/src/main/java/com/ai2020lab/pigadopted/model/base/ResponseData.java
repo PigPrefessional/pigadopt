@@ -15,7 +15,7 @@ public class ResponseData<T> {
 		/**
 		 * 服务器返回状态吗
 		 */
-		public int result_code;
+		public String result_code;
 
 		/**
 		 * 服务器返回状态信息
@@ -25,7 +25,7 @@ public class ResponseData<T> {
 		/**
 		 * 数据模式，0:普通模式(明文)。1:加密模式(base64)
 		 */
-		public int data_mode = DataMode.NORMAL;
+		public String data_mode;
 
 		/**
 		 * 报文摘要：MD5,(body字段的密文)

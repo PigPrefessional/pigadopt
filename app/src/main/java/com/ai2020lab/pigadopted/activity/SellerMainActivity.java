@@ -22,7 +22,7 @@ import com.ai2020lab.aiutils.image.ImageUtils;
 import com.ai2020lab.aiutils.system.DisplayUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
-import com.ai2020lab.pigadopted.common.IntentExtra;
+import com.ai2020lab.pigadopted.common.DataManager;
 import com.ai2020lab.pigadopted.fragment.HogpenAddDialog;
 import com.ai2020lab.pigadopted.fragment.OnClickDialogBtnListener;
 import com.ai2020lab.pigadopted.fragment.PhotoSourceSelectDialog;
@@ -34,13 +34,19 @@ import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
 import com.ai2020lab.pigadopted.model.pig.HealthInfo;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
+import com.ai2020lab.pigadopted.model.pig.PigPhotoUploadResponse;
 import com.ai2020lab.pigadopted.model.pig.PigStatus;
 import com.ai2020lab.pigadopted.model.user.UserInfo;
+import com.ai2020lab.pigadopted.net.HttpManager;
+import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
+import com.ai2020lab.pigadopted.net.UrlName;
 import com.ai2020lab.pigadopted.view.BirdIndicator;
 import com.ai2020lab.pigadopted.view.HogpenViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * 卖家主页
@@ -109,7 +115,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		userInfo = (UserInfo) getIntent().getExtras().get(IntentExtra.USER_INFO);
+		userInfo = DataManager.getInstance().getSellerInfo();
 		setContentView(R.layout.activity_main_seller);
 		// 不展示工具栏
 		supportToolbar(false);
@@ -311,6 +317,7 @@ public class SellerMainActivity extends AIBaseActivity {
 					df.dismiss();
 					//添加猪圈
 					addHogpen(hogpenInfo);
+					executeAddHogpen(hogpenInfo);
 				}
 
 				@Override
@@ -429,6 +436,36 @@ public class SellerMainActivity extends AIBaseActivity {
 			setAddPigBtnVisibility(hogpenVp.getPigNumber()
 					< HogpenViewPager.PIG_LIMIT);
 		}
+	}
+
+	// TODO:添加猪圈
+	private void executeAddHogpen(SellerHogpenInfo sellerHogpenInfo) {
+		HttpManager.postFile(this, UrlName.ADD_GROWTH_INFO.getUrl(),
+				sellerHogpenInfo.hogpenPhoto, sellerHogpenInfo,
+				new JsonHttpResponseHandler<PigPhotoUploadResponse> (this){
+
+					@Override
+					public void onHandleSuccess(int statusCode, Header[] headers,
+					                            PigPhotoUploadResponse jsonObj) {
+
+					}
+
+					@Override
+					public void onCancel() {
+
+					}
+
+					@Override
+					public void onHandleFailure(String errorMsg) {
+
+					}
+
+					@Override
+					public void onFinish() {
+
+					}
+				});
+
 	}
 
 	/**

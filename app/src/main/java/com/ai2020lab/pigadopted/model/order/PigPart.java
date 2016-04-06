@@ -15,13 +15,17 @@ public class PigPart {
 	 */
 	@Expose
 	@SerializedName("part_id")
-	public String partID;
+	public int partID;
 	/**
 	 * 部位名称
 	 */
 	@Expose
 	@SerializedName("part_name")
 	public String partName;
+
+	@Expose
+	@SerializedName("part_code")
+	public String partCode;
 	/**
 	 * 认购日期时间戳
 	 */

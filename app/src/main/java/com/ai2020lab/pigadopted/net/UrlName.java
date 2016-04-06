@@ -6,15 +6,22 @@ package com.ai2020lab.pigadopted.net;
  */
 public enum UrlName {
 
-    TEST("findCustomerProposalDetail"),
+	// 卖家猪详情
+    PIG_INFO_FOR_SELLER("findSellerPigInfo"),
+	// 买家猪详情
+    PIG_INFO_FOR_CUSTOMER("findCustomerPigInfo"),
+	// 买家猪列表
+    PIG_LIST_FOR_CUSTOMER("queryCustomerPigList"),
+	// 猪部位列表
+    PIG_BODY_PART_LIST("queryPigBodyPartList"),
+	// 猪品种列表
+    PIG_CATEGORY_LIST("queryPigCategoryList"),
+	// 根据partyID查询卖家信息
+    SELLER_INFO_BY_PARTYID("queryProviderInfo"),
+	// 根据partyID查询买家信息
+	BUYER_INFO_BY_PARTYID("queryCustomerInfo"),
+	ADD_GROWTH_INFO("uploadGrowthPhoto");
 
-    PIG_LIST("queryPigList"),
-    PIG_DETAIL("findPigDetail"),
-    PIG_ORDER_DETAIL("findPigOrderDetail"),
-    PIG_CATEGORIES("queryPigCategories"),
-    PIG_LAIRAGE("pigLairage"),
-    PIG_PHOTO_UPLOAD("uploadPigPhoto"),
-    HOGPEN_DETAIL("findHogpenDetail");
 
 
 
@@ -28,8 +35,7 @@ public enum UrlName {
         return "http://" + HOST + ":" + PORT + "/" + name;
     }
 
-    private static final String HOST = "10.5.1.198";
-    private static final int PORT = 8282;
-    private static final String PIG_ADOPTED = "pigadopted";
+    private static final String HOST = "171.221.254.231";
+    private static final int PORT = 3002;
 
 }

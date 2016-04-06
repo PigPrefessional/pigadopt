@@ -78,6 +78,8 @@
 	<string name="login_buyer_name">苍老师</string>
 	<string name="login_seller_name">刘司机</string>
 	<string name="login_prompt_select_role">亲，请选择一个角色登录</string>
+	<string name="login_prompt_login_failure">登录失败，请重试！</string>
+	<string name="login_login_in">正在拼了命的为您登录</string>
 
 	<!--买家主页-->
 	<string name="activity_title_buyer_main" formatted="false">%s的猪</string>
@@ -86,4 +88,8 @@
 	<!--成长历程-->
 	<string name="activity_title_growth_history">成长历程</string>
 	<string name="activity_distance_camera">拍照记录</string>
+
+	<!--提示-->
+	<string name="prompt_query_pig_categories_failure">获取猪品种失败，请重新打开应用</string>
+	<string name="prompt_query_pig_parts_failure">获取猪部位失败，请重新打开应用</string>
 </resources>

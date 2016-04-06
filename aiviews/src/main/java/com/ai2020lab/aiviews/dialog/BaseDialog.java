@@ -33,7 +33,7 @@ public class BaseDialog extends Dialog {
 	 *
 	 * @author Justin Z
 	 */
-	public static class Builder {
+	public final static class Builder {
 		/**
 		 * 上下文引用
 		 */
@@ -190,7 +190,7 @@ public class BaseDialog extends Dialog {
 		 *
 		 * @return 返回对话框对象
 		 */
-		public BaseDialog create() {
+		public final BaseDialog create() {
 			// 参数检查
 			if (this.context == null) {
 				throw new IllegalArgumentException("上下文引用不能为空");

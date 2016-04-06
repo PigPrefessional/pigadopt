@@ -47,11 +47,11 @@ public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
     }
 
     @Override
-    protected int getPigPartImageResID(String partID) {
+    protected int getPigPartImageResID(int partID) {
         final int firstPartId = 1;
         final int firstPartImageId = R.mipmap.pig_part_has_number_01;
 
-        return firstPartImageId + (Integer.parseInt(partID) - firstPartId);
+        return firstPartImageId + (partID - firstPartId);
     }
 
     private class PartsAdapter extends

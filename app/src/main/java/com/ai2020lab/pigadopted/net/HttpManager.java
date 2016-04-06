@@ -9,12 +9,16 @@ import com.ai2020lab.pigadopted.model.base.RequestData;
 import com.loopj.android.http.ResponseHandlerInterface;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Date;
 import java.util.HashMap;
 
-import cz.msebera.android.httpclient.entity.FileEntity;
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.entity.ContentType;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.entity.mime.HttpMultipartMode;
+import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
 import cz.msebera.android.httpclient.protocol.HTTP;
 
 /**
@@ -28,8 +32,10 @@ public class HttpManager {
 	private final static String TAG = HttpManager.class.getSimpleName();
 	public static String HTTP_HEADER_HTTP_QUERY = "HttpQuery";
 	public static String USER_ID = "100000001872";
+	public static String CONTENT_TYPE = "Content-Type";
 	public static String CONTENT_TYPE_JSON = "application/json;charset=utf-8";
 	public static String CONTENT_TYPE_JPEG = "image/jpeg";
+	public static String CONTENT_TYPE_MULTIPART = "multipart/form-data";
 
 
 	private static <T> String getRequestJson(T requestObj) {
@@ -58,6 +64,7 @@ public class HttpManager {
 		LogUtils.i(TAG, "----POST发送JSON数据----");
 		HashMap<String, String> headerParams = new HashMap<>();
 		headerParams.put(HTTP_HEADER_HTTP_QUERY, getVerifyString(USER_ID));
+//		headerParams.put(CONTENT_TYPE, CONTENT_TYPE_JSON);
 		// 设置HTTP请求体
 		StringEntity entity = null;
 		try {
@@ -81,22 +88,31 @@ public class HttpManager {
 	 * @param response ResponseHandlerInterface的引用
 	 * @param <T>      泛型类
 	 */
-	public static <T> void postPhoto(Context context, String url,
-	                                 String filePath, ResponseHandlerInterface response) {
+	public static <T> void postFile(Context context, String url,
+	                                 String filePath, T requestObj,
+	                                 ResponseHandlerInterface response) {
 		LogUtils.i(TAG, "----POST发送照片文件----");
 		HashMap<String, String> headerParams = new HashMap<>();
 		headerParams.put(HTTP_HEADER_HTTP_QUERY, getVerifyString(USER_ID));
-		FileEntity entity = null;
-		try {
-			entity = new FileEntity(new File(filePath));
-		} catch (Exception e) {
-			LogUtils.e(TAG, "没有找到要上传的文件", e);
-		}
+
+		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+		//MultipartEntity有2个模式，STRICT和BROWSER_COMPATIBLE
+		//缺省为STRICT,发送Content-Type和Content-Transfer-Encoding
+		//BROWSER_COMPATIBLE不会
+		builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+		// 得到请求的JSON字符窜
+		Charset.availableCharsets();
+		LogUtils.i(TAG, "");
+		builder.addTextBody("data", getRequestJson(requestObj),
+				ContentType.create("text/plain", Charset.forName("utf-8")));
+		builder.addBinaryBody("fileUp", new File(filePath));
+		HttpEntity entity = builder.build();
 		if (entity == null) {
 			LogUtils.i(TAG, "要发送的请求数据对象为空");
 			return;
 		}
-		HttpUtils.post(context, url, TIME_OUT, headerParams, entity, CONTENT_TYPE_JPEG, response);
+		HttpUtils.post(context, url, TIME_OUT, headerParams, entity,
+				CONTENT_TYPE_MULTIPART, response);
 	}
 
 }

@@ -143,7 +143,7 @@ public class PigAddDialog extends DialogFragment {
 	 * 设置猪品种选择滚轮
 	 */
 	private void setPigAddCategoryWv() {
-		ArrayList<PigCategory> pigCategories = DataManager.getInstance().getAllPigCategories();
+		ArrayList<PigCategory> pigCategories = DataManager.getInstance().getPigCategories();
 		pigCategoryWvAdapter = new ArrayWheelAdapter<>(pigCategories, 2);
 		pigAddCategoryWv.setAdapter(pigCategoryWvAdapter);
 		// 设置选中第一项
@@ -204,7 +204,7 @@ public class PigAddDialog extends DialogFragment {
 		pigInfo.attendedDate = "2016-3-18";
 		pigInfo.attendedWeight = 30;
 		pigInfo.pigCategory = new PigCategory();
-		pigInfo.pigCategory.categoryID = "2";
+		pigInfo.pigCategory.categoryID = 2;
 		pigInfo.pigCategory.categoryName = "内江猪";
 		return pigInfo;
 	}

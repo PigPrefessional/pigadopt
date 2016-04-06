@@ -18,14 +18,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ai2020lab.aiutils.common.LogUtils;
+import com.ai2020lab.aiutils.common.ToastUtils;
 import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
 import com.ai2020lab.pigadopted.common.Constants;
 import com.ai2020lab.pigadopted.common.DataManager;
-import com.ai2020lab.pigadopted.common.IntentExtra;
-import com.ai2020lab.pigadopted.model.user.UserInfo;
+import com.ai2020lab.pigadopted.model.user.BuyerInfoByPartyIDRequest;
+import com.ai2020lab.pigadopted.model.user.BuyerInfoByPartyIDResponse;
+import com.ai2020lab.pigadopted.model.user.PartyID;
+import com.ai2020lab.pigadopted.model.user.SellerInfoByPartyIDRequest;
+import com.ai2020lab.pigadopted.model.user.SellerInfoByPartyIDResponse;
+import com.ai2020lab.pigadopted.net.HttpManager;
+import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
+import com.ai2020lab.pigadopted.net.UrlName;
 
+import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -57,16 +65,21 @@ public class LoginActivity extends AIBaseActivity {
 
 	private boolean isLoadAnim = false;
 
+	private boolean isFirstLoad = true;
+
 	private Animation slideInLeft;
 	private Animation slideInRight;
 	private Animation scaleIn;
 	private Animation selectIn;
 	private Animation selectOut;
 
+	/**
+	 * 程序入口
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initData();
+		initCache();
 		initAnims();
 		setContentView(R.layout.activity_login);
 		setToolbar();
@@ -75,8 +88,9 @@ public class LoginActivity extends AIBaseActivity {
 	}
 
 	// 初始化数据
-	private void initData(){
-		DataManager.getInstance().init();
+	private void initCache() {
+		// 初始化内存缓存
+		DataManager.getInstance().init(this);
 	}
 
 	private void setToolbar() {
@@ -102,22 +116,25 @@ public class LoginActivity extends AIBaseActivity {
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		if (hasFocus) {
-			loadAnim();
-		} else {
-			setViewsGone();
+			if (isFirstLoad) {
+				loadAnim();
+				isFirstLoad = false;
+			}
+			// 选择角色
+			setRoleType(currentRoleType, selectIn, selectOut, false);
 		}
 	}
 
-	private void setViewsGone() {
-		buyerIv.setVisibility(View.GONE);
-		buyerCiv.setVisibility(View.GONE);
-		buyerSelectIv.setVisibility(View.GONE);
-		buyerTv.setVisibility(View.GONE);
-		sellerIv.setVisibility(View.GONE);
-		sellerCiv.setVisibility(View.GONE);
-		sellerSelectIv.setVisibility(View.GONE);
-		sellerTv.setVisibility(View.GONE);
-	}
+//	private void setViewsGone() {
+//		buyerIv.setVisibility(View.GONE);
+//		buyerCiv.setVisibility(View.GONE);
+//		buyerSelectIv.setVisibility(View.GONE);
+//		buyerTv.setVisibility(View.GONE);
+//		sellerIv.setVisibility(View.GONE);
+//		sellerCiv.setVisibility(View.GONE);
+//		sellerSelectIv.setVisibility(View.GONE);
+//		sellerTv.setVisibility(View.GONE);
+//	}
 
 	/**
 	 * 初始化各个动画资源
@@ -226,15 +243,15 @@ public class LoginActivity extends AIBaseActivity {
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					if (isClick) {
-						LogUtils.i(TAG, "选择角色动画执行完毕，界面跳转");
-						skipToMainActivity(currentRoleType);
+						LogUtils.i(TAG, "选择角色动画执行完毕，查询用户信息");
+						queryUserInfo(currentRoleType);
 					}
 					isLoadAnim = false;
 				}
 			});
 		} else if (isClick) {
-			LogUtils.i(TAG, "界面直接跳转");
-			skipToMainActivity(currentRoleType);
+			LogUtils.i(TAG, "直接查询用户信息");
+			queryUserInfo(currentRoleType);
 		}
 	}
 
@@ -260,20 +277,116 @@ public class LoginActivity extends AIBaseActivity {
 	}
 
 	/**
+	 * 查询用户信息
+	 */
+	private void queryUserInfo(int roleType){
+		if(roleType == Constants.ROLE_TYPE_BUYER){
+			queryBuyerInfo();
+		}
+		else if(roleType == Constants.ROLE_TYPE_SELLER){
+			querySellerInfo();
+		}
+	}
+
+	/**
+	 * 请求卖家用户数据
+	 */
+	private void querySellerInfo() {
+		LogUtils.i(TAG, "--根据partyID查询卖家信息--");
+		// 弹出提示
+		showLoading(getString(R.string.login_login_in));
+		SellerInfoByPartyIDRequest data = new SellerInfoByPartyIDRequest();
+		data.partyID = PartyID.SELLER_1;
+		HttpManager.postJson(this, UrlName.SELLER_INFO_BY_PARTYID.getUrl(), data,
+				new JsonHttpResponseHandler<SellerInfoByPartyIDResponse>(this) {
+					/**
+					 * 成功回调
+					 *
+					 * @param statusCode 状态码
+					 * @param headers    Header
+					 * @param jsonObj    服务端返回的对象
+					 */
+					@Override
+					public void onHandleSuccess(int statusCode, Header[] headers,
+					                            SellerInfoByPartyIDResponse jsonObj) {
+						dismissLoading();
+						DataManager.getInstance().setSellerInfo(jsonObj);
+						skipToMainActivity(currentRoleType);
+					}
+
+					@Override
+					public void onCancel() {
+						dismissLoading();
+						// 没有网络的情况会终止请求
+						ToastUtils.getInstance().showToast(getActivity(),
+								R.string.login_prompt_login_failure);
+					}
+
+					@Override
+					public void onHandleFailure(String errorMsg) {
+						dismissLoading();
+						ToastUtils.getInstance().showToast(getActivity(),
+								R.string.login_prompt_login_failure);
+					}
+
+				});
+	}
+
+	/**
+	 * 请求买家用户数据
+	 */
+	private void queryBuyerInfo() {
+		LogUtils.i(TAG, "--根据partyID查询买家信息--");
+		// 弹出提示
+		showLoading(getString(R.string.login_login_in));
+		BuyerInfoByPartyIDRequest data = new BuyerInfoByPartyIDRequest();
+		data.partyID = PartyID.BUYER_1;
+		HttpManager.postJson(this, UrlName.BUYER_INFO_BY_PARTYID.getUrl(), data,
+				new JsonHttpResponseHandler<BuyerInfoByPartyIDResponse>(this) {
+					/**
+					 * 成功回调
+					 *
+					 * @param statusCode 状态码
+					 * @param headers    Header
+					 * @param jsonObj    服务端返回的对象
+					 */
+					@Override
+					public void onHandleSuccess(int statusCode, Header[] headers,
+					                            BuyerInfoByPartyIDResponse jsonObj) {
+						dismissLoading();
+						DataManager.getInstance().setBuyerInfo(jsonObj);
+						skipToMainActivity(currentRoleType);
+					}
+
+					@Override
+					public void onCancel() {
+						dismissLoading();
+						// 没有网络的情况会终止请求
+						ToastUtils.getInstance().showToast(getActivity(),
+								R.string.login_prompt_login_failure);
+					}
+
+					@Override
+					public void onHandleFailure(String errorMsg) {
+						dismissLoading();
+						ToastUtils.getInstance().showToast(getActivity(),
+								R.string.login_prompt_login_failure);
+					}
+				});
+	}
+
+	/**
 	 * 跳转到买家或卖家主页
 	 */
 	private void skipToMainActivity(int currentRoleType) {
-		UserInfo userInfo = getUserInfo(currentRoleType);
 		// 跳转到买家主页
 		if (currentRoleType == Constants.ROLE_TYPE_BUYER) {
 			Intent intent = new Intent(this, BuyerMainActivity.class);
-			intent.putExtra(IntentExtra.USER_INFO, userInfo);
 			startActivity(intent);
 		}
 		// 跳转到卖家主页
 		else if (currentRoleType == Constants.ROLE_TYPE_SELLER) {
 			Intent intent = new Intent(this, SellerMainActivity.class);
-			intent.putExtra(IntentExtra.USER_INFO, userInfo);
 			startActivity(intent);
 		} else {
 			// 弹出角色选择提示
@@ -282,24 +395,9 @@ public class LoginActivity extends AIBaseActivity {
 		}
 	}
 
-	/**
-	 * 获取UserInfo对象
-	 */
-	private UserInfo getUserInfo(int roleType) {
-		TextView roleNameTv = null;
-		String userID = null;
-		if (roleType == Constants.ROLE_TYPE_BUYER) {
-			roleNameTv = buyerTv;
-			userID = "213";
-		} else if (roleType == Constants.ROLE_TYPE_SELLER) {
-			roleNameTv = sellerTv;
-			userID = "123";
-		}
-		UserInfo userInfo = new UserInfo();
-		userInfo.userName = roleNameTv != null ? roleNameTv.getText().toString() : "";
-		userInfo.userID = userID;
-		LogUtils.i(TAG, "userName:" + userInfo.userName);
-		return userInfo;
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		DataManager.getInstance().release();
 	}
-
 }

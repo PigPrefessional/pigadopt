@@ -6,6 +6,6 @@ package com.ai2020lab.pigadopted.net;
  */
 public interface ResultCode {
 
-	public final static int SUCCESS = 1;
+	public final static int SUCCESS = 200;
 	public final static int FAILURE = 0;
 }

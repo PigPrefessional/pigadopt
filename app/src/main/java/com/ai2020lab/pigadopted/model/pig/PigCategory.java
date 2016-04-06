@@ -15,7 +15,7 @@ public class PigCategory {
 	 */
 	@Expose
 	@SerializedName("category_id")
-	public String categoryID;
+	public int categoryID;
 	/**
 	 * 猪品种名
 	 */
@@ -26,7 +26,7 @@ public class PigCategory {
 	 * 猪品种照片地址链接
 	 */
 	@Expose
-	@SerializedName("category_photo")
+	@SerializedName("category_img")
 	public String categoryPhoto;
 
 	//这个用来显示在PickerView上面的字符串,PickerView会通过反射获取getPickerViewText方法显示出来。

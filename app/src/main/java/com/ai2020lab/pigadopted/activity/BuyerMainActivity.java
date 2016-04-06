@@ -9,7 +9,7 @@ import android.view.animation.BounceInterpolator;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.adapter.BuyerPigListRvAdapter;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
-import com.ai2020lab.pigadopted.common.IntentExtra;
+import com.ai2020lab.pigadopted.common.DataManager;
 import com.ai2020lab.pigadopted.model.hogpen.HogpenInfo;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
 import com.ai2020lab.pigadopted.model.pig.HealthInfo;
@@ -48,7 +48,7 @@ public class BuyerMainActivity extends AIBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		userInfo = (UserInfo) getIntent().getExtras().get(IntentExtra.USER_INFO);
+		userInfo = DataManager.getInstance().getBuyerInfo();
 		setContentView(R.layout.activity_main_buyer);
 		setToolbar();
 		assignViews();

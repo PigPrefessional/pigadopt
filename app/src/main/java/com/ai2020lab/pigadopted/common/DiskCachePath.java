@@ -7,9 +7,19 @@ package com.ai2020lab.pigadopted.common;
  */
 public interface DiskCachePath {
 	/**
-	 * 上传文本缓存的根目录
+	 * 猪部位列表
 	 */
-	String ANALYSIS_SEND_DATA = "analysis_send_data";
-
-	String ANALYSIS_LIST_DATA = "analysis_list_data";
+	String PIG_BODY_PARTS_LIST = "pig_body_parts_list";
+	/**
+	 * 猪品种列表
+	 */
+	String PIG_CATEGORIES_LIST = "pig_categories_list";
+	/**
+	 * 卖家用户信息
+	 */
+	String SELLER_INFO = "seller_info";
+	/**
+	 * 买家用户信息
+	 */
+	String BUYER_INFO = "buyer_info";
 }
