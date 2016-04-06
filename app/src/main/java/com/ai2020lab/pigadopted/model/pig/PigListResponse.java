@@ -1,7 +1,6 @@
 package com.ai2020lab.pigadopted.model.pig;
 
 import com.ai2020lab.pigadopted.model.base.ResponseData;
-import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,12 +14,6 @@ import java.util.List;
 public class PigListResponse extends ResponseData<PigListResponse.PigListResult> {
 
 	public class PigListResult {
-		/**
-		 * 买家信息
-		 */
-		@Expose
-		@SerializedName("user_info")
-		public UserInfo userInfo;
 		/**
 		 * 买家猪列表
 		 */

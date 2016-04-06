@@ -4,12 +4,14 @@ import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * 猪圈信息实体类
  * Created by Justin on 2015/12/7.
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
-public class HogpenInfo {
+public class HogpenInfo implements Serializable {
 	/**
 	 * 猪圈id
 	 */

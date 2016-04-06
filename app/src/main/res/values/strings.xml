@@ -16,6 +16,8 @@
 	<string name="length">长</string>
 	<string name="width">宽</string>
 
+	<string name="prompt_loading">正在拼了命的为您加载…</string>
+	<string name="prompt_loading_failure">抱歉，加载失败，请重试</string>
 	<string name="prompt_check_network">世界上最遥远的距离就是没网。检查设置</string>
 
 	<string name="photo_source_album">相册</string>
@@ -29,9 +31,9 @@
 	<string name="year_month_day" formatted="false">%s年%s月%s日</string>
 	<string name="pig_photo_date" formatted="false">时间：%s</string>
 	<!--猪增加体重-->
-	<string name="pig_increase_weight" formatted="false">增长：%s斤</string>
+	<string name="pig_increase_weight" formatted="false">增长：%s公斤</string>
 	<!--猪体重-->
-	<string name="pig_weight" formatted="false">体重：%s斤</string>
+	<string name="pig_weight" formatted="false">体重：%s公斤</string>
 	<!--猪体温-->
 	<string name="pig_temperature" formatted="false">体温：%s℃</string>
 	<!--猪年龄-->
@@ -47,7 +49,7 @@
 	<string name="pig_detail_label_steps">步数:</string>
 	<string name="pig_detail_label_environment">环境:</string>
 	<string name="pig_detail_buyer_number">已有%1$d人购买</string>
-	<string name="pig_detail_weight_increase">我又胖%1$.0f斤了哦</string>
+	<string name="pig_detail_weight_increase">我又胖%1$.0f公斤了哦</string>
 	<string name="pig_detail_steps">%1$d步</string>
 	<string name="pig_detail_age">%1$.1f月</string>
 	<string name="pig_detail_title">详细信息</string>
@@ -79,7 +81,7 @@
 	<string name="login_seller_name">刘司机</string>
 	<string name="login_prompt_select_role">亲，请选择一个角色登录</string>
 	<string name="login_prompt_login_failure">登录失败，请重试！</string>
-	<string name="login_login_in">正在拼了命的为您登录</string>
+	<string name="login_login_in">正在拼了命的为您登录…</string>
 
 	<!--买家主页-->
 	<string name="activity_title_buyer_main" formatted="false">%s的猪</string>

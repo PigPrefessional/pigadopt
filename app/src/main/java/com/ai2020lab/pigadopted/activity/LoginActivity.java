@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.common.ToastUtils;
+import com.ai2020lab.aiutils.thread.ThreadUtils;
 import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
@@ -308,10 +309,15 @@ public class LoginActivity extends AIBaseActivity {
 					 */
 					@Override
 					public void onHandleSuccess(int statusCode, Header[] headers,
-					                            SellerInfoByPartyIDResponse jsonObj) {
-						dismissLoading();
-						DataManager.getInstance().setSellerInfo(jsonObj);
-						skipToMainActivity(currentRoleType);
+					                            final SellerInfoByPartyIDResponse jsonObj) {
+						ThreadUtils.runOnUIThread(new Runnable() {
+							@Override
+							public void run() {
+								dismissLoading();
+								DataManager.getInstance().setSellerInfo(jsonObj);
+								skipToMainActivity(currentRoleType);
+							}
+						}, 1000);
 					}
 
 					@Override
@@ -352,10 +358,16 @@ public class LoginActivity extends AIBaseActivity {
 					 */
 					@Override
 					public void onHandleSuccess(int statusCode, Header[] headers,
-					                            BuyerInfoByPartyIDResponse jsonObj) {
-						dismissLoading();
-						DataManager.getInstance().setBuyerInfo(jsonObj);
-						skipToMainActivity(currentRoleType);
+					                            final BuyerInfoByPartyIDResponse jsonObj) {
+						ThreadUtils.runOnUIThread(new Runnable() {
+							@Override
+							public void run() {
+								dismissLoading();
+								DataManager.getInstance().setBuyerInfo(jsonObj);
+								skipToMainActivity(currentRoleType);
+							}
+						}, 1000);
+
 					}
 
 					@Override

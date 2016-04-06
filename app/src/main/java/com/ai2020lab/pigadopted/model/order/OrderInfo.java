@@ -16,7 +16,7 @@ public class OrderInfo {
      * 买家总数
      */
     @Expose
-    @SerializedName("buyer_number")
+    @SerializedName("buyers_number")
     public int buyerNumber;
 
     /**

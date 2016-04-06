@@ -6,8 +6,8 @@ package com.ai2020lab.pigadopted.common;
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
 public interface IntentExtra {
-	/**
-	 * 解析结果
-	 */
-	String USER_INFO = "com.ai2020lab.pigadopted.LoginActivity.userInfo";
+
+	String PIG_INFO = "com.ai2020lab.pigadopted.model.pig.PigInfo";
+
+
 }

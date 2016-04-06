@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ai2020lab.aiutils.common.LogUtils;
@@ -45,6 +46,8 @@ public class BuyerPigListRvAdapter extends BuyerPigListAdapter<BuyerPigListRvAda
 	private Drawable pigSleepingDrawable;
 	private Drawable pigEatingDrawable;
 
+	private OnClickBuyerPigListener onClickBuyerPigListener;
+
 	/**
 	 * 构造方法
 	 *
@@ -54,6 +57,13 @@ public class BuyerPigListRvAdapter extends BuyerPigListAdapter<BuyerPigListRvAda
 		this.context = context;
 		this.inflater = LayoutInflater.from(context);
 		initResources();
+	}
+
+	/**
+	 * 绑定点击Card事件
+	 */
+	public void setOnClickCardListener(OnClickBuyerPigListener onClickBuyerPigListener) {
+		this.onClickBuyerPigListener = onClickBuyerPigListener;
 	}
 
 	private void initResources() {
@@ -84,6 +94,22 @@ public class BuyerPigListRvAdapter extends BuyerPigListAdapter<BuyerPigListRvAda
 		// 设置绳子的隐藏状态
 		setLineVisible(position, holder.lineLeftUpIv, holder.lineLeftDownIv,
 				holder.lineRightUpIv, holder.lineRightDownIv);
+		setClickPigListener(pigInfo, holder.buyerPigRl);
+	}
+
+	/**
+	 * 绑定卡片点击事件
+	 */
+	private void setClickPigListener(final PigDetailInfoAndOrder pigInfo,
+	                                 RelativeLayout buyerPigRl) {
+		buyerPigRl.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (onClickBuyerPigListener != null) {
+					onClickBuyerPigListener.onClick(pigInfo);
+				}
+			}
+		});
 	}
 
 	/**
@@ -163,9 +189,8 @@ public class BuyerPigListRvAdapter extends BuyerPigListAdapter<BuyerPigListRvAda
 	private void setSellerNameTv(PigDetailInfoAndOrder pigInfo,
 	                             RotateTextView sellerNameTv) {
 		String name = context.getString(R.string.display_none);
-		if (pigInfo.pigInfo != null && pigInfo.pigInfo.hogpenInfo != null &&
-				pigInfo.pigInfo.hogpenInfo.userInfo != null) {
-			name = pigInfo.pigInfo.hogpenInfo.userInfo.userName;
+		if (pigInfo.pigInfo != null && pigInfo.pigInfo.userInfo != null) {
+			name = pigInfo.pigInfo.userInfo.userName;
 		}
 		sellerNameTv.setText(name);
 		sellerNameTv.getPaint().setFakeBoldText(true);
@@ -209,6 +234,7 @@ public class BuyerPigListRvAdapter extends BuyerPigListAdapter<BuyerPigListRvAda
 		ImageView lineLeftDownIv;
 		ImageView lineRightUpIv;
 		ImageView lineRightDownIv;
+		RelativeLayout buyerPigRl;
 
 		ItemViewHolder(View view) {
 			super(view);
@@ -221,7 +247,12 @@ public class BuyerPigListRvAdapter extends BuyerPigListAdapter<BuyerPigListRvAda
 			lineLeftDownIv = (ImageView) view.findViewById(R.id.line_left_down_iv);
 			lineRightUpIv = (ImageView) view.findViewById(R.id.line_right_up_iv);
 			lineRightDownIv = (ImageView) view.findViewById(R.id.line_right_down_iv);
+			buyerPigRl = (RelativeLayout) view.findViewById(R.id.buyer_pig_rl);
 		}
+	}
+
+	public interface OnClickBuyerPigListener {
+		void onClick(PigDetailInfoAndOrder pigDetailInfo);
 	}
 
 

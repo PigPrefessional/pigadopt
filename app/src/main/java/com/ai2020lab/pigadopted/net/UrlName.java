@@ -6,8 +6,10 @@ package com.ai2020lab.pigadopted.net;
  */
 public enum UrlName {
 
+	// 卖家猪圈列表
+	HOGPEN_LIST_FOR_BUYER("queryHogpensList"),
 	// 买家猪列表
-	PIG_LIST_FOR_CUSTOMER("queryCustomerPigList"),
+	PIG_LIST_FOR_BUYER("queryCustomerPigList"),
 	// 猪部位列表
 	PIG_BODY_PART_LIST("queryPigBodyPartList"),
 	// 猪品种列表

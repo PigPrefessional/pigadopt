@@ -31,6 +31,16 @@ public class ThreadUtils {
 	}
 
 	/**
+	 * 主线程执行指定任务
+	 *
+	 * @param runnable  Runnable引用
+	 * @param delayTime 延迟时间
+	 */
+	public static void runOnUIThread(Runnable runnable, long delayTime) {
+		new Handler().postDelayed(runnable, delayTime);
+	}
+
+	/**
 	 * 子线程执行任务<p>
 	 *
 	 * @param runnable Runnable对象的引用
@@ -64,6 +74,32 @@ public class ThreadUtils {
 				msg.sendToTarget();
 			}
 		});
+	}
+
+	/**
+	 * 子线程执行任务<p>
+	 * 不适合大量的耗时任务，可以将文件读取操作的执行放在这里，以提高UI线程的效率
+	 *
+	 * @param runnable  TaskSimpleRunnable
+	 * @param delayTime 延迟时间
+	 */
+	public static void runOnSubThread(TaskSimpleRunnable runnable, long delayTime) {
+		final String key = Long.toHexString(System.nanoTime());
+		HandlerThread thread = new HandlerThread(key);
+		thread.start();
+		final TaskRunnable run = runnable;
+		final AIHandler handler = new AIHandler(runnable,
+				thread.getLooper());
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// 执行后台任务
+				run.doInBackground();
+				// 发送消息告知后台任务执行完毕
+				Message msg = handler.obtainMessage(AIHandler.MSG_POST_RESULT);
+				msg.sendToTarget();
+			}
+		}, delayTime);
 	}
 
 

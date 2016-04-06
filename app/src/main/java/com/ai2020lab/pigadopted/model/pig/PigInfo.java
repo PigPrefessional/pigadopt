@@ -1,15 +1,18 @@
 package com.ai2020lab.pigadopted.model.pig;
 
 import com.ai2020lab.pigadopted.model.hogpen.HogpenInfo;
+import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * 猪猪基本信息实体类
  * Created by Justin on 2015/12/7.
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
-public class PigInfo {
+public class PigInfo implements Serializable {
 	/**
 	 * 猪id
 	 */
@@ -25,8 +28,8 @@ public class PigInfo {
 	/**
 	 * 猪品种对象
 	 */
-    @Expose
-    @SerializedName("pig_category")
+	@Expose
+	@SerializedName("pig_category")
 	public PigCategory pigCategory;
 	/**
 	 * 入栏时间
@@ -51,7 +54,12 @@ public class PigInfo {
 
 	public String birthDate;
 
-
+	/**
+	 * 卖家用户信息
+	 */
+	@Expose
+	@SerializedName("user_info")
+	public UserInfo userInfo;
 
 
 }
