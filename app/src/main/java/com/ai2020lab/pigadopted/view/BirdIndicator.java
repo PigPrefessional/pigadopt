@@ -33,7 +33,7 @@ public class BirdIndicator extends LinearLayout {
 	/**
 	 * 游标总个数
 	 */
-	private final static int INDICATOR_LIMIT = 3;
+	public final static int INDICATOR_LIMIT = 3;
 	/**
 	 * 游标TAG的前缀
 	 */

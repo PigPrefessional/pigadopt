@@ -14,11 +14,11 @@ public class PigAddRequest extends PigInfo {
 	 */
 	@Expose
 	@SerializedName("category_id")
-	public String category_id;
+	public int categoryID;
 	/**
 	 * 猪圈id
 	 */
 	@Expose
 	@SerializedName("hogpen_id")
-	public String hogpenID;
+	public int hogpenID;
 }

@@ -17,7 +17,7 @@ public class HogpenInfo implements Serializable {
 	 */
 	@Expose
 	@SerializedName("hogpen_id")
-	public String hogpenID;
+	public int hogpenID;
 	/**
 	 * 猪圈名字
 	 */

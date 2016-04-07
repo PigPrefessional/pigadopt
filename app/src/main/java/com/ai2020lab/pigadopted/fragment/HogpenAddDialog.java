@@ -86,7 +86,7 @@ public class HogpenAddDialog extends DialogFragment {
 		BaseDialog dialog = createDialog(contentView);
 		assignViews(contentView);
 		setTextFonts();
-		setDialogBtnClickListener(dialog);
+		setDialogBtnClickListener();
 		setPhotoIvClickListener();
 		return dialog;
 	}
@@ -175,7 +175,7 @@ public class HogpenAddDialog extends DialogFragment {
 	/**
 	 * 绑定按钮事件
 	 */
-	private void setDialogBtnClickListener(final BaseDialog dialog) {
+	private void setDialogBtnClickListener() {
 		ensureBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

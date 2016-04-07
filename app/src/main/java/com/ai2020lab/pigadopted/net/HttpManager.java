@@ -57,7 +57,6 @@ public class HttpManager {
 	 * @param url        接口访问地址url
 	 * @param requestObj 发送数据对象实例
 	 * @param response   ResponseHandlerInterface的引用
-	 * @param <T>        泛型类
 	 */
 	public static <T> void postJson(Context context, String url, T requestObj,
 	                                ResponseHandlerInterface response) {
@@ -85,15 +84,15 @@ public class HttpManager {
 	/**
 	 * post发送json格式数据,同时上传文件
 	 *
-	 * @param context  上下文引用
-	 * @param url      接口访问地址url
-	 * @param filePath 上传文件路径
-	 * @param response ResponseHandlerInterface的引用
-	 * @param <T>      泛型类
+	 * @param context    上下文引用
+	 * @param url        接口访问地址url
+	 * @param requestObj 发送数据对象实例
+	 * @param filePath   上传文件路径
+	 * @param response   ResponseHandlerInterface的引用
 	 */
 	public static <T> void postFile(Context context, String url,
-	                                 String filePath, T requestObj,
-	                                 ResponseHandlerInterface response) {
+	                                T requestObj, String filePath,
+	                                ResponseHandlerInterface response) {
 		LogUtils.i(TAG, "----POST发送照片文件----");
 		HashMap<String, String> headerParams = new HashMap<>();
 		headerParams.put(HTTP_HEADER_HTTP_QUERY, getVerifyString(USER_ID));

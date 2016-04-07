@@ -6,6 +6,8 @@ package com.ai2020lab.pigadopted.net;
  */
 public enum UrlName {
 
+	ADD_HOGPEN("addHogpen"),
+	ADD_PIG("addPig"),
 	// 卖家猪圈列表
 	HOGPEN_LIST_FOR_BUYER("queryHogpensList"),
 	// 买家猪列表
@@ -25,17 +27,18 @@ public enum UrlName {
 	PIG_TEMPERATURE_LIST("queryTemperatureList"),
 	PIG_STEP_LIST("queryStepList");
 
-    private String name;
+	private String name;
 
-    UrlName(String name) {
-        this.name = name;
-    }
+	UrlName(String name) {
+		this.name = name;
+	}
 
-    public String getUrl() {
-        return "http://" + HOST + ":" + PORT + "/" + name;
-    }
+	public String getUrl() {
+		return "http://" + HOST + ":" + PORT + "/" + name;
+	}
 
 	private static final String HOST = "171.221.254.231";
+	//	private static final String HOST = "10.5.1.59";
 	private static final int PORT = 3002;
 
 }

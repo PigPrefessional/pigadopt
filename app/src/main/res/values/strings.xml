@@ -69,6 +69,10 @@
 	<string name="prompt_select_hogpen_photo">亲，没有选择猪圈照片哦~</string>
 	<string name="prompt_select_hogpen_photo_again">亲，请重新选择猪圈照片~</string>
 	<string name="prompt_take_hogpen_photo_again">亲，请重新拍摄猪圈照片~</string>
+	<string name="prompt_add_pig_failure">添加猪失败，请重试</string>
+	<string name="prompt_add_hogpen_failure">添加猪圈失败，请重试</string>
+	<string name="prompt_add_loading">添加中，请稍后…</string>
+	<string name="prompt_hogpen_exceed_limit">猪圈个数超过限制</string>
 
 	<string name="pig_add_category">猪的品种</string>
 	<string name="pig_add_age">入栏年龄</string>

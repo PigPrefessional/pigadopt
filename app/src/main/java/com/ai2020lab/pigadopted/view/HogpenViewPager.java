@@ -294,10 +294,19 @@ public class HogpenViewPager extends LinearLayout {
 	/**
 	 * 获取当前选中的猪圈页卡
 	 *
-	 * @return
+	 * @return 返回当前选中的页卡下标
 	 */
 	public int getCurrentIndex() {
 		return currentIndex;
+	}
+
+	/**
+	 * 根据下标获取Hogpen数据
+	 * @param index 下标
+	 * @return 返回index对应的猪圈数据
+	 */
+	public SellerHogpenInfo getHogpen(int index){
+		return hogpenAdapter.getItemData(index);
 	}
 
 	/**

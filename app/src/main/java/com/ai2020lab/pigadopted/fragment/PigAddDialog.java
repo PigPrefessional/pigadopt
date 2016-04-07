@@ -15,11 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ai2020lab.aiutils.common.LogUtils;
+import com.ai2020lab.aiutils.common.TimeUtils;
 import com.ai2020lab.aiutils.common.ViewUtils;
 import com.ai2020lab.aiutils.system.DisplayUtils;
 import com.ai2020lab.aiviews.dialog.BaseDialog;
 import com.ai2020lab.aiviews.wheelview.WheelView;
 import com.ai2020lab.pigadopted.R;
+import com.ai2020lab.pigadopted.common.CommonUtils;
 import com.ai2020lab.pigadopted.common.DataManager;
 import com.ai2020lab.pigadopted.model.pig.PigCategory;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
@@ -80,16 +82,9 @@ public class PigAddDialog extends DialogFragment {
 		setTextFonts();
 		setPigAddCategoryWv();
 		setPigAddDatePv();
-		setDialogBtnClickListener(dialog);
+		setDialogBtnClickListener();
 		long endTime = System.currentTimeMillis();
 		LogUtils.i(TAG, "消耗时间：" + (endTime - startTime) / 1000 + "秒");
-
-//		if (loadAnim) {
-//			setVisible();
-//			loadAnimation();
-//		} else {
-//			setVisible();
-//		}
 		return dialog;
 	}
 
@@ -151,10 +146,22 @@ public class PigAddDialog extends DialogFragment {
 //		pigAddCategoryWv.setCyclic(false);
 	}
 
+	/**
+	 * 设置时间选择为当前时间
+	 */
 	private void setPigAddDatePv() {
-		pigAddDatePv.setPickerView(2016, 1, 1);
+		int year = CommonUtils.getCurrentYear();
+		int month = CommonUtils.getCurrentMonth();
+		int day = CommonUtils.getCurrentDay();
+//		LogUtils.i(TAG, "年份:" + year);
+//		LogUtils.i(TAG, "月份:" + month);
+//		LogUtils.i(TAG, "日期:" + day);
+		pigAddDatePv.setPickerView(year, month, day);
 	}
 
+	/**
+	 * 返回添加的猪信息对象
+	 */
 	private PigInfo getSelectPigInfo() {
 		PigInfo pigInfo = new PigInfo();
 		// 猪品种
@@ -166,24 +173,27 @@ public class PigAddDialog extends DialogFragment {
 		pigInfo.attendedWeight = pigAddWeightPv.getSelectPigWeight();
 		// 入栏时间
 		pigInfo.attendedDate = pigAddDatePv.getSelectTime();
+		pigInfo.attendedTime = TimeUtils.dateToTimeStamp(pigInfo.attendedDate,
+				TimeUtils.Template.YMD);
 		LogUtils.i(TAG, "入栏品种:" + pigInfo.pigCategory.toString());
 		LogUtils.i(TAG, "入栏猪龄:" + pigInfo.attendedAge);
 		LogUtils.i(TAG, "入栏体重:" + pigInfo.attendedWeight);
 		LogUtils.i(TAG, "入栏时间:" + pigInfo.attendedDate);
+		LogUtils.i(TAG, "入栏时间戳:" + pigInfo.attendedTime);
+		LogUtils.i(TAG, "转换回来:" + TimeUtils.formatTimeStamp(pigInfo.attendedTime,
+				TimeUtils.Template.YMD));
 		return pigInfo;
 	}
 
 	/**
 	 * 绑定按钮事件
 	 */
-	private void setDialogBtnClickListener(final BaseDialog dialog) {
+	private void setDialogBtnClickListener() {
 		ensureBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getSelectPigInfo();
-
 				if (onClickDialogBtnListener != null)
-					onClickDialogBtnListener.onClickEnsure(PigAddDialog.this, getPigInfo());
+					onClickDialogBtnListener.onClickEnsure(PigAddDialog.this, getSelectPigInfo());
 			}
 		});
 		cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -194,19 +204,6 @@ public class PigAddDialog extends DialogFragment {
 
 			}
 		});
-	}
-
-
-	//TODO:返回猪基础信息测试数据,返回后将基础数据提交服务端
-	private PigInfo getPigInfo() {
-		PigInfo pigInfo = new PigInfo();
-		pigInfo.attendedAge = 3;
-		pigInfo.attendedDate = "2016-3-18";
-		pigInfo.attendedWeight = 30;
-		pigInfo.pigCategory = new PigCategory();
-		pigInfo.pigCategory.categoryID = 2;
-		pigInfo.pigCategory.categoryName = "内江猪";
-		return pigInfo;
 	}
 
 
