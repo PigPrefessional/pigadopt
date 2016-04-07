@@ -60,7 +60,7 @@
 						android:src="@mipmap/symbol_right"
 						android:visibility="gone"
 						tools:ignore="contentDescription"/>
-					<TextView
+					<!--<TextView
 						android:id="@+id/buyer_tv"
 						style="@style/TextNormal"
 						android:layout_width="70dp"
@@ -69,7 +69,7 @@
 						android:layout_marginTop="5dp"
 						android:gravity="center"
 						android:text="@string/login_buyer_name"
-						android:visibility="gone"/>
+						android:visibility="gone"/>-->
 				</RelativeLayout>
 			</LinearLayout>
 
@@ -131,7 +131,7 @@
 						android:src="@mipmap/symbol_right"
 						android:visibility="gone"
 						tools:ignore="contentDescription"/>
-					<TextView
+					<!--<TextView
 						android:id="@+id/seller_tv"
 						style="@style/TextNormal"
 						android:layout_width="70dp"
@@ -140,7 +140,7 @@
 						android:layout_marginTop="5dp"
 						android:gravity="center"
 						android:text="@string/login_seller_name"
-						android:visibility="gone"/>
+						android:visibility="gone"/>-->
 				</RelativeLayout>
 
 			</LinearLayout>
