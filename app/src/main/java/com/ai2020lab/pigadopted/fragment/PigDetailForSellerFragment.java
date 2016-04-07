@@ -30,7 +30,6 @@ import com.ai2020lab.pigadopted.biz.HttpStatisticDataManager;
 import com.ai2020lab.pigadopted.biz.PigDetailManager;
 import com.ai2020lab.pigadopted.biz.StatisticsDataManager;
 import com.ai2020lab.pigadopted.common.DataManager;
-import com.ai2020lab.pigadopted.model.base.ResponseData;
 import com.ai2020lab.pigadopted.model.order.OrderInfo;
 import com.ai2020lab.pigadopted.model.order.PigPart;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
@@ -40,11 +39,8 @@ import com.ai2020lab.pigadopted.model.pig.PigDetailInfo;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrderResponse;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
-import com.ai2020lab.pigadopted.model.statistic.BodyTemperatureData;
 import com.ai2020lab.pigadopted.model.statistic.BodyTemperatureResponse;
-import com.ai2020lab.pigadopted.model.statistic.StepData;
 import com.ai2020lab.pigadopted.model.statistic.StepStaticResponse;
-import com.ai2020lab.pigadopted.model.statistic.WeightData;
 import com.ai2020lab.pigadopted.model.statistic.WeightStaticResponse;
 import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
@@ -65,567 +61,478 @@ import cz.msebera.android.httpclient.Header;
  */
 public class PigDetailForSellerFragment extends Fragment {
 
-    private static final String TAG = "PigDetailForSeller";
-    public static final String KEY_PIG_DATA = "KEY_PIG_DATA";
-
-    private FrameLayout mPigPartsContainer;
-    protected RecyclerView mRecyclerView;
-    private ImageView mWholePig;
-    private Button mWeightChartBtn;
-    private Button mStepsChartBtn;
-    private Button mTemperatureBtn;
-    private TextView mBuyerNumber;
-    private TextView mIncreaseWeight;
-    private TextView mPigTypeName;
-    private TextView mPigAge;
-    private TextView mPigWeight;
-    private TextView mPigTemperature;
-    private TextView mPigFatRate;
-    private TextView mPigSteps;
-
-    private List<WeightData> mWeightDataSet;
-    private List<StepData> mStepDataSet;
-    private List<BodyTemperatureData> mTemperatureDataSet;
-    private Serializable mDataSet;
-
-    private PigDetailInfoAndOrderResponse mPigData;
-    protected PigInfo mPigInfo;
-
-
-    public PigDetailForSellerFragment() {
-        // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    //    mPigData = (PigDetailInfoAndOrderResponse) getArguments().getSerializable(KEY_PIG_DATA);
-        mPigInfo = (PigInfo) getArguments().getSerializable(KEY_PIG_DATA);
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final View rootView = inflateRootView(inflater, container, savedInstanceState);
+	private static final String TAG = "PigDetailForSeller";
+	public static final String KEY_PIG_DATA = "KEY_PIG_DATA";
+
+	private FrameLayout mPigPartsContainer;
+	protected RecyclerView mRecyclerView;
+	private ImageView mWholePig;
+	private Button mWeightChartBtn;
+	private Button mStepsChartBtn;
+	private Button mTemperatureBtn;
+	private TextView mBuyerNumber;
+	private TextView mIncreaseWeight;
+	private TextView mPigTypeName;
+	private TextView mPigAge;
+	private TextView mPigWeight;
+	private TextView mPigTemperature;
+	private TextView mPigFatRate;
+	private TextView mPigSteps;
+
+	private Serializable mDataSet;
+
 
-        setupMainLayout(rootView);
-        setupOtherViews(rootView);
+	protected PigInfo mPigInfo;
 
-        setChartsButtonListener();
 
-        loadPigDetailData(mPigInfo);
+	public PigDetailForSellerFragment() {
+		// Required empty public constructor
+	}
 
-        return rootView;
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-    protected View inflateRootView(LayoutInflater inflater, ViewGroup container,
-                                   Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_pig_detail_for_seller, container, false);
-    }
+		mPigInfo = (PigInfo) getArguments().getSerializable(KEY_PIG_DATA);
+	}
 
-    protected void setupMainLayout(View rootView) {
-        mPigPartsContainer = (FrameLayout) rootView.findViewById(R.id.pig_parts_container);
-        mWholePig = (ImageView) rootView.findViewById(R.id.whole_pig);
-        mWeightChartBtn = (Button) rootView.findViewById(R.id.weight_chart);
-        mTemperatureBtn = (Button) rootView.findViewById(R.id.temperture_chart);
-        mStepsChartBtn = (Button) rootView.findViewById(R.id.steps_chart);
 
-        mIncreaseWeight = (TextView) rootView.findViewById(R.id.pig_detail_increase_weight);
-        mPigTypeName = (TextView) rootView.findViewById(R.id.pig_type_name);
-        mPigAge = (TextView) rootView.findViewById(R.id.pig_age);
-        mPigWeight = (TextView) rootView.findViewById(R.id.pig_weight);
-        mPigTemperature = (TextView) rootView.findViewById(R.id.pig_temperature);
-        mPigFatRate = (TextView) rootView.findViewById(R.id.pig_fat_rate);
-        mPigSteps = (TextView) rootView.findViewById(R.id.pig_steps);
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	                         Bundle savedInstanceState) {
+		final View rootView = inflateRootView(inflater, container, savedInstanceState);
 
-    protected void setupOtherViews(View rootView) {
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.buyer_list);
-        mBuyerNumber = (TextView) rootView.findViewById(R.id.buyer_number);
-    }
+		setupMainLayout(rootView);
+		setupOtherViews(rootView);
 
-    protected void loadPigDetailData(PigInfo pigInfo) {
-        PigDetailManager pigDetailManager = new HttpPigDetailManager(getContext());
+		setChartsButtonListener();
 
-        final AIBaseActivity activity = (AIBaseActivity) getActivity();
+		loadPigDetailData(mPigInfo);
 
-        activity.showLoading(getString(R.string.prompt_loading));
+		return rootView;
+	}
 
-        pigDetailManager.findSellerPigDetailInfo("" + pigInfo.pigID, new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(activity) {
-            @Override
-            public void onHandleFailure(String errorMsg) {
-                Log.i(TAG, errorMsg);
-                activity.dismissLoading();
-                ToastUtils.getInstance().showToast(activity, errorMsg);
-            }
+	protected View inflateRootView(LayoutInflater inflater, ViewGroup container,
+	                               Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.fragment_pig_detail_for_seller, container, false);
+	}
 
-            @Override
-            public void onHandleSuccess(int statusCode, Header[] headers, PigDetailInfoAndOrderResponse jsonObj) {
-                activity.dismissLoading();
+	protected void setupMainLayout(View rootView) {
+		mPigPartsContainer = (FrameLayout) rootView.findViewById(R.id.pig_parts_container);
+		mWholePig = (ImageView) rootView.findViewById(R.id.whole_pig);
+		mWeightChartBtn = (Button) rootView.findViewById(R.id.weight_chart);
+		mTemperatureBtn = (Button) rootView.findViewById(R.id.temperture_chart);
+		mStepsChartBtn = (Button) rootView.findViewById(R.id.steps_chart);
 
-                final PigDetailInfoAndOrderResponse response = jsonObj;
-                final PigDetailInfoAndOrder result = response.data;
-                result.pigInfo = mPigInfo;
+		mIncreaseWeight = (TextView) rootView.findViewById(R.id.pig_detail_increase_weight);
+		mPigTypeName = (TextView) rootView.findViewById(R.id.pig_type_name);
+		mPigAge = (TextView) rootView.findViewById(R.id.pig_age);
+		mPigWeight = (TextView) rootView.findViewById(R.id.pig_weight);
+		mPigTemperature = (TextView) rootView.findViewById(R.id.pig_temperature);
+		mPigFatRate = (TextView) rootView.findViewById(R.id.pig_fat_rate);
+		mPigSteps = (TextView) rootView.findViewById(R.id.pig_steps);
+	}
 
-                setupPigInfoUI(result);
-            }
+	protected void setupOtherViews(View rootView) {
+		mRecyclerView = (RecyclerView) rootView.findViewById(R.id.buyer_list);
+		mBuyerNumber = (TextView) rootView.findViewById(R.id.buyer_number);
+	}
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                activity.dismissLoading();
-                ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
-            }
-        });
-    }
+	protected void loadPigDetailData(PigInfo pigInfo) {
+		PigDetailManager pigDetailManager = new HttpPigDetailManager(getContext());
 
-    protected void setupPigInfoUI(PigDetailInfoAndOrder result) {
-        setupPigInfo(result);
-        displayPig(result.orderInfo.pigParts);
-        loadBuyersData(result.orderInfo.pigParts);
-    }
+		final AIBaseActivity activity = (AIBaseActivity) getActivity();
 
-    protected PigDetailInfoAndOrderResponse fakeLoadData() {
+		activity.showLoading(getString(R.string.prompt_loading));
 
+		pigDetailManager.findSellerPigDetailInfo("" + pigInfo.pigID, new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(activity) {
+			@Override
+			public void onHandleFailure(String errorMsg) {
+				Log.i(TAG, errorMsg);
+				activity.dismissLoading();
+				ToastUtils.getInstance().showToast(activity, errorMsg);
+			}
 
+			@Override
+			public void onHandleSuccess(int statusCode, Header[] headers, PigDetailInfoAndOrderResponse jsonObj) {
+				activity.dismissLoading();
 
-        PigDetailInfoAndOrderResponse response = new PigDetailInfoAndOrderResponse();
+				final PigDetailInfoAndOrderResponse response = jsonObj;
+				final PigDetailInfoAndOrder result = response.data;
+				result.pigInfo = mPigInfo;
 
-        PigDetailInfo detailInfo = new PigDetailInfo();
+				setupPigInfoUI(result);
+			}
 
-        PigInfo pigInfo = new PigInfo();
-        pigInfo.attendedAge = 2;
-        detailInfo.pigInfo = pigInfo;
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+				activity.dismissLoading();
+				ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
+			}
+		});
+	}
 
-        PigCategory category = new PigCategory();
-        category.categoryName = "内江猪";
-        pigInfo.pigCategory = category;
+	protected void setupPigInfoUI(PigDetailInfoAndOrder result) {
+		setupPigInfo(result);
+		displayPig(result.orderInfo.pigParts);
+		loadBuyersData(result.orderInfo.pigParts);
+	}
 
-        GrowthInfo growthInfo = new GrowthInfo();
-        growthInfo.increasedWeight = 10;
-        growthInfo.pigWeight = 20;
+	protected PigDetailInfoAndOrderResponse fakeLoadData() {
 
 
-        detailInfo.growthInfo = growthInfo;
+		PigDetailInfoAndOrderResponse response = new PigDetailInfoAndOrderResponse();
 
-        HealthInfo healthInfo = new HealthInfo();
-        healthInfo.fatRate = 24;
-        healthInfo.steps = 46;
-        healthInfo.temperature = 38.2f;
+		PigDetailInfo detailInfo = new PigDetailInfo();
 
-        detailInfo.healthInfo = healthInfo;
+		PigInfo pigInfo = new PigInfo();
+		pigInfo.attendedAge = 2;
+		detailInfo.pigInfo = pigInfo;
 
+		PigCategory category = new PigCategory();
+		category.categoryName = "内江猪";
+		pigInfo.pigCategory = category;
 
-        OrderInfo orderInfo = new OrderInfo();
+		GrowthInfo growthInfo = new GrowthInfo();
+		growthInfo.increasedWeight = 10;
+		growthInfo.pigWeight = 20;
 
-        List<PigPart> partList = new ArrayList<>();
 
-        for (int i = 0; i < 6; i++) {
-            PigPart part = new PigPart();
-            part.partID = i + 1;
-            part.partName = "后腿肉";
+		detailInfo.growthInfo = growthInfo;
 
-            UserInfo userInfo = new UserInfo();
-            userInfo.userID = i + 1;
-            userInfo.userName = "买家" + (i + 1);
-            userInfo.userPortrait = "http://tse4.mm.bing.net/th?id=OIP.Md7bcb36c7db90393682b4bf44487d9f2o0&pid=15.1";
+		HealthInfo healthInfo = new HealthInfo();
+		healthInfo.fatRate = 24;
+		healthInfo.steps = 46;
+		healthInfo.temperature = 38.2f;
 
-            part.userInfo = userInfo;
+		detailInfo.healthInfo = healthInfo;
 
-            partList.add(part);
-        }
 
-        orderInfo.pigParts = partList;
+		OrderInfo orderInfo = new OrderInfo();
 
-        PigDetailInfoAndOrder result = new PigDetailInfoAndOrder();
-        result.pigInfo = pigInfo;
-        result.growthInfo = growthInfo;
-        result.healthInfo = healthInfo;
-        result.orderInfo = orderInfo;
+		List<PigPart> partList = new ArrayList<>();
 
-        response.data = result;
+		for (int i = 0; i < 6; i++) {
+			PigPart part = new PigPart();
+			part.partID = i + 1;
+			part.partName = "后腿肉";
 
-        return response;
-    }
+			UserInfo userInfo = new UserInfo();
+			userInfo.userID = i + 1;
+			userInfo.userName = "买家" + (i + 1);
+			userInfo.userPortrait = "http://tse4.mm.bing.net/th?id=OIP.Md7bcb36c7db90393682b4bf44487d9f2o0&pid=15.1";
 
-    private void setupPigInfo(PigDetailInfoAndOrder result) {
-        mIncreaseWeight.setVisibility(View.INVISIBLE);
-        mIncreaseWeight.setText(String.format(getResources().getString(R.string.pig_detail_weight_increase), result.growthInfo.increasedWeight / 2));
-        mPigTypeName.setText(DataManager.getInstance().getPigCategory(result.pigInfo.pigCategory.categoryID).categoryName);
-        mPigSteps.setText(String.format(getResources().getString(R.string.pig_detail_steps), result.healthInfo.steps));
-        mPigFatRate.setText(result.healthInfo.fatRate + "%");
-        mPigTemperature.setText(result.healthInfo.temperature + "℃");
-        mPigAge.setText(String.format(getResources().getString(R.string.pig_detail_age), result.pigInfo.attendedAge));
-    }
+			part.userInfo = userInfo;
 
-    private void startPigIncreaseWeightAnim() {
-        Animation anim;
-        anim = AnimationUtils.loadAnimation(getContext(), R.anim.scale_left_down_in);
-        anim.setInterpolator(new AnticipateOvershootInterpolator());
-        mIncreaseWeight.setVisibility(View.VISIBLE);
-        mIncreaseWeight.startAnimation(anim);
-    }
+			partList.add(part);
+		}
 
-    private void displayPig(List<PigPart> partList) {
+		orderInfo.pigParts = partList;
 
-        if (partList == null || partList.size() == 0) {
-            return;
-        }
+		PigDetailInfoAndOrder result = new PigDetailInfoAndOrder();
+		result.pigInfo = pigInfo;
+		result.growthInfo = growthInfo;
+		result.healthInfo = healthInfo;
+		result.orderInfo = orderInfo;
 
-        for (int i = 0; i < partList.size(); i++) {
-            final PigPart part = partList.get(i);
-            final int partImageId = getPigPartImageResID(part);
+		response.data = result;
 
-            ImageView image = new ImageView(getContext());
-            image.setLayoutParams(mWholePig.getLayoutParams());
-            image.setScaleType(mWholePig.getScaleType());
+		return response;
+	}
 
-            image.setImageResource(partImageId);
+	private void setupPigInfo(PigDetailInfoAndOrder result) {
+		mIncreaseWeight.setVisibility(View.INVISIBLE);
+		mIncreaseWeight.setText(String.format(getResources().getString(R.string.pig_detail_weight_increase), result.growthInfo.increasedWeight / 2));
+		mPigTypeName.setText(DataManager.getInstance().getPigCategory(result.pigInfo.pigCategory.categoryID).categoryName);
+		mPigSteps.setText(String.format(getResources().getString(R.string.pig_detail_steps), result.healthInfo.steps));
+		mPigFatRate.setText(result.healthInfo.fatRate + "%");
+		mPigTemperature.setText(result.healthInfo.temperature + "℃");
+		mPigAge.setText(String.format(getResources().getString(R.string.pig_detail_age), result.pigInfo.attendedAge));
+	}
 
-            mPigPartsContainer.addView(image);
-            Animation animation = startPigPartAnim(image);
+	private void startPigIncreaseWeightAnim() {
+		Animation anim;
+		anim = AnimationUtils.loadAnimation(getContext(), R.anim.scale_left_down_in);
+		anim.setInterpolator(new AnticipateOvershootInterpolator());
+		mIncreaseWeight.setVisibility(View.VISIBLE);
+		mIncreaseWeight.startAnimation(anim);
+	}
 
-            if (i == partList.size() - 1) {
-                animation.setAnimationListener(new AnimSimpleListener() {
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        startPigIncreaseWeightAnim();
-                    }
-                });
-            }
-        }
+	private void displayPig(List<PigPart> partList) {
 
+		if (partList == null || partList.size() == 0) {
+			return;
+		}
 
-    }
+		for (int i = 0; i < partList.size(); i++) {
+			final PigPart part = partList.get(i);
+			final int partImageId = getPigPartImageResID(part);
 
-    protected int getPigPartImageResID(PigPart pigPart) {
-        return DataManager.getInstance().getPigPartImageResID(pigPart);
-    }
-
-    protected void loadBuyersData(List<PigPart> pigParts) {
-
-        List<UserInfo> buyers = new ArrayList<>();
-        Map<Integer, UserInfo> userMap = new HashMap<>();
-
-        for (PigPart pigPart : pigParts) {
-            final UserInfo user = pigPart.userInfo;
+			ImageView image = new ImageView(getContext());
+			image.setLayoutParams(mWholePig.getLayoutParams());
+			image.setScaleType(mWholePig.getScaleType());
 
-            if (!userMap.containsKey(user.userID)) {
-                userMap.put(user.userID, user);
-            }
-        }
+			image.setImageResource(partImageId);
 
+			mPigPartsContainer.addView(image);
+			Animation animation = startPigPartAnim(image);
 
-        final Set<Integer> keys = userMap.keySet();
+			if (i == partList.size() - 1) {
+				animation.setAnimationListener(new AnimSimpleListener() {
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						startPigIncreaseWeightAnim();
+					}
+				});
+			}
+		}
 
-        for (int key : keys) {
-            buyers.add(userMap.get(key));
-        }
 
-        mBuyerNumber.setText(String.format(getResources().getString(R.string.pig_detail_buyer_number), buyers.size()));
+	}
 
-        mRecyclerView.setHasFixedSize(true);
+	protected int getPigPartImageResID(PigPart pigPart) {
+		return DataManager.getInstance().getPigPartImageResID(pigPart);
+	}
 
-        // use a linear layout manager
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(new BuyerAdapter(getContext(), buyers));
-    }
-
-
-    protected Animation startPigPartAnim(View animatedView) {
-        Random random = new Random();
-
-        int animationId = 0;
-
-        switch (random.nextInt(4)) {
-            case 0:
-                animationId = R.anim.push_left_in;
-                break;
-            case 1:
-                animationId = R.anim.push_top_in;
-                break;
-            case 2:
-                animationId = R.anim.push_right_in;
-                break;
-            case 3:
-                animationId = R.anim.slide_bottom_in;
-                break;
-            default:
-                animationId = R.anim.push_left_in;
-        }
-
-        Animation anim = AnimationUtils.loadAnimation(getContext(), animationId);
-        anim.setDuration(1000);
-        animatedView.startAnimation(anim);
-
-        return anim;
-    }
-
-    private void setChartsButtonListener() {
-        mWeightChartBtn.setOnClickListener(createChartButtonListener(StatisticsChartFragment.CHART_TYPE_WEIGHT));
-        mTemperatureBtn.setOnClickListener(createChartButtonListener(StatisticsChartFragment.CHART_TYPE_TEMPERATURE));
-        mStepsChartBtn.setOnClickListener(createChartButtonListener(StatisticsChartFragment.CHART_TYPE_STEPS));
-    }
-
-    private View.OnClickListener createChartButtonListener(final int chartType) {
-
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setupStatisticChart(chartType);
-
-
-//                DisplayMetrics metric = new DisplayMetrics();
-//                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
-//                int width = metric.widthPixels;  // 屏幕宽度（像素）
-//                int height = metric.heightPixels;  // 屏幕高度（像素
-//
-//
-//                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-//                Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
-//
-//                if (prev != null) {
-//                    ft.remove(prev);
-//                }
-//                ft.addToBackStack(null);
-//
-//                final float scale = metric.density;
-//                // dp to px
-//                int marginWidth = (int) (15 * scale + 0.5f);
-//                int marginHeight = (int) (300 * scale + 0.5f);
-//
-//                DialogFragment newFragment = StatisticsChartFragment
-//                        .newInstance(width - marginWidth, height - marginHeight, chartType);
-//
-//
-//                newFragment.show(ft, "dialog");
-            }
-        };
-
-        return listener;
-    }
-
-
-    private void setupStatisticChart(final int chartType) {
-
-        HttpStatisticDataManager statisticsDataManager = new HttpStatisticDataManager(getContext());
-
-        final AIBaseActivity activity = (AIBaseActivity) getActivity();
-
-        activity.showLoading(getString(R.string.prompt_loading));
-
-        switch (chartType) {
-            case StatisticsChartFragment.CHART_TYPE_STEPS:
-                statisticsDataManager.queryStepList("1", StatisticsDataManager.DataType.DAY,
-                        null, null, new ChartJsonHandler<StepStaticResponse>(chartType, activity));
-                break;
-            case StatisticsChartFragment.CHART_TYPE_TEMPERATURE:
-                statisticsDataManager.queryTemperatureList("1", StatisticsDataManager.DataType.DAY,
-                        null, null, new ChartJsonHandler<BodyTemperatureResponse>(chartType, activity));
-                break;
-            case StatisticsChartFragment.CHART_TYPE_WEIGHT:
-                statisticsDataManager.queryWeightList("1", StatisticsDataManager.DataType.DAY,
-                        null, null, new ChartJsonHandler<WeightStaticResponse>(chartType, activity));
-                break;
-            default:
-                break;
-        }
-
-//        if (chartType == StatisticsChartFragment.CHART_TYPE_WEIGHT) {
-//
-//            statisticsDataManager.queryWeightList("1", StatisticsDataManager.DataType.DAY,
-//                    null, null, new JsonHttpResponseHandler<WeightStaticResponse>(getContext()) {
-//                        @Override
-//                        public void onHandleSuccess(int statusCode, Header[] headers, WeightStaticResponse jsonObj) {
-//                            mDataSet = (Serializable) jsonObj.data.dataList;
-//                            activity.dismissLoading();
-//                            addChartFragment(chartType);
-//                        }
-//
-//                        @Override
-//                        public void onHandleFailure(String errorMsg) {
-//                            activity.dismissLoading();
-//                            ToastUtils.getInstance().showToast(activity, errorMsg);
-//                        }
-//
-//                        @Override
-//                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                            activity.dismissLoading();
-//                            ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
-//                        }
-//
-//                    });
-//        } else if (chartType == StatisticsChartFragment.CHART_TYPE_STEPS) {
-//            statisticsDataManager.queryStepList("1", StatisticsDataManager.DataType.DAY,
-//                    null, null, new JsonHttpResponseHandler<StepStaticResponse>(getContext()) {
-//                        @Override
-//                        public void onHandleSuccess(int statusCode, Header[] headers, StepStaticResponse jsonObj) {
-//                            mDataSet = (Serializable) jsonObj.data.dataList;
-//                            activity.dismissLoading();
-//                            addChartFragment(chartType);
-//                        }
-//
-//                        @Override
-//                        public void onHandleFailure(String errorMsg) {
-//                            ToastUtils.getInstance().showToast(activity, errorMsg);
-//                        }
-//
-//                        @Override
-//                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                            ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
-//                        }
-//
-//                    });
-//        } else if (chartType == StatisticsChartFragment.CHART_TYPE_TEMPERATURE) {
-//            statisticsDataManager.queryTemperatureList("1", StatisticsDataManager.DataType.DAY,
-//                    null, null, new JsonHttpResponseHandler<BodyTemperatureResponse>(getContext()) {
-//                        @Override
-//                        public void onHandleSuccess(int statusCode, Header[] headers, BodyTemperatureResponse jsonObj) {
-//                            mDataSet = (Serializable) jsonObj.data.dataList;
-//                            Log.i(TAG, jsonObj.toString());
-//                            addChartFragment(chartType);
-//                        }
-//
-//                        @Override
-//                        public void onHandleFailure(String errorMsg) {
-//                            ToastUtils.getInstance().showToast(activity, errorMsg);
-//                        }
-//
-//                        @Override
-//                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                            ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
-//                        }
-//
-//                    });
-//        }
-    }
-
-    private class ChartJsonHandler<T extends ResponseData> extends JsonHttpResponseHandler<T> {
-
-        private int mmChartType;
-        private AIBaseActivity mmContext;
-
-        ChartJsonHandler(int chartType, AIBaseActivity context) {
-            super(context);
-            mmChartType = chartType;
-            mmContext = context;
-        }
-
-
-        @Override
-        public void onHandleFailure(String errorMsg) {
-            mmContext.dismissLoading();
-            ToastUtils.getInstance().showToast(mmContext, errorMsg);
-        }
-
-        @Override
-        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-            mmContext.dismissLoading();
-            ToastUtils.getInstance().showToast(mmContext, R.string.prompt_loading_failure);
-        }
-
-        @Override
-        public void onHandleSuccess(int statusCode, Header[] headers, T jsonObj) {
-            mmContext.dismissLoading();
-
-            switch (mmChartType) {
-                case StatisticsChartFragment.CHART_TYPE_STEPS:
-                    mDataSet = (Serializable) ((StepStaticResponse) jsonObj).data.dataList;
-                    break;
-                case StatisticsChartFragment.CHART_TYPE_TEMPERATURE:
-                    BodyTemperatureResponse response = (BodyTemperatureResponse) jsonObj;
-                    mDataSet = (Serializable) ((BodyTemperatureResponse) jsonObj).data.dataList;
-                    break;
-                case StatisticsChartFragment.CHART_TYPE_WEIGHT:
-                    mDataSet = (Serializable) ((WeightStaticResponse) jsonObj).data.dataList;
-                    break;
-                default:
-                    break;
-            }
-
-            addChartFragment(mmChartType);
-        }
-    }
-
-    private void addChartFragment(final int chartType) {
-        DisplayMetrics metric = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
-        int width = metric.widthPixels;  // 屏幕宽度（像素）
-        int height = metric.heightPixels;  // 屏幕高度（像素
-
-
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
-
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        final float scale = metric.density;
-        // dp to px
-        int marginWidth = (int) (15 * scale + 0.5f);
-        int marginHeight = (int) (300 * scale + 0.5f);
-
-        DialogFragment newFragment = StatisticsChartFragment
-                .newInstance(width - marginWidth, height - marginHeight, chartType, mDataSet);
-
-
-        newFragment.show(ft, "dialog");
-    }
-
-    private class BuyerAdapter extends
-            RecyclerView.Adapter<BuyerAdapter.ViewHolder> {
-
-        private LayoutInflater mInflater;
-        private List<UserInfo> mBuyers;
-
-        public BuyerAdapter(Context context, List<UserInfo> buyers) {
-            mInflater = LayoutInflater.from(context);
-            mBuyers = buyers;
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            public ViewHolder(View view) {
-                super(view);
-            }
-
-            ImageView mPortrait;
-            TextView mName;
-        }
-
-        @Override
-        public int getItemCount() {
-            return mBuyers.size();
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View view = mInflater.inflate(R.layout.item_buyer,
-                    viewGroup, false);
-            ViewHolder viewHolder = new ViewHolder(view);
-
-            viewHolder.mPortrait = (ImageView) view
-                    .findViewById(R.id.buyer_portrait);
-            viewHolder.mName = (TextView) view.findViewById(R.id.buyer_name);
-
-            return viewHolder;
-        }
-
-
-        @Override
-        public void onBindViewHolder(final ViewHolder viewHolder, final int index) {
-            final ImageLoader imageLoader = ImageLoader.getInstance();
-
-            final UserInfo buyer = mBuyers.get(index);
-
-            viewHolder.mName.setText(buyer.userName);
-            imageLoader.displayImage(buyer.userPortrait, viewHolder.mPortrait);
-        }
-
-    }
+	protected void loadBuyersData(List<PigPart> pigParts) {
+
+		List<UserInfo> buyers = new ArrayList<>();
+		Map<Integer, UserInfo> userMap = new HashMap<>();
+
+		for (PigPart pigPart : pigParts) {
+			final UserInfo user = pigPart.userInfo;
+
+			if (!userMap.containsKey(user.userID)) {
+				userMap.put(user.userID, user);
+			}
+		}
+
+
+		final Set<Integer> keys = userMap.keySet();
+
+		for (int key : keys) {
+			buyers.add(userMap.get(key));
+		}
+
+		mBuyerNumber.setText(String.format(getResources().getString(R.string.pig_detail_buyer_number), buyers.size()));
+
+		mRecyclerView.setHasFixedSize(true);
+
+		// use a linear layout manager
+		LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+		mRecyclerView.setLayoutManager(mLayoutManager);
+		mRecyclerView.setAdapter(new BuyerAdapter(getContext(), buyers));
+	}
+
+
+	protected Animation startPigPartAnim(View animatedView) {
+		Random random = new Random();
+
+		int animationId = 0;
+
+		switch (random.nextInt(4)) {
+			case 0:
+				animationId = R.anim.push_left_in;
+				break;
+			case 1:
+				animationId = R.anim.push_top_in;
+				break;
+			case 2:
+				animationId = R.anim.push_right_in;
+				break;
+			case 3:
+				animationId = R.anim.slide_bottom_in;
+				break;
+			default:
+				animationId = R.anim.push_left_in;
+		}
+
+		Animation anim = AnimationUtils.loadAnimation(getContext(), animationId);
+		anim.setDuration(1000);
+		animatedView.startAnimation(anim);
+
+		return anim;
+	}
+
+	private void setChartsButtonListener() {
+		mWeightChartBtn.setOnClickListener(createChartButtonListener(StatisticsChartFragment.CHART_TYPE_WEIGHT));
+		mTemperatureBtn.setOnClickListener(createChartButtonListener(StatisticsChartFragment.CHART_TYPE_TEMPERATURE));
+		mStepsChartBtn.setOnClickListener(createChartButtonListener(StatisticsChartFragment.CHART_TYPE_STEPS));
+	}
+
+	private View.OnClickListener createChartButtonListener(final int chartType) {
+
+		View.OnClickListener listener = new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setupStatisticChart(chartType);
+			}
+		};
+
+		return listener;
+	}
+
+
+	private void setupStatisticChart(final int chartType) {
+
+		HttpStatisticDataManager statisticsDataManager = new HttpStatisticDataManager(getContext());
+
+		final AIBaseActivity activity = (AIBaseActivity) getActivity();
+
+		activity.showLoading(getString(R.string.prompt_loading));
+
+
+		if (chartType == StatisticsChartFragment.CHART_TYPE_WEIGHT) {
+
+			statisticsDataManager.queryWeightList("" + mPigInfo.pigID, StatisticsDataManager.DataType.DAY,
+					null, null, new JsonHttpResponseHandler<WeightStaticResponse>(getContext()) {
+						@Override
+						public void onHandleSuccess(int statusCode, Header[] headers, WeightStaticResponse jsonObj) {
+							mDataSet = (Serializable) jsonObj.data.dataList;
+							activity.dismissLoading();
+							addChartFragment(chartType);
+						}
+
+						@Override
+						public void onHandleFailure(String errorMsg) {
+							activity.dismissLoading();
+							ToastUtils.getInstance().showToast(activity, errorMsg);
+						}
+
+						@Override
+						public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+							activity.dismissLoading();
+							ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
+						}
+
+					});
+		} else if (chartType == StatisticsChartFragment.CHART_TYPE_STEPS) {
+			statisticsDataManager.queryStepList("" + mPigInfo.pigID, StatisticsDataManager.DataType.DAY,
+					null, null, new JsonHttpResponseHandler<StepStaticResponse>(getContext()) {
+						@Override
+						public void onHandleSuccess(int statusCode, Header[] headers, StepStaticResponse jsonObj) {
+							mDataSet = (Serializable) jsonObj.data.dataList;
+							activity.dismissLoading();
+							addChartFragment(chartType);
+						}
+
+						@Override
+						public void onHandleFailure(String errorMsg) {
+							activity.dismissLoading();
+							ToastUtils.getInstance().showToast(activity, errorMsg);
+						}
+
+						@Override
+						public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+							activity.dismissLoading();
+							ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
+						}
+
+					});
+		} else if (chartType == StatisticsChartFragment.CHART_TYPE_TEMPERATURE) {
+			statisticsDataManager.queryTemperatureList("" + mPigInfo.pigID, StatisticsDataManager.DataType.DAY,
+					null, null, new JsonHttpResponseHandler<BodyTemperatureResponse>(getContext()) {
+						@Override
+						public void onHandleSuccess(int statusCode, Header[] headers, BodyTemperatureResponse jsonObj) {
+							mDataSet = (Serializable) jsonObj.data.dataList;
+							activity.dismissLoading();
+							addChartFragment(chartType);
+						}
+
+						@Override
+						public void onHandleFailure(String errorMsg) {
+							activity.dismissLoading();
+							ToastUtils.getInstance().showToast(activity, errorMsg);
+						}
+
+						@Override
+						public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+							activity.dismissLoading();
+							ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
+						}
+
+					});
+		}
+	}
+
+
+	private void addChartFragment(final int chartType) {
+		DisplayMetrics metric = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+		int width = metric.widthPixels;  // 屏幕宽度（像素）
+		int height = metric.heightPixels;  // 屏幕高度（像素
+
+
+		FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+		Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
+
+		if (prev != null) {
+			ft.remove(prev);
+		}
+		ft.addToBackStack(null);
+
+		final float scale = metric.density;
+		// dp to px
+		int marginWidth = (int) (15 * scale + 0.5f);
+		int marginHeight = (int) (300 * scale + 0.5f);
+
+		DialogFragment newFragment = StatisticsChartFragment
+				.newInstance(width - marginWidth, height - marginHeight, chartType, mDataSet);
+
+
+		newFragment.show(ft, "dialog");
+	}
+
+	private class BuyerAdapter extends
+			RecyclerView.Adapter<BuyerAdapter.ViewHolder> {
+
+		private LayoutInflater mInflater;
+		private List<UserInfo> mBuyers;
+
+		public BuyerAdapter(Context context, List<UserInfo> buyers) {
+			mInflater = LayoutInflater.from(context);
+			mBuyers = buyers;
+		}
+
+		class ViewHolder extends RecyclerView.ViewHolder {
+			public ViewHolder(View view) {
+				super(view);
+			}
+
+			ImageView mPortrait;
+			TextView mName;
+		}
+
+		@Override
+		public int getItemCount() {
+			return mBuyers.size();
+		}
+
+		@Override
+		public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+			View view = mInflater.inflate(R.layout.item_buyer,
+					viewGroup, false);
+			ViewHolder viewHolder = new ViewHolder(view);
+
+			viewHolder.mPortrait = (ImageView) view
+					.findViewById(R.id.buyer_portrait);
+			viewHolder.mName = (TextView) view.findViewById(R.id.buyer_name);
+
+			return viewHolder;
+		}
+
+
+		@Override
+		public void onBindViewHolder(final ViewHolder viewHolder, final int index) {
+			final ImageLoader imageLoader = ImageLoader.getInstance();
+
+			final UserInfo buyer = mBuyers.get(index);
+
+			viewHolder.mName.setText(buyer.userName);
+			imageLoader.displayImage(buyer.userPortrait, viewHolder.mPortrait);
+		}
+
+	}
 
 }
