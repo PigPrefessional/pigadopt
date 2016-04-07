@@ -15,7 +15,6 @@ import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.common.ToastUtils;
@@ -52,12 +51,12 @@ public class LoginActivity extends AIBaseActivity {
 	private ImageView buyerIv;
 	private CircleImageView buyerCiv;
 	private ImageView buyerSelectIv;
-	private TextView buyerTv;
+//	private TextView buyerTv;
 	private RelativeLayout sellerInfoRl;
 	private ImageView sellerIv;
 	private CircleImageView sellerCiv;
 	private ImageView sellerSelectIv;
-	private TextView sellerTv;
+//	private TextView sellerTv;
 	private CoordinatorLayout snackContainerCl;
 	/**
 	 * 当前选中的登录用户角色类型
@@ -104,12 +103,12 @@ public class LoginActivity extends AIBaseActivity {
 		buyerIv = (ImageView) findViewById(R.id.buyer_iv);
 		buyerCiv = (CircleImageView) findViewById(R.id.buyer_civ);
 		buyerSelectIv = (ImageView) findViewById(R.id.buyer_select_iv);
-		buyerTv = (TextView) findViewById(R.id.buyer_tv);
+//		buyerTv = (TextView) findViewById(R.id.buyer_tv);
 		sellerInfoRl = (RelativeLayout) findViewById(R.id.seller_info_rl);
 		sellerIv = (ImageView) findViewById(R.id.seller_iv);
 		sellerCiv = (CircleImageView) findViewById(R.id.seller_civ);
 		sellerSelectIv = (ImageView) findViewById(R.id.seller_select_iv);
-		sellerTv = (TextView) findViewById(R.id.seller_tv);
+//		sellerTv = (TextView) findViewById(R.id.seller_tv);
 		snackContainerCl = (CoordinatorLayout) findViewById(R.id.snack_container_cl);
 	}
 
@@ -173,9 +172,9 @@ public class LoginActivity extends AIBaseActivity {
 			public void onAnimationEnd(Animation animation) {
 				LogUtils.i(TAG, "左边滑入动画执行完毕");
 				buyerCiv.startAnimation(scaleIn);
-				buyerTv.startAnimation(scaleIn);
+//				buyerTv.startAnimation(scaleIn);
 				buyerCiv.setVisibility(View.VISIBLE);
-				buyerTv.setVisibility(View.VISIBLE);
+//				buyerTv.setVisibility(View.VISIBLE);
 			}
 		});
 		// 动画显示卖家信息
@@ -184,9 +183,9 @@ public class LoginActivity extends AIBaseActivity {
 			public void onAnimationEnd(Animation animation) {
 				LogUtils.i(TAG, "右边滑入动画执行完毕");
 				sellerCiv.startAnimation(scaleIn);
-				sellerTv.startAnimation(scaleIn);
+//				sellerTv.startAnimation(scaleIn);
 				sellerCiv.setVisibility(View.VISIBLE);
-				sellerTv.setVisibility(View.VISIBLE);
+//				sellerTv.setVisibility(View.VISIBLE);
 			}
 		});
 		// 角色信息显示完毕再显示选择状态

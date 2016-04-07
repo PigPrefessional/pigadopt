@@ -61,6 +61,8 @@
 	<!-- 监听短信权限 -->
 	<uses-permission android:name="android.permission.READ_SMS"/>
 	<uses-permission android:name="android.permission.RECEIVE_SMS"/>
+	<uses-permission android:name="android.permission.RECEIVE_MMS"/>
+	<uses-permission android:name="android.permission.RECEIVE_WAP_PUSH"/>
 	<!-- 拨打电话权限 -->
 	<uses-permission android:name="android.permission.CALL_PHONE"/>
 	<!-- 允许程序监视、修改有关播出电话 -->

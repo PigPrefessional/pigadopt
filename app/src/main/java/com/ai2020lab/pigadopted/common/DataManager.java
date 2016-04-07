@@ -316,18 +316,13 @@ public class DataManager {
 					public void onCancel() {
 						// 没有网络的情况会终止请求
 						ToastUtils.getInstance().showToast(context,
-								context.getString(R.string.prompt_query_pig_categories_failure));
+								R.string.prompt_query_pig_categories_failure);
 					}
 
 					@Override
 					public void onHandleFailure(String errorMsg) {
 						ToastUtils.getInstance().showToast(context,
-								context.getString(R.string.prompt_query_pig_categories_failure));
-					}
-
-					@Override
-					public void onFinish() {
-
+								R.string.prompt_query_pig_categories_failure);
 					}
 				});
 	}
@@ -362,18 +357,13 @@ public class DataManager {
 					public void onCancel() {
 						// 没有网络的情况会终止请求
 						ToastUtils.getInstance().showToast(context,
-								context.getString(R.string.prompt_query_pig_parts_failure));
+								R.string.prompt_query_pig_parts_failure);
 					}
 
 					@Override
 					public void onHandleFailure(String errorMsg) {
 						ToastUtils.getInstance().showToast(context,
-								context.getString(R.string.prompt_query_pig_parts_failure));
-					}
-
-					@Override
-					public void onFinish() {
-
+								R.string.prompt_query_pig_parts_failure);
 					}
 				});
 	}

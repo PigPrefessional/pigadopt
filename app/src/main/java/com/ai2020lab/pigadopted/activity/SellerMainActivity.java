@@ -168,7 +168,7 @@ public class SellerMainActivity extends AIBaseActivity {
 				birdIndicator.setCurrentIndex(index);
 				// 根据当前猪圈中的猪决定是否隐藏添加猪按钮
 				setAddPigBtnVisibility(hogpenVp.getPigNumber(index)
-						< HogpenViewPager.PIG_LIMIT);
+						< HogpenViewPager.PIG_LIMIT && hogpenVp.getHogpenNumber() > 0);
 			}
 		});
 		hogpenVp.setOnPigClickListener(new HogpenViewPager.OnPigClickListener() {
@@ -436,7 +436,7 @@ public class SellerMainActivity extends AIBaseActivity {
 		if (birdIndicator.getIndicatorNumber() == 1) {
 			birdIndicator.setCurrentIndex(0);
 			setAddPigBtnVisibility(hogpenVp.getPigNumber()
-					< HogpenViewPager.PIG_LIMIT);
+					< HogpenViewPager.PIG_LIMIT && hogpenVp.getHogpenNumber() > 0);
 		}
 	}
 
@@ -477,8 +477,10 @@ public class SellerMainActivity extends AIBaseActivity {
 									// 让游标选中第一项,初始化猪圈的时候，页面选择事件是无效的？
 									birdIndicator.setCurrentIndex(0);
 									// 判断添加猪按钮是否显示
+									// 初始的时候猪圈可能为0，所以不能添加猪
 									setAddPigBtnVisibility(hogpenVp.getPigNumber()
-											< HogpenViewPager.PIG_LIMIT);
+											< HogpenViewPager.PIG_LIMIT
+											&& hogpenVp.getHogpenNumber() > 0);
 									// 动画显示卖家信息
 									loadSellerInfoAnim();
 								} else {
