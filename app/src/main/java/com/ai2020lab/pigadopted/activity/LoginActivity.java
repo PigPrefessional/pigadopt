@@ -344,8 +344,6 @@ public class LoginActivity extends AIBaseActivity {
 						}, 1000);
 					}
 
-
-
 				});
 	}
 
