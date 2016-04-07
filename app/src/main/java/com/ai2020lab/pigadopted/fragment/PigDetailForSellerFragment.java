@@ -36,6 +36,11 @@ import com.ai2020lab.pigadopted.model.pig.PigDetailInfo;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrderResponse;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
+import com.ai2020lab.pigadopted.model.statistic.BodyTemperatureData;
+import com.ai2020lab.pigadopted.model.statistic.BodyTemperatureResponse;
+import com.ai2020lab.pigadopted.model.statistic.StepData;
+import com.ai2020lab.pigadopted.model.statistic.StepStaticResponse;
+import com.ai2020lab.pigadopted.model.statistic.WeightData;
 import com.ai2020lab.pigadopted.model.statistic.WeightStaticResponse;
 import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
@@ -71,6 +76,10 @@ public class PigDetailForSellerFragment extends Fragment {
     private TextView mPigTemperature;
     private TextView mPigFatRate;
     private TextView mPigSteps;
+
+    private List<WeightData> mWeightDataSet;
+    private List<StepData> mStepDataSet;
+    private List<BodyTemperatureData> mTemperatureDataSet;
 
 
     public PigDetailForSellerFragment() {
@@ -317,45 +326,7 @@ public class PigDetailForSellerFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (chartType == StatisticsChartFragment.CHART_TYPE_WEIGHT) {
-                    HttpStatisticDataManager statisticsDataManager = new HttpStatisticDataManager(getContext());
 
-                    statisticsDataManager.queryWeightList("1", StatisticsDataManager.DataType.DAY,
-                            null, null, new JsonHttpResponseHandler<WeightStaticResponse>(getContext()) {
-                                @Override
-                                public void onHandleSuccess(int statusCode, Header[] headers, WeightStaticResponse jsonObj) {
-
-                                    Log.i(TAG, jsonObj.toString());
-                                }
-
-                                @Override
-                                public void onHandleFailure(String errorMsg) {
-                                    Log.i(TAG, errorMsg);
-                                }
-
-                                @Override
-                                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                                    Log.i(TAG, responseString);
-                                }
-
-                            });
-                } else if (chartType == StatisticsChartFragment.CHART_TYPE_STEPS) {
-                    PigDetailManager mPigDetailManager;
-
-                    mPigDetailManager = new HttpPigDetailManager(getContext());
-
-                    mPigDetailManager.findSellerPigDetailInfo("1", new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(getContext()) {
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                            Log.i(TAG, responseString);
-                        }
-
-                        @Override
-                        public void onHandleSuccess(int statusCode, Header[] headers, PigDetailInfoAndOrderResponse jsonObj) {
-                            Log.i(TAG, jsonObj.toString());
-                        }
-                    });
-                }
 
                 DisplayMetrics metric = new DisplayMetrics();
                 getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -387,6 +358,73 @@ public class PigDetailForSellerFragment extends Fragment {
         };
 
         return listener;
+    }
+
+    private void loadDataSet(final int chartType) {
+        HttpStatisticDataManager statisticsDataManager = new HttpStatisticDataManager(getContext());
+
+        if (chartType == StatisticsChartFragment.CHART_TYPE_WEIGHT) {
+
+            statisticsDataManager.queryWeightList("1", StatisticsDataManager.DataType.DAY,
+                    null, null, new JsonHttpResponseHandler<WeightStaticResponse>(getContext()) {
+                        @Override
+                        public void onHandleSuccess(int statusCode, Header[] headers, WeightStaticResponse jsonObj) {
+                            mWeightDataSet = jsonObj.data.dataList;
+                            Log.i(TAG, jsonObj.toString());
+                        }
+
+                        @Override
+                        public void onHandleFailure(String errorMsg) {
+                            Log.i(TAG, errorMsg);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.i(TAG, responseString);
+                        }
+
+                    });
+        } else if (chartType == StatisticsChartFragment.CHART_TYPE_STEPS) {
+            statisticsDataManager.queryStepList("1", StatisticsDataManager.DataType.DAY,
+                    null, null, new JsonHttpResponseHandler<StepStaticResponse>(getContext()) {
+                        @Override
+                        public void onHandleSuccess(int statusCode, Header[] headers, StepStaticResponse jsonObj) {
+                            mStepDataSet = jsonObj.data.dataList;
+                            Log.i(TAG, jsonObj.toString());
+                        }
+
+                        @Override
+                        public void onHandleFailure(String errorMsg) {
+                            Log.i(TAG, errorMsg);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.i(TAG, responseString);
+                        }
+
+                    });
+        } else if (chartType == StatisticsChartFragment.CHART_TYPE_TEMPERATURE) {
+            statisticsDataManager.queryTemperatureList("1", StatisticsDataManager.DataType.DAY,
+                    null, null, new JsonHttpResponseHandler<BodyTemperatureResponse>(getContext()) {
+                        @Override
+                        public void onHandleSuccess(int statusCode, Header[] headers, BodyTemperatureResponse jsonObj) {
+                            mTemperatureDataSet = jsonObj.data.dataList;
+                            Log.i(TAG, jsonObj.toString());
+                        }
+
+                        @Override
+                        public void onHandleFailure(String errorMsg) {
+                            Log.i(TAG, errorMsg);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.i(TAG, responseString);
+                        }
+
+                    });
+        }
     }
 
     private class BuyerAdapter extends
