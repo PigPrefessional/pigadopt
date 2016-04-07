@@ -153,9 +153,9 @@ public class PigAddDialog extends DialogFragment {
 		int year = CommonUtils.getCurrentYear();
 		int month = CommonUtils.getCurrentMonth();
 		int day = CommonUtils.getCurrentDay();
-		LogUtils.i(TAG, "年份:" + year);
-		LogUtils.i(TAG, "月份:" + month);
-		LogUtils.i(TAG, "日期:" + day);
+//		LogUtils.i(TAG, "年份:" + year);
+//		LogUtils.i(TAG, "月份:" + month);
+//		LogUtils.i(TAG, "日期:" + day);
 		pigAddDatePv.setPickerView(year, month, day);
 	}
 
@@ -175,13 +175,13 @@ public class PigAddDialog extends DialogFragment {
 		pigInfo.attendedDate = pigAddDatePv.getSelectTime();
 		pigInfo.attendedTime = TimeUtils.dateToTimeStamp(pigInfo.attendedDate,
 				TimeUtils.Template.YMD);
-//		LogUtils.i(TAG, "入栏品种:" + pigInfo.pigCategory.toString());
-//		LogUtils.i(TAG, "入栏猪龄:" + pigInfo.attendedAge);
-//		LogUtils.i(TAG, "入栏体重:" + pigInfo.attendedWeight);
-//		LogUtils.i(TAG, "入栏时间:" + pigInfo.attendedDate);
-//		LogUtils.i(TAG, "入栏时间戳:" + pigInfo.attendedTime);
-//		LogUtils.i(TAG, "转换回来:" + TimeUtils.formatTimeStamp(pigInfo.attendedTime,
-//				TimeUtils.Template.YMD));
+		LogUtils.i(TAG, "入栏品种:" + pigInfo.pigCategory.toString());
+		LogUtils.i(TAG, "入栏猪龄:" + pigInfo.attendedAge);
+		LogUtils.i(TAG, "入栏体重:" + pigInfo.attendedWeight);
+		LogUtils.i(TAG, "入栏时间:" + pigInfo.attendedDate);
+		LogUtils.i(TAG, "入栏时间戳:" + pigInfo.attendedTime);
+		LogUtils.i(TAG, "转换回来:" + TimeUtils.formatTimeStamp(pigInfo.attendedTime,
+				TimeUtils.Template.YMD));
 		return pigInfo;
 	}
 

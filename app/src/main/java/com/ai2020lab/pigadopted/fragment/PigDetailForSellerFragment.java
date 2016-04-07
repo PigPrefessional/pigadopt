@@ -23,9 +23,7 @@ import android.widget.TextView;
 
 import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
-import com.ai2020lab.pigadopted.biz.HttpPigDetailManager;
 import com.ai2020lab.pigadopted.biz.HttpStatisticDataManager;
-import com.ai2020lab.pigadopted.biz.PigDetailManager;
 import com.ai2020lab.pigadopted.biz.StatisticsDataManager;
 import com.ai2020lab.pigadopted.model.order.OrderInfo;
 import com.ai2020lab.pigadopted.model.order.PigPart;
@@ -174,7 +172,7 @@ public class PigDetailForSellerFragment extends Fragment {
             part.partName = "后腿肉";
 
             UserInfo userInfo = new UserInfo();
-            userInfo.userID = "" + (i + 1);
+            userInfo.userID = i + 1;
             userInfo.userName = "买家" + (i + 1);
             userInfo.userPortrait = "http://tse4.mm.bing.net/th?id=OIP.Md7bcb36c7db90393682b4bf44487d9f2o0&pid=15.1";
 
@@ -256,7 +254,7 @@ public class PigDetailForSellerFragment extends Fragment {
     protected void loadBuyersData(List<PigPart> pigParts) {
 
         List<UserInfo> buyers = new ArrayList<>();
-        Map<String, UserInfo> userMap = new HashMap<>();
+        Map<Integer, UserInfo> userMap = new HashMap<>();
 
         for (PigPart pigPart : pigParts) {
             final UserInfo user = pigPart.userInfo;
@@ -267,9 +265,9 @@ public class PigDetailForSellerFragment extends Fragment {
         }
 
 
-        final Set<String> keys = userMap.keySet();
+        final Set<Integer> keys = userMap.keySet();
 
-        for (String key : keys) {
+        for (int key : keys) {
             buyers.add(userMap.get(key));
         }
 

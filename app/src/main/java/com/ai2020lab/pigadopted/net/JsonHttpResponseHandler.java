@@ -81,6 +81,7 @@ public abstract class JsonHttpResponseHandler<T extends ResponseData> extends Te
 	public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 		LogUtils.i(TAG, "请求失败:" + responseString);
 //		ToastUtils.getInstance().showToast(context, "Get data failure!");
+		onHandleFailure(responseString);
 	}
 
 	/**
