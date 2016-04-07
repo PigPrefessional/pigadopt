@@ -70,6 +70,7 @@ public class PigDetailActivity extends AIBaseActivity {
 	 */
 	private void skipToGrowthInfosActivity() {
 		Intent intent = new Intent(this, GrowthHistoryActivity.class);
+        intent.putExtra(IntentExtra.PIG_INFO, mPigInfo);
 		startActivity(intent);
 	}
 

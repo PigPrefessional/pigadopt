@@ -1,6 +1,7 @@
 package com.ai2020lab.pigadopted.fragment;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -32,6 +33,7 @@ import com.ai2020lab.pigadopted.biz.PigDetailManager;
 import com.ai2020lab.pigadopted.biz.StatisticsDataManager;
 import com.ai2020lab.pigadopted.common.DataManager;
 import com.ai2020lab.pigadopted.common.IntentExtra;
+import com.ai2020lab.pigadopted.model.base.ResponseData;
 import com.ai2020lab.pigadopted.model.order.OrderInfo;
 import com.ai2020lab.pigadopted.model.order.PigPart;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
@@ -414,70 +416,140 @@ public class PigDetailForSellerFragment extends Fragment {
 
         HttpStatisticDataManager statisticsDataManager = new HttpStatisticDataManager(getContext());
 
-        if (chartType == StatisticsChartFragment.CHART_TYPE_WEIGHT) {
+        final AIBaseActivity activity = (AIBaseActivity) getActivity();
 
-            statisticsDataManager.queryWeightList("1", StatisticsDataManager.DataType.DAY,
-                    null, null, new JsonHttpResponseHandler<WeightStaticResponse>(getContext()) {
-                        @Override
-                        public void onHandleSuccess(int statusCode, Header[] headers, WeightStaticResponse jsonObj) {
-                            mDataSet = (Serializable) jsonObj.data.dataList;
-                            Log.i(TAG, jsonObj.toString());
-                            addChartFragment(chartType);
-                        }
+        activity.showLoading(getString(R.string.prompt_loading));
 
-                        @Override
-                        public void onHandleFailure(String errorMsg) {
-                            Log.i(TAG, errorMsg);
-                        }
+        switch (chartType) {
+            case StatisticsChartFragment.CHART_TYPE_STEPS:
+                statisticsDataManager.queryStepList("1", StatisticsDataManager.DataType.DAY,
+                        null, null, new ChartJsonHandler<StepStaticResponse>(chartType, activity));
+                break;
+            case StatisticsChartFragment.CHART_TYPE_TEMPERATURE:
+                statisticsDataManager.queryTemperatureList("1", StatisticsDataManager.DataType.DAY,
+                        null, null, new ChartJsonHandler<BodyTemperatureResponse>(chartType, activity));
+                break;
+            case StatisticsChartFragment.CHART_TYPE_WEIGHT:
+                statisticsDataManager.queryWeightList("1", StatisticsDataManager.DataType.DAY,
+                        null, null, new ChartJsonHandler<WeightStaticResponse>(chartType, activity));
+                break;
+            default:
+                break;
+        }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                            Log.i(TAG, responseString);
-                        }
+//        if (chartType == StatisticsChartFragment.CHART_TYPE_WEIGHT) {
+//
+//            statisticsDataManager.queryWeightList("1", StatisticsDataManager.DataType.DAY,
+//                    null, null, new JsonHttpResponseHandler<WeightStaticResponse>(getContext()) {
+//                        @Override
+//                        public void onHandleSuccess(int statusCode, Header[] headers, WeightStaticResponse jsonObj) {
+//                            mDataSet = (Serializable) jsonObj.data.dataList;
+//                            activity.dismissLoading();
+//                            addChartFragment(chartType);
+//                        }
+//
+//                        @Override
+//                        public void onHandleFailure(String errorMsg) {
+//                            activity.dismissLoading();
+//                            ToastUtils.getInstance().showToast(activity, errorMsg);
+//                        }
+//
+//                        @Override
+//                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                            activity.dismissLoading();
+//                            ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
+//                        }
+//
+//                    });
+//        } else if (chartType == StatisticsChartFragment.CHART_TYPE_STEPS) {
+//            statisticsDataManager.queryStepList("1", StatisticsDataManager.DataType.DAY,
+//                    null, null, new JsonHttpResponseHandler<StepStaticResponse>(getContext()) {
+//                        @Override
+//                        public void onHandleSuccess(int statusCode, Header[] headers, StepStaticResponse jsonObj) {
+//                            mDataSet = (Serializable) jsonObj.data.dataList;
+//                            activity.dismissLoading();
+//                            addChartFragment(chartType);
+//                        }
+//
+//                        @Override
+//                        public void onHandleFailure(String errorMsg) {
+//                            ToastUtils.getInstance().showToast(activity, errorMsg);
+//                        }
+//
+//                        @Override
+//                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                            ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
+//                        }
+//
+//                    });
+//        } else if (chartType == StatisticsChartFragment.CHART_TYPE_TEMPERATURE) {
+//            statisticsDataManager.queryTemperatureList("1", StatisticsDataManager.DataType.DAY,
+//                    null, null, new JsonHttpResponseHandler<BodyTemperatureResponse>(getContext()) {
+//                        @Override
+//                        public void onHandleSuccess(int statusCode, Header[] headers, BodyTemperatureResponse jsonObj) {
+//                            mDataSet = (Serializable) jsonObj.data.dataList;
+//                            Log.i(TAG, jsonObj.toString());
+//                            addChartFragment(chartType);
+//                        }
+//
+//                        @Override
+//                        public void onHandleFailure(String errorMsg) {
+//                            ToastUtils.getInstance().showToast(activity, errorMsg);
+//                        }
+//
+//                        @Override
+//                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                            ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
+//                        }
+//
+//                    });
+//        }
+    }
 
-                    });
-        } else if (chartType == StatisticsChartFragment.CHART_TYPE_STEPS) {
-            statisticsDataManager.queryStepList("1", StatisticsDataManager.DataType.DAY,
-                    null, null, new JsonHttpResponseHandler<StepStaticResponse>(getContext()) {
-                        @Override
-                        public void onHandleSuccess(int statusCode, Header[] headers, StepStaticResponse jsonObj) {
-                            mDataSet = (Serializable) jsonObj.data.dataList;
-                            Log.i(TAG, jsonObj.toString());
-                            addChartFragment(chartType);
-                        }
+    private class ChartJsonHandler<T extends ResponseData> extends JsonHttpResponseHandler<T> {
 
-                        @Override
-                        public void onHandleFailure(String errorMsg) {
-                            Log.i(TAG, errorMsg);
-                        }
+        private int mmChartType;
+        private AIBaseActivity mmContext;
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                            Log.i(TAG, responseString);
-                        }
+        ChartJsonHandler(int chartType, AIBaseActivity context) {
+            super(context);
+            mmChartType = chartType;
+            mmContext = context;
+        }
 
-                    });
-        } else if (chartType == StatisticsChartFragment.CHART_TYPE_TEMPERATURE) {
-            statisticsDataManager.queryTemperatureList("1", StatisticsDataManager.DataType.DAY,
-                    null, null, new JsonHttpResponseHandler<BodyTemperatureResponse>(getContext()) {
-                        @Override
-                        public void onHandleSuccess(int statusCode, Header[] headers, BodyTemperatureResponse jsonObj) {
-                            mDataSet = (Serializable) jsonObj.data.dataList;
-                            Log.i(TAG, jsonObj.toString());
-                            addChartFragment(chartType);
-                        }
 
-                        @Override
-                        public void onHandleFailure(String errorMsg) {
-                            Log.i(TAG, errorMsg);
-                        }
+        @Override
+        public void onHandleFailure(String errorMsg) {
+            mmContext.dismissLoading();
+            ToastUtils.getInstance().showToast(mmContext, errorMsg);
+        }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                            Log.i(TAG, responseString);
-                        }
+        @Override
+        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+            mmContext.dismissLoading();
+            ToastUtils.getInstance().showToast(mmContext, R.string.prompt_loading_failure);
+        }
 
-                    });
+        @Override
+        public void onHandleSuccess(int statusCode, Header[] headers, T jsonObj) {
+            mmContext.dismissLoading();
+
+            switch (mmChartType) {
+                case StatisticsChartFragment.CHART_TYPE_STEPS:
+                    mDataSet = (Serializable) ((StepStaticResponse) jsonObj).data.dataList;
+                    break;
+                case StatisticsChartFragment.CHART_TYPE_TEMPERATURE:
+                    BodyTemperatureResponse response = (BodyTemperatureResponse) jsonObj;
+                    mDataSet = (Serializable) ((BodyTemperatureResponse) jsonObj).data.dataList;
+                    break;
+                case StatisticsChartFragment.CHART_TYPE_WEIGHT:
+                    mDataSet = (Serializable) ((WeightStaticResponse) jsonObj).data.dataList;
+                    break;
+                default:
+                    break;
+            }
+
+            addChartFragment(mmChartType);
         }
     }
 
