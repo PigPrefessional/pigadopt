@@ -11,10 +11,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.animation.BounceInterpolator;
 
+import com.ai2020lab.aiutils.common.LogUtils;
+import com.ai2020lab.aiutils.common.ToastUtils;
+import com.ai2020lab.aiutils.thread.ThreadUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.adapter.GrowthHistoryRvAdapter;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
+import com.ai2020lab.pigadopted.model.base.PageSplitInfo;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
+import com.ai2020lab.pigadopted.model.pig.GrowthInfoRequest;
+import com.ai2020lab.pigadopted.model.pig.GrowthInfoResponse;
+import com.ai2020lab.pigadopted.net.HttpManager;
+import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
+import com.ai2020lab.pigadopted.net.UrlName;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
@@ -22,6 +31,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
 
 /**
@@ -47,7 +57,9 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 		setToolbar();
 		assignViews();
 		setGrowthHistoryRv();
-		loadData();
+		// TODO:加载测试数据
+//		loadData();
+		queryCustomerPigList();
 	}
 
 	private void assignViews() {
@@ -75,6 +87,9 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 		});
 	}
 
+	/**
+	 * 设置生长记录RecyclerView
+	 */
 	private void setGrowthHistoryRv() {
 		growthHistoryRvAdapter = new GrowthHistoryRvAdapter(this);
 		LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -101,6 +116,71 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 		startActivity(intent);
 	}
 
+
+	/**
+	 * 请求生长记录列表
+	 */
+	// TODO:还要加上下拉刷新和分页加载效果
+	private void queryCustomerPigList() {
+		LogUtils.i(TAG, "--查询买家猪列表--");
+		// 弹出提示
+		showLoading(getString(R.string.prompt_loading));
+		GrowthInfoRequest data = new GrowthInfoRequest();
+		data.pigID = 1;
+		data.pageSplitInfo = new PageSplitInfo();
+		data.pageSplitInfo.startIndex = 1;
+		data.pageSplitInfo.dataNum = 20;
+		HttpManager.postJson(this, UrlName.GROWTH_INFO_LIST.getUrl(), data,
+				new JsonHttpResponseHandler<GrowthInfoResponse>(this) {
+					/**
+					 * 成功回调
+					 *
+					 * @param statusCode 状态码
+					 * @param headers    Header
+					 * @param jsonObj    服务端返回的对象
+					 */
+					@Override
+					public void onHandleSuccess(int statusCode, Header[] headers,
+					                            final GrowthInfoResponse jsonObj) {
+						ThreadUtils.runOnUIThread(new Runnable() {
+							@Override
+							public void run() {
+								dismissLoading();
+								List<GrowthInfo> growthInfos = jsonObj.data.growthInfos;
+								int size = growthInfos.size();
+								if (size > 0) {
+									for (int i = 0; i < size; i++) {
+										GrowthInfo growthInfo = growthInfos.get(i);
+										growthHistoryRvAdapter.add(i, growthInfo);
+									}
+								} else {
+									ToastUtils.getInstance().showToast(getActivity(),
+											R.string.prompt_none_growth_infos);
+								}
+							}
+						}, 1000);
+					}
+
+					@Override
+					public void onCancel() {
+						dismissLoading();
+						// 没有网络的情况会终止请求
+						ToastUtils.getInstance().showToast(getActivity(),
+								R.string.prompt_loading_failure);
+					}
+
+					@Override
+					public void onHandleFailure(String errorMsg) {
+						dismissLoading();
+						ToastUtils.getInstance().showToast(getActivity(),
+								R.string.prompt_loading_failure);
+					}
+
+				});
+
+	}
+
+	// 加载测试数据
 	private void loadData() {
 		new Handler().postDelayed(new Runnable() {
 			@Override
@@ -111,7 +191,6 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 		}, 1000);
 	}
 
-	// TODO:加载测试数据
 	private void loadTestListData() {
 		List<GrowthInfo> growthInfos = getTestListData();
 		sortList(growthInfos);

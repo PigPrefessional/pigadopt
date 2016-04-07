@@ -13,7 +13,7 @@ public class GrowthInfoRequest {
 
 	@Expose
 	@SerializedName("pig_id")
-	public String pigID;
+	public int pigID;
 
 	@Expose
 	@SerializedName("page_split_info")

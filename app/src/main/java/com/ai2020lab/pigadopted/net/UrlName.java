@@ -5,8 +5,9 @@ package com.ai2020lab.pigadopted.net;
  * 接口Url
  */
 public enum UrlName {
-
+	// 添加猪圈
 	ADD_HOGPEN("addHogpen"),
+	// 添加猪
 	ADD_PIG("addPig"),
 	// 卖家猪圈列表
 	HOGPEN_LIST_FOR_BUYER("queryHogpensList"),
@@ -20,7 +21,8 @@ public enum UrlName {
 	SELLER_INFO_BY_PARTYID("queryProviderInfo"),
 	// 根据partyID查询买家信息
 	BUYER_INFO_BY_PARTYID("queryCustomerInfo"),
-	ADD_GROWTH_INFO("uploadGrowthPhoto"),
+	// 查询猪生长信息
+	GROWTH_INFO_LIST("queryGrowthInfoList"),
 	PIG_INFO_CUSTOMER("findCustomerPigInfo"),
 	PIG_INFO_SELLER("findSellerPigInfo"),
 	PIG_WEIGHT_LIST("queryWeightList"),
@@ -37,8 +39,8 @@ public enum UrlName {
 		return "http://" + HOST + ":" + PORT + "/" + name;
 	}
 
-//	private static final String HOST = "171.221.254.231";
-	private static final String HOST = "10.5.1.59";
+	private static final String HOST = "171.221.254.231";
+//	private static final String HOST = "10.5.1.59";
 	private static final int PORT = 3002;
 
 }

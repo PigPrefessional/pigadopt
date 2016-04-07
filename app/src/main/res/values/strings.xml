@@ -94,6 +94,7 @@
 	<!--成长历程-->
 	<string name="activity_title_growth_history">成长历程</string>
 	<string name="activity_distance_camera">拍照记录</string>
+	<string name="prompt_none_growth_infos">抱歉，还没有成长记录，请先拍照！</string>
 
 	<!--提示-->
 	<string name="prompt_query_pig_categories_failure">获取猪品种失败，请重新打开应用</string>
