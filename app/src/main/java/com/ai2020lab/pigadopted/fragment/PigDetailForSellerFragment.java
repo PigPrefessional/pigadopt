@@ -21,12 +21,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ai2020lab.aiutils.common.ToastUtils;
 import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
+import com.ai2020lab.pigadopted.base.AIBaseActivity;
 import com.ai2020lab.pigadopted.biz.HttpPigDetailManager;
 import com.ai2020lab.pigadopted.biz.HttpStatisticDataManager;
 import com.ai2020lab.pigadopted.biz.PigDetailManager;
 import com.ai2020lab.pigadopted.biz.StatisticsDataManager;
+import com.ai2020lab.pigadopted.common.DataManager;
+import com.ai2020lab.pigadopted.common.IntentExtra;
 import com.ai2020lab.pigadopted.model.order.OrderInfo;
 import com.ai2020lab.pigadopted.model.order.PigPart;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
@@ -61,6 +65,7 @@ import cz.msebera.android.httpclient.Header;
 public class PigDetailForSellerFragment extends Fragment {
 
     private static final String TAG = "PigDetailForSeller";
+    public static final String KEY_PIG_DATA = "KEY_PIG_DATA";
 
     private FrameLayout mPigPartsContainer;
     protected RecyclerView mRecyclerView;
@@ -81,9 +86,20 @@ public class PigDetailForSellerFragment extends Fragment {
     private List<StepData> mStepDataSet;
     private List<BodyTemperatureData> mTemperatureDataSet;
 
+    private PigDetailInfoAndOrderResponse mPigData;
+    private PigInfo mPigInfo;
+
 
     public PigDetailForSellerFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    //    mPigData = (PigDetailInfoAndOrderResponse) getArguments().getSerializable(KEY_PIG_DATA);
+        mPigInfo = (PigInfo) getArguments().getSerializable(KEY_PIG_DATA);
     }
 
 
@@ -95,14 +111,15 @@ public class PigDetailForSellerFragment extends Fragment {
         setupMainLayout(rootView);
         setupOtherViews(rootView);
 
-        final PigDetailInfoAndOrderResponse response = loadData();
-        final PigDetailInfoAndOrder result = response.data;
-
-        setupPigInfo(result);
-        displayPig(result.orderInfo.pigParts);
-        loadBuyersData(result.orderInfo.pigParts);
+//        final PigDetailInfoAndOrderResponse response = mPigData;
+//        final PigDetailInfoAndOrder result = response.data;
+//
+//        setupPigInfo(result);
+//        displayPig(result.orderInfo.pigParts);
+//        loadBuyersData(result.orderInfo.pigParts);
         setChartsButtonListener();
 
+        loadPigDetailData(mPigInfo);
 
         return rootView;
     }
@@ -133,7 +150,42 @@ public class PigDetailForSellerFragment extends Fragment {
         mBuyerNumber = (TextView) rootView.findViewById(R.id.buyer_number);
     }
 
-    protected PigDetailInfoAndOrderResponse loadData() {
+    protected void loadPigDetailData(PigInfo pigInfo) {
+        PigDetailManager pigDetailManager = new HttpPigDetailManager(getContext());
+
+        final AIBaseActivity activity = (AIBaseActivity) getActivity();
+
+        activity.showLoading(getString(R.string.prompt_loading));
+
+        pigDetailManager.findSellerPigDetailInfo(pigInfo.pigID, new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(activity) {
+            @Override
+            public void onHandleFailure(String errorMsg) {
+                Log.i(TAG, errorMsg);
+                activity.dismissLoading();
+                ToastUtils.getInstance().showToast(activity, errorMsg);
+            }
+
+            @Override
+            public void onHandleSuccess(int statusCode, Header[] headers, PigDetailInfoAndOrderResponse jsonObj) {
+                activity.dismissLoading();
+
+                final PigDetailInfoAndOrderResponse response = mPigData;
+                final PigDetailInfoAndOrder result = response.data;
+
+                setupPigInfo(result);
+                displayPig(result.orderInfo.pigParts);
+                loadBuyersData(result.orderInfo.pigParts);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                activity.dismissLoading();
+                ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
+            }
+        });
+    }
+
+    protected PigDetailInfoAndOrderResponse fakeLoadData() {
 
 
 
@@ -199,7 +251,7 @@ public class PigDetailForSellerFragment extends Fragment {
     private void setupPigInfo(PigDetailInfoAndOrder result) {
         mIncreaseWeight.setVisibility(View.INVISIBLE);
         mIncreaseWeight.setText(String.format(getResources().getString(R.string.pig_detail_weight_increase), result.growthInfo.increasedWeight / 2));
-        mPigTypeName.setText(result.pigInfo.pigCategory.categoryName);
+        mPigTypeName.setText(DataManager.getInstance().getPigCategory(result.pigInfo.pigCategory.categoryID).categoryName);
         mPigSteps.setText(String.format(getResources().getString(R.string.pig_detail_steps), result.healthInfo.steps));
         mPigFatRate.setText(result.healthInfo.fatRate + "%");
         mPigTemperature.setText(result.healthInfo.temperature + "℃");
@@ -222,7 +274,7 @@ public class PigDetailForSellerFragment extends Fragment {
 
         for (int i = 0; i < partList.size(); i++) {
             final PigPart part = partList.get(i);
-            final int partImageId = getPigPartImageResID(part.partID);
+            final int partImageId = getPigPartImageResID(part);
 
             ImageView image = new ImageView(getContext());
             image.setLayoutParams(mWholePig.getLayoutParams());
@@ -246,11 +298,8 @@ public class PigDetailForSellerFragment extends Fragment {
 
     }
 
-    protected int getPigPartImageResID(int partID) {
-        final int firstPartId = 1;
-        final int firstPartImageId = R.mipmap.pig_part_01;
-
-        return firstPartImageId + (partID - firstPartId);
+    protected int getPigPartImageResID(PigPart pigPart) {
+        return DataManager.getInstance().getPigPartImageResID(pigPart);
     }
 
     protected void loadBuyersData(List<PigPart> pigParts) {
@@ -352,8 +401,6 @@ public class PigDetailForSellerFragment extends Fragment {
 
 
                 newFragment.show(ft, "dialog");
-
-
             }
         };
 
