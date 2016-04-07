@@ -51,7 +51,7 @@ public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
 
         activity.showLoading(getString(R.string.prompt_loading));
 
-        pigDetailManager.findCustomerPigDetailInfo(pigInfo.pigID, String.valueOf(DataManager.getInstance().getBuyerInfo().userID),
+        pigDetailManager.findCustomerPigDetailInfo("" + pigInfo.pigID, String.valueOf(DataManager.getInstance().getBuyerInfo().userID),
                 new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(activity) {
             @Override
             public void onHandleFailure(String errorMsg) {

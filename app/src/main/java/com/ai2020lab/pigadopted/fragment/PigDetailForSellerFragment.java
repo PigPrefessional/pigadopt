@@ -1,7 +1,6 @@
 package com.ai2020lab.pigadopted.fragment;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -25,14 +24,12 @@ import android.widget.TextView;
 import com.ai2020lab.aiutils.common.ToastUtils;
 import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
-
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
 import com.ai2020lab.pigadopted.biz.HttpPigDetailManager;
 import com.ai2020lab.pigadopted.biz.HttpStatisticDataManager;
 import com.ai2020lab.pigadopted.biz.PigDetailManager;
 import com.ai2020lab.pigadopted.biz.StatisticsDataManager;
 import com.ai2020lab.pigadopted.common.DataManager;
-import com.ai2020lab.pigadopted.common.IntentExtra;
 import com.ai2020lab.pigadopted.model.base.ResponseData;
 import com.ai2020lab.pigadopted.model.order.OrderInfo;
 import com.ai2020lab.pigadopted.model.order.PigPart;
@@ -156,7 +153,7 @@ public class PigDetailForSellerFragment extends Fragment {
 
         activity.showLoading(getString(R.string.prompt_loading));
 
-        pigDetailManager.findSellerPigDetailInfo(pigInfo.pigID, new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(activity) {
+        pigDetailManager.findSellerPigDetailInfo("" + pigInfo.pigID, new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(activity) {
             @Override
             public void onHandleFailure(String errorMsg) {
                 Log.i(TAG, errorMsg);

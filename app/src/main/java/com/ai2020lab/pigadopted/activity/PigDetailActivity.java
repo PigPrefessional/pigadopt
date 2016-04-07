@@ -84,7 +84,7 @@ public class PigDetailActivity extends AIBaseActivity {
 		showLoading(getString(R.string.prompt_loading));
 
 		if (type == TYPE_SELLER) {
-			pigDetailManager.findSellerPigDetailInfo(mPigInfo.pigID, new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(this) {
+			pigDetailManager.findSellerPigDetailInfo("" + mPigInfo.pigID, new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(this) {
 				@Override
 				public void onHandleFailure(String errorMsg) {
 					Log.i(TAG, errorMsg);
@@ -105,7 +105,7 @@ public class PigDetailActivity extends AIBaseActivity {
                 }
             });
 		} else {
-			pigDetailManager.findSellerPigDetailInfo(mPigInfo.pigID, new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(this) {
+			pigDetailManager.findSellerPigDetailInfo("" + mPigInfo.pigID, new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(this) {
 				@Override
 				public void onHandleFailure(String errorMsg) {
 					Log.i(TAG, errorMsg);
