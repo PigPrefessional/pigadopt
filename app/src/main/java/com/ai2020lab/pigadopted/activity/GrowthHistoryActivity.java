@@ -132,13 +132,7 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 		data.pageSplitInfo.dataNum = 20;
 		HttpManager.postJson(this, UrlName.GROWTH_INFO_LIST.getUrl(), data,
 				new JsonHttpResponseHandler<GrowthInfoResponse>(this) {
-					/**
-					 * 成功回调
-					 *
-					 * @param statusCode 状态码
-					 * @param headers    Header
-					 * @param jsonObj    服务端返回的对象
-					 */
+
 					@Override
 					public void onHandleSuccess(int statusCode, Header[] headers,
 					                            final GrowthInfoResponse jsonObj) {
