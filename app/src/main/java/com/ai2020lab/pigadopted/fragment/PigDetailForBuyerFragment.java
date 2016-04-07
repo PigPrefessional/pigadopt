@@ -4,22 +4,34 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ai2020lab.aiutils.common.ToastUtils;
 import com.ai2020lab.pigadopted.R;
+import com.ai2020lab.pigadopted.base.AIBaseActivity;
+import com.ai2020lab.pigadopted.biz.HttpPigDetailManager;
+import com.ai2020lab.pigadopted.biz.PigDetailManager;
 import com.ai2020lab.pigadopted.common.DataManager;
 import com.ai2020lab.pigadopted.model.order.PigPart;
+import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrderResponse;
+import com.ai2020lab.pigadopted.model.pig.PigInfo;
+import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
 
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Rocky on 16/3/22.
  */
 public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
+
+    private static final String TAG = "PigDetailForBuyer";
 
     @Override
     protected void setupOtherViews(View rootView) {
@@ -29,6 +41,42 @@ public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
     @Override
     protected View inflateRootView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_pig_detail_for_buyer, container, false);
+    }
+
+    @Override
+    protected void loadPigDetailData(PigInfo pigInfo) {
+        PigDetailManager pigDetailManager = new HttpPigDetailManager(getContext());
+
+        final AIBaseActivity activity = (AIBaseActivity) getActivity();
+
+        activity.showLoading(getString(R.string.prompt_loading));
+
+        pigDetailManager.findCustomerPigDetailInfo(pigInfo.pigID, String.valueOf(DataManager.getInstance().getBuyerInfo().userID),
+                new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(activity) {
+            @Override
+            public void onHandleFailure(String errorMsg) {
+                Log.i(TAG, errorMsg);
+                activity.dismissLoading();
+                ToastUtils.getInstance().showToast(activity, errorMsg);
+            }
+
+            @Override
+            public void onHandleSuccess(int statusCode, Header[] headers, PigDetailInfoAndOrderResponse jsonObj) {
+                activity.dismissLoading();
+
+                final PigDetailInfoAndOrderResponse response = jsonObj;
+                final PigDetailInfoAndOrder result = response.data;
+                response.data.pigInfo = mPigInfo;
+
+                setupPigInfoUI(result);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                activity.dismissLoading();
+                ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
+            }
+        });
     }
 
     @Override

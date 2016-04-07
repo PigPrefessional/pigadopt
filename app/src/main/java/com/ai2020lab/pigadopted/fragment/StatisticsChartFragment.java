@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.ai2020lab.pigadopted.chart.ChartDataAdapter;
 import com.ai2020lab.pigadopted.model.statistic.BodyTemperatureData;
 import com.ai2020lab.pigadopted.model.statistic.StepData;
 import com.ai2020lab.pigadopted.model.statistic.WeightData;
@@ -68,13 +69,14 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
     private float mMaxYValue;
 
-    static StatisticsChartFragment newInstance(int width, int height, int chartType) {
+    static StatisticsChartFragment newInstance(int width, int height, int chartType, Serializable dataSet) {
         StatisticsChartFragment f = new StatisticsChartFragment();
 
         Bundle args = new Bundle();
         args.putInt(WIDTH, width);
         args.putInt(HEIGHT, height);
         args.putInt(TYPE, chartType);
+        args.putSerializable(DATA_SET, dataSet);
 
         f.setArguments(args);
         return f;
@@ -288,7 +290,7 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
     @Override
     public void onChartSingleTapped(MotionEvent me) {
-        changeDataSet();
+//        changeDataSet();
 //        if (mChart.getAlpha() < 0.01) {
 //            mChart.animate().alpha(1f)
 //                    .setDuration(1000);
@@ -371,14 +373,60 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
     }
 
     private void setChartData() {
-        List<WeightData> list = loadWeightDataForWeeks();
-        LineData data = createChartData(list);
+//        List<WeightData> list = loadWeightDataForWeeks();
+//        LineData data = createChartData(list);
+
+        ChartDataAdapter.XYValues xyValues = null;
+
+
+        switch (mType) {
+            case CHART_TYPE_STEPS:
+                xyValues = ChartDataAdapter.convertStepData(mStepDataSet);
+                break;
+            case CHART_TYPE_WEIGHT:
+                xyValues = ChartDataAdapter.convertWeightData(mWeightDataSet);
+                break;
+            case CHART_TYPE_TEMPERATURE:
+                xyValues = ChartDataAdapter.convertTemperatureData(mTemperatureDataSet);
+                break;
+            default:
+                break;
+        }
+
+        LineData data = createChartData(xyValues);
+
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setAxisMaxValue(mMaxYValue + 5);
         mChart.setData(data);
 
         mChart.setVisibleXRangeMaximum(5);
+    }
+
+    private LineData createChartData(ChartDataAdapter.XYValues xyValues) {
+
+        mMaxYValue = xyValues.maxYValue;
+
+        LineDataSet set1 = new LineDataSet(xyValues.yVals, "Weight data set");
+
+        set1.setDrawCubic(true);
+
+        set1.setLineWidth(1f);
+        set1.setCircleRadius(3f);
+        set1.setDrawCircleHole(true);
+        set1.setValueTextSize(9f);
+
+
+        set1.setDrawFilled(true);
+
+        setChartColor(set1);
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(set1);
+
+
+        return new LineData(xyValues.xVals, dataSets);
+
     }
 
     private LineData createChartData(List<WeightData> dataList) {

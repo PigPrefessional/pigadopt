@@ -51,6 +51,7 @@ import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,9 +87,10 @@ public class PigDetailForSellerFragment extends Fragment {
     private List<WeightData> mWeightDataSet;
     private List<StepData> mStepDataSet;
     private List<BodyTemperatureData> mTemperatureDataSet;
+    private Serializable mDataSet;
 
     private PigDetailInfoAndOrderResponse mPigData;
-    private PigInfo mPigInfo;
+    protected PigInfo mPigInfo;
 
 
     public PigDetailForSellerFragment() {
@@ -112,12 +114,6 @@ public class PigDetailForSellerFragment extends Fragment {
         setupMainLayout(rootView);
         setupOtherViews(rootView);
 
-//        final PigDetailInfoAndOrderResponse response = mPigData;
-//        final PigDetailInfoAndOrder result = response.data;
-//
-//        setupPigInfo(result);
-//        displayPig(result.orderInfo.pigParts);
-//        loadBuyersData(result.orderInfo.pigParts);
         setChartsButtonListener();
 
         loadPigDetailData(mPigInfo);
@@ -170,12 +166,11 @@ public class PigDetailForSellerFragment extends Fragment {
             public void onHandleSuccess(int statusCode, Header[] headers, PigDetailInfoAndOrderResponse jsonObj) {
                 activity.dismissLoading();
 
-                final PigDetailInfoAndOrderResponse response = mPigData;
+                final PigDetailInfoAndOrderResponse response = jsonObj;
                 final PigDetailInfoAndOrder result = response.data;
+                result.pigInfo = mPigInfo;
 
-                setupPigInfo(result);
-                displayPig(result.orderInfo.pigParts);
-                loadBuyersData(result.orderInfo.pigParts);
+                setupPigInfoUI(result);
             }
 
             @Override
@@ -184,6 +179,12 @@ public class PigDetailForSellerFragment extends Fragment {
                 ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
             }
         });
+    }
+
+    protected void setupPigInfoUI(PigDetailInfoAndOrder result) {
+        setupPigInfo(result);
+        displayPig(result.orderInfo.pigParts);
+        loadBuyersData(result.orderInfo.pigParts);
     }
 
     protected PigDetailInfoAndOrderResponse fakeLoadData() {
@@ -375,40 +376,42 @@ public class PigDetailForSellerFragment extends Fragment {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setupStatisticChart(chartType);
 
 
-
-                DisplayMetrics metric = new DisplayMetrics();
-                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
-                int width = metric.widthPixels;  // 屏幕宽度（像素）
-                int height = metric.heightPixels;  // 屏幕高度（像素
-
-
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
-
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-
-                final float scale = metric.density;
-                // dp to px
-                int marginWidth = (int) (15 * scale + 0.5f);
-                int marginHeight = (int) (300 * scale + 0.5f);
-
-                DialogFragment newFragment = StatisticsChartFragment
-                        .newInstance(width - marginWidth, height - marginHeight, chartType);
-
-
-                newFragment.show(ft, "dialog");
+//                DisplayMetrics metric = new DisplayMetrics();
+//                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+//                int width = metric.widthPixels;  // 屏幕宽度（像素）
+//                int height = metric.heightPixels;  // 屏幕高度（像素
+//
+//
+//                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//                Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
+//
+//                if (prev != null) {
+//                    ft.remove(prev);
+//                }
+//                ft.addToBackStack(null);
+//
+//                final float scale = metric.density;
+//                // dp to px
+//                int marginWidth = (int) (15 * scale + 0.5f);
+//                int marginHeight = (int) (300 * scale + 0.5f);
+//
+//                DialogFragment newFragment = StatisticsChartFragment
+//                        .newInstance(width - marginWidth, height - marginHeight, chartType);
+//
+//
+//                newFragment.show(ft, "dialog");
             }
         };
 
         return listener;
     }
 
-    private void loadDataSet(final int chartType) {
+
+    private void setupStatisticChart(final int chartType) {
+
         HttpStatisticDataManager statisticsDataManager = new HttpStatisticDataManager(getContext());
 
         if (chartType == StatisticsChartFragment.CHART_TYPE_WEIGHT) {
@@ -417,8 +420,9 @@ public class PigDetailForSellerFragment extends Fragment {
                     null, null, new JsonHttpResponseHandler<WeightStaticResponse>(getContext()) {
                         @Override
                         public void onHandleSuccess(int statusCode, Header[] headers, WeightStaticResponse jsonObj) {
-                            mWeightDataSet = jsonObj.data.dataList;
+                            mDataSet = (Serializable) jsonObj.data.dataList;
                             Log.i(TAG, jsonObj.toString());
+                            addChartFragment(chartType);
                         }
 
                         @Override
@@ -437,8 +441,9 @@ public class PigDetailForSellerFragment extends Fragment {
                     null, null, new JsonHttpResponseHandler<StepStaticResponse>(getContext()) {
                         @Override
                         public void onHandleSuccess(int statusCode, Header[] headers, StepStaticResponse jsonObj) {
-                            mStepDataSet = jsonObj.data.dataList;
+                            mDataSet = (Serializable) jsonObj.data.dataList;
                             Log.i(TAG, jsonObj.toString());
+                            addChartFragment(chartType);
                         }
 
                         @Override
@@ -457,8 +462,9 @@ public class PigDetailForSellerFragment extends Fragment {
                     null, null, new JsonHttpResponseHandler<BodyTemperatureResponse>(getContext()) {
                         @Override
                         public void onHandleSuccess(int statusCode, Header[] headers, BodyTemperatureResponse jsonObj) {
-                            mTemperatureDataSet = jsonObj.data.dataList;
+                            mDataSet = (Serializable) jsonObj.data.dataList;
                             Log.i(TAG, jsonObj.toString());
+                            addChartFragment(chartType);
                         }
 
                         @Override
@@ -473,6 +479,33 @@ public class PigDetailForSellerFragment extends Fragment {
 
                     });
         }
+    }
+
+    private void addChartFragment(final int chartType) {
+        DisplayMetrics metric = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+        int width = metric.widthPixels;  // 屏幕宽度（像素）
+        int height = metric.heightPixels;  // 屏幕高度（像素
+
+
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
+
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        final float scale = metric.density;
+        // dp to px
+        int marginWidth = (int) (15 * scale + 0.5f);
+        int marginHeight = (int) (300 * scale + 0.5f);
+
+        DialogFragment newFragment = StatisticsChartFragment
+                .newInstance(width - marginWidth, height - marginHeight, chartType, mDataSet);
+
+
+        newFragment.show(ft, "dialog");
     }
 
     private class BuyerAdapter extends

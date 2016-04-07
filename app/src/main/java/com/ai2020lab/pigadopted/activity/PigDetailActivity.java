@@ -58,7 +58,9 @@ public class PigDetailActivity extends AIBaseActivity {
 
         final int type = getIntent().getExtras().getInt(KEY_DETAIL_TYPE, TYPE_BUYER);
 
-        setupDetailFragment(type, (PigInfo) getIntent().getSerializableExtra(IntentExtra.PIG_INFO));
+        mPigInfo = (PigInfo) getIntent().getSerializableExtra(IntentExtra.PIG_INFO);
+
+        setupDetailFragment(type, mPigInfo);
 
 	//	loadPigDetailData();
 	}
