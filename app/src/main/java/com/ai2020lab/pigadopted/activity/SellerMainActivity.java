@@ -32,13 +32,12 @@ import com.ai2020lab.pigadopted.fragment.PigAddSuccessDialog;
 import com.ai2020lab.pigadopted.model.hogpen.HogpenListRequest;
 import com.ai2020lab.pigadopted.model.hogpen.HogpenListResponse;
 import com.ai2020lab.pigadopted.model.hogpen.SellerHogpenInfo;
-import com.ai2020lab.pigadopted.model.order.OrderInfoForSeller;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
-import com.ai2020lab.pigadopted.model.pig.HealthInfo;
+import com.ai2020lab.pigadopted.model.pig.PigAddRequest;
+import com.ai2020lab.pigadopted.model.pig.PigAddResponse;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
 import com.ai2020lab.pigadopted.model.pig.PigPhotoUploadResponse;
-import com.ai2020lab.pigadopted.model.pig.PigStatus;
 import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.ai2020lab.pigadopted.net.HttpManager;
 import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
@@ -46,7 +45,6 @@ import com.ai2020lab.pigadopted.net.UrlName;
 import com.ai2020lab.pigadopted.view.BirdIndicator;
 import com.ai2020lab.pigadopted.view.HogpenViewPager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -175,8 +173,7 @@ public class SellerMainActivity extends AIBaseActivity {
 		hogpenVp.setOnPigClickListener(new HogpenViewPager.OnPigClickListener() {
 			@Override
 			public void onPigClick(SellerHogpenInfo hogpenInfo, PigDetailInfoAndOrder pigInfo) {
-//				pigInfo.pigInfo.hogpenInfo = hogpenInfo;
-				// 猪点击监听
+				// 点击猪跳转到详情界面
 				skipToPigDetailActivity(pigInfo.pigInfo);
 			}
 		});
@@ -184,9 +181,8 @@ public class SellerMainActivity extends AIBaseActivity {
 		hogpenVp.setOnPigAddListener(new HogpenViewPager.OnPigAddListener() {
 			@Override
 			public void onEnd() {
-
+				// 猪添加动画执行完毕弹出提示对话框
 				showAddPigSuccessDialog();
-
 			}
 		});
 	}
@@ -350,7 +346,7 @@ public class SellerMainActivity extends AIBaseActivity {
 				public void onClickEnsure(DialogFragment df, PigInfo pigInfo) {
 					df.dismiss();
 					//添加猪
-					addPig();
+					addPig(pigInfo);
 				}
 
 				@Override
@@ -442,45 +438,6 @@ public class SellerMainActivity extends AIBaseActivity {
 		}
 	}
 
-	// TODO:添加猪圈
-	private void executeAddHogpen(SellerHogpenInfo sellerHogpenInfo) {
-		HttpManager.postFile(this, UrlName.ADD_GROWTH_INFO.getUrl(),
-				sellerHogpenInfo.hogpenPhoto, sellerHogpenInfo,
-				new JsonHttpResponseHandler<PigPhotoUploadResponse>(this) {
-
-					@Override
-					public void onHandleSuccess(int statusCode, Header[] headers,
-					                            PigPhotoUploadResponse jsonObj) {
-
-					}
-
-					@Override
-					public void onCancel() {
-
-					}
-
-					@Override
-					public void onHandleFailure(String errorMsg) {
-
-					}
-
-					@Override
-					public void onFinish() {
-
-					}
-				});
-
-	}
-
-	/**
-	 * 添加测试猪
-	 */
-	private void addPig() {
-		hogpenVp.addPig(getPigTestData());
-		setAddPigBtnVisibility(hogpenVp.getPigNumber()
-				< HogpenViewPager.PIG_LIMIT);
-	}
-
 	/**
 	 * 请求卖家猪圈列表
 	 */
@@ -542,61 +499,154 @@ public class SellerMainActivity extends AIBaseActivity {
 				});
 	}
 
+	// TODO:添加猪圈
+	private void executeAddHogpen(SellerHogpenInfo sellerHogpenInfo) {
+		HttpManager.postFile(this, UrlName.ADD_GROWTH_INFO.getUrl(),
+				sellerHogpenInfo.hogpenPhoto, sellerHogpenInfo,
+				new JsonHttpResponseHandler<PigPhotoUploadResponse>(this) {
+
+					@Override
+					public void onHandleSuccess(int statusCode, Header[] headers,
+					                            PigPhotoUploadResponse jsonObj) {
+
+					}
+
+					@Override
+					public void onCancel() {
+
+					}
+
+					@Override
+					public void onHandleFailure(String errorMsg) {
+
+					}
+
+					@Override
+					public void onFinish() {
+
+					}
+				});
+
+	}
+
+	/**
+	 * 发起添加猪请求
+	 */
+	private void addPig(final PigInfo pigInfo) {
+		LogUtils.i(TAG, "--添加猪请求--");
+		// 弹出提示
+		showLoading(getString(R.string.prompt_add_pig_loading));
+		PigAddRequest data = new PigAddRequest();
+		data.categoryID = pigInfo.pigCategory.categoryID;
+		data.hogpenID = hogpenVp.getHogpen(hogpenVp.getCurrentIndex()).hogpenID;
+		data.attendedTime = pigInfo.attendedTime;
+		data.attendedWeight = pigInfo.attendedWeight;
+		data.attendedAge = pigInfo.attendedAge;
+		HttpManager.postJson(this, UrlName.ADD_PIG.getUrl(), data,
+				new JsonHttpResponseHandler<PigAddResponse>(this) {
+					/**
+					 * 成功回调
+					 *
+					 * @param statusCode 状态码
+					 * @param headers    Header
+					 * @param jsonObj    服务端返回的对象
+					 */
+					@Override
+					public void onHandleSuccess(int statusCode, Header[] headers,
+					                            final PigAddResponse jsonObj) {
+						ThreadUtils.runOnUIThread(new Runnable() {
+							@Override
+							public void run() {
+								dismissLoading();
+								hogpenVp.addPig(getAddPigInfoAndOrder(pigInfo));
+								setAddPigBtnVisibility(hogpenVp.getPigNumber()
+										< HogpenViewPager.PIG_LIMIT);
+							}
+						}, 1000);
+
+					}
+
+					@Override
+					public void onCancel() {
+						ThreadUtils.runOnUIThread(new Runnable() {
+							@Override
+							public void run() {
+								dismissLoading();
+								// 没有网络的情况会终止请求
+								ToastUtils.getInstance().showToast(getActivity(),
+										R.string.prompt_add_pig_failure);
+							}
+						}, 1000);
+					}
+
+					@Override
+					public void onHandleFailure(String errorMsg) {
+						ThreadUtils.runOnUIThread(new Runnable() {
+							@Override
+							public void run() {
+								dismissLoading();
+								ToastUtils.getInstance().showToast(getActivity(),
+										R.string.prompt_add_pig_failure);
+							}
+						}, 1000);
+					}
+				});
+	}
 
 	/**
 	 * 返回添加猪测试数据
 	 */
-	private PigDetailInfoAndOrder getPigTestData() {
-		PigDetailInfoAndOrder pigInfo = new PigDetailInfoAndOrder();
-		pigInfo.orderInfo = new OrderInfoForSeller();
-		pigInfo.orderInfo.buyerNumber = 30;
-		pigInfo.growthInfo = new GrowthInfo();
-		pigInfo.growthInfo.pigWeight = 150;
-		pigInfo.healthInfo = new HealthInfo();
-		pigInfo.healthInfo.temperature = 36;
-		pigInfo.healthInfo.status = PigStatus.SLEEPING;
-		pigInfo.pigInfo = new PigInfo();
-		return pigInfo;
+	private PigDetailInfoAndOrder getAddPigInfoAndOrder(PigInfo pigInfo) {
+		PigDetailInfoAndOrder pigInfoAndOrder = new PigDetailInfoAndOrder();
+//		pigInfoAndOrder.orderInfo = new OrderInfoForSeller();
+//		pigInfoAndOrder.orderInfo.buyerNumber = 0;
+//		pigInfoAndOrder.healthInfo = new HealthInfo();
+//		pigInfoAndOrder.healthInfo.temperature = 36.5f;
+//		pigInfoAndOrder.healthInfo.status = PigStatus.WALKING;
+		pigInfoAndOrder.growthInfo = new GrowthInfo();
+		pigInfoAndOrder.growthInfo.pigWeight = pigInfo.attendedWeight;
+		pigInfoAndOrder.pigInfo = pigInfo;
+		return pigInfoAndOrder;
 	}
 
-	/**
-	 * 返回初始化猪圈测试数据
-	 */
-	private List<SellerHogpenInfo> getHogpenInfos() {
-		List<SellerHogpenInfo> hogpenInfos = new ArrayList<>();
-		SellerHogpenInfo hogpenInfo;
-		hogpenInfo = new SellerHogpenInfo();
-		hogpenInfo.hogpenID = "厕所边";
-		hogpenInfo.hogpenWidth = 3;
-		hogpenInfo.hogpenLength = 4;
-		hogpenInfo.pigInfos = new ArrayList<>();
-		// 构造猪数据
-		PigDetailInfoAndOrder pigDetail;
-		pigDetail = new PigDetailInfoAndOrder();
-		pigDetail.growthInfo = new GrowthInfo();
-		pigDetail.growthInfo.pigWeight = 180;
-		pigDetail.healthInfo = new HealthInfo();
-		pigDetail.healthInfo.status = PigStatus.EATING;
-		pigDetail.healthInfo.temperature = 37.5f;
-		pigDetail.orderInfo = new OrderInfoForSeller();
-		pigDetail.orderInfo.buyerNumber = 8;
-		hogpenInfo.pigInfos.add(pigDetail);
-		//
-		pigDetail = new PigDetailInfoAndOrder();
-		pigDetail.growthInfo = new GrowthInfo();
-		pigDetail.growthInfo.pigWeight = 180;
-		pigDetail.healthInfo = new HealthInfo();
-		pigDetail.healthInfo.status = PigStatus.EATING;
-		pigDetail.healthInfo.temperature = 37.5f;
-		pigDetail.orderInfo = new OrderInfoForSeller();
-		pigDetail.orderInfo.buyerNumber = 8;
-		hogpenInfo.pigInfos.add(pigDetail);
-
-		hogpenInfos.add(hogpenInfo);
-
-
-		return hogpenInfos;
-	}
+//	/**
+//	 * 返回初始化猪圈测试数据
+//	 */
+//	private List<SellerHogpenInfo> getHogpenInfos() {
+//		List<SellerHogpenInfo> hogpenInfos = new ArrayList<>();
+//		SellerHogpenInfo hogpenInfo;
+//		hogpenInfo = new SellerHogpenInfo();
+//		hogpenInfo.hogpenID = 1;
+//		hogpenInfo.hogpenWidth = 3;
+//		hogpenInfo.hogpenLength = 4;
+//		hogpenInfo.pigInfos = new ArrayList<>();
+//		// 构造猪数据
+//		PigDetailInfoAndOrder pigDetail;
+//		pigDetail = new PigDetailInfoAndOrder();
+//		pigDetail.growthInfo = new GrowthInfo();
+//		pigDetail.growthInfo.pigWeight = 180;
+//		pigDetail.healthInfo = new HealthInfo();
+//		pigDetail.healthInfo.status = PigStatus.EATING;
+//		pigDetail.healthInfo.temperature = 37.5f;
+//		pigDetail.orderInfo = new OrderInfoForSeller();
+//		pigDetail.orderInfo.buyerNumber = 8;
+//		hogpenInfo.pigInfos.add(pigDetail);
+//		//
+//		pigDetail = new PigDetailInfoAndOrder();
+//		pigDetail.growthInfo = new GrowthInfo();
+//		pigDetail.growthInfo.pigWeight = 180;
+//		pigDetail.healthInfo = new HealthInfo();
+//		pigDetail.healthInfo.status = PigStatus.EATING;
+//		pigDetail.healthInfo.temperature = 37.5f;
+//		pigDetail.orderInfo = new OrderInfoForSeller();
+//		pigDetail.orderInfo.buyerNumber = 8;
+//		hogpenInfo.pigInfos.add(pigDetail);
+//
+//		hogpenInfos.add(hogpenInfo);
+//
+//
+//		return hogpenInfos;
+//	}
 
 
 }

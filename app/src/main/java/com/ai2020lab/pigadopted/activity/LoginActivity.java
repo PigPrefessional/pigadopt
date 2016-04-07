@@ -280,11 +280,10 @@ public class LoginActivity extends AIBaseActivity {
 	/**
 	 * 查询用户信息
 	 */
-	private void queryUserInfo(int roleType){
-		if(roleType == Constants.ROLE_TYPE_BUYER){
+	private void queryUserInfo(int roleType) {
+		if (roleType == Constants.ROLE_TYPE_BUYER) {
 			queryBuyerInfo();
-		}
-		else if(roleType == Constants.ROLE_TYPE_SELLER){
+		} else if (roleType == Constants.ROLE_TYPE_SELLER) {
 			querySellerInfo();
 		}
 	}
@@ -322,17 +321,27 @@ public class LoginActivity extends AIBaseActivity {
 
 					@Override
 					public void onCancel() {
-						dismissLoading();
-						// 没有网络的情况会终止请求
-						ToastUtils.getInstance().showToast(getActivity(),
-								R.string.login_prompt_login_failure);
+						ThreadUtils.runOnUIThread(new Runnable() {
+							@Override
+							public void run() {
+								dismissLoading();
+								// 没有网络的情况会终止请求
+								ToastUtils.getInstance().showToast(getActivity(),
+										R.string.login_prompt_login_failure);
+							}
+						}, 1000);
 					}
 
 					@Override
 					public void onHandleFailure(String errorMsg) {
-						dismissLoading();
-						ToastUtils.getInstance().showToast(getActivity(),
-								R.string.login_prompt_login_failure);
+						ThreadUtils.runOnUIThread(new Runnable() {
+							@Override
+							public void run() {
+								dismissLoading();
+								ToastUtils.getInstance().showToast(getActivity(),
+										R.string.login_prompt_login_failure);
+							}
+						}, 1000);
 					}
 
 				});
@@ -372,17 +381,27 @@ public class LoginActivity extends AIBaseActivity {
 
 					@Override
 					public void onCancel() {
-						dismissLoading();
-						// 没有网络的情况会终止请求
-						ToastUtils.getInstance().showToast(getActivity(),
-								R.string.login_prompt_login_failure);
+						ThreadUtils.runOnUIThread(new Runnable() {
+							@Override
+							public void run() {
+								dismissLoading();
+								// 没有网络的情况会终止请求
+								ToastUtils.getInstance().showToast(getActivity(),
+										R.string.login_prompt_login_failure);
+							}
+						}, 1000);
 					}
 
 					@Override
 					public void onHandleFailure(String errorMsg) {
-						dismissLoading();
-						ToastUtils.getInstance().showToast(getActivity(),
-								R.string.login_prompt_login_failure);
+						ThreadUtils.runOnUIThread(new Runnable() {
+							@Override
+							public void run() {
+								dismissLoading();
+								ToastUtils.getInstance().showToast(getActivity(),
+										R.string.login_prompt_login_failure);
+							}
+						}, 1000);
 					}
 				});
 	}
