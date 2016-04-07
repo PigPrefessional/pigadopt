@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ai2020lab.pigadopted.R;
+import com.ai2020lab.pigadopted.common.DataManager;
 import com.ai2020lab.pigadopted.model.order.PigPart;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrderResponse;
 
@@ -39,18 +40,9 @@ public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
         mRecyclerView.setAdapter(new PartsAdapter(getContext(), pigParts));
     }
 
-
     @Override
-    protected PigDetailInfoAndOrderResponse loadData() {
-        return super.loadData();
-    }
-
-    @Override
-    protected int getPigPartImageResID(int partID) {
-        final int firstPartId = 1;
-        final int firstPartImageId = R.mipmap.pig_part_has_number_01;
-
-        return firstPartImageId + (partID - firstPartId);
+    protected int getPigPartImageResID(PigPart  pigPart) {
+        return DataManager.getInstance().getPigPartWithNumberImageResID(pigPart);
     }
 
     private class PartsAdapter extends

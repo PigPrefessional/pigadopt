@@ -1,11 +1,13 @@
 package com.ai2020lab.pigadopted.model.base;
 
+import java.io.Serializable;
+
 /**
  * Http响应报文实体类
  * Created by Justin on 2015/11/11.
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
-public class ResponseData<T> {
+public class ResponseData<T> implements Serializable {
 
 	public T data;
 

@@ -137,11 +137,11 @@ public class DataManager {
 	 * @param pigCategoryID String
 	 * @return 没有的时候返回null
 	 */
-	public PigCategory getPigCategory(String pigCategoryID) {
+	public PigCategory getPigCategory(int pigCategoryID) {
 		if (pigCategories == null || pigCategories.size() == 0) {
 			initPigCategories();
 		}
-		return pigCategoriesMap.get(pigCategoryID);
+		return pigCategoriesMap.get(new Integer(pigCategoryID));
 	}
 
 	/**
@@ -205,6 +205,24 @@ public class DataManager {
 			initSellerInfo();
 		}
 		return sellerInfo;
+	}
+
+	public int getPigPartImageResID(PigPart pigPart) {
+		ArrayList<PigPart> parts = getPigParts();
+
+		final int firstPartId = 1;
+		final int firstPartImageId = R.mipmap.pig_part_01;
+
+		return firstPartImageId + (pigPart.partID - firstPartId);
+	}
+
+	public int getPigPartWithNumberImageResID(PigPart pigPart) {
+		ArrayList<PigPart> parts = getPigParts();
+
+		final int firstPartId = 1;
+		final int firstPartImageId = R.mipmap.pig_part_01;
+
+		return firstPartImageId + (pigPart.partID - firstPartId);
 	}
 
 	private void initSellerInfo() {
