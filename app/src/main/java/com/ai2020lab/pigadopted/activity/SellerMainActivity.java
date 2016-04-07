@@ -286,7 +286,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	 * 弹出添加猪圈对话框
 	 */
 	private void showAddHogpenDialog() {
-		hogpenDialog = HogpenAddDialog.newInstance(true, onClickHogpenDialogListener,
+		hogpenDialog = HogpenAddDialog.newInstance(true, onClickHogpenAddListener,
 				onClickHogpenPhotoIvListener);
 		Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DIALOG_ADD_HOGPEN);
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -310,7 +310,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	/**
 	 * 添加猪圈对话框确定，取消按钮事件监听
 	 */
-	private OnClickDialogBtnListener<SellerHogpenInfo> onClickHogpenDialogListener =
+	private OnClickDialogBtnListener<SellerHogpenInfo> onClickHogpenAddListener =
 			new OnClickDialogBtnListener<SellerHogpenInfo>() {
 				@Override
 				public void onClickEnsure(DialogFragment df, SellerHogpenInfo hogpenInfo) {
@@ -330,7 +330,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	 * 弹出添加猪对话框
 	 */
 	private void showAddPigDialog() {
-		PigAddDialog pigDialog = PigAddDialog.newInstance(true, onClickDialogBtnListener);
+		PigAddDialog pigDialog = PigAddDialog.newInstance(true, onClickPigAddListener);
 		Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DIALOG_ADD_PIG);
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		if (fragment != null)
@@ -340,7 +340,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	}
 
 	// 添加猪对话框点击监听
-	private OnClickDialogBtnListener<PigInfo> onClickDialogBtnListener =
+	private OnClickDialogBtnListener<PigInfo> onClickPigAddListener =
 			new OnClickDialogBtnListener<PigInfo>() {
 				@Override
 				public void onClickEnsure(DialogFragment df, PigInfo pigInfo) {
@@ -359,28 +359,30 @@ public class SellerMainActivity extends AIBaseActivity {
 	 * 弹出添加猪成功提示对话框
 	 */
 	private void showAddPigSuccessDialog() {
-		PigAddSuccessDialog addPigSuccessDialog = PigAddSuccessDialog.newInstance(true,
-				new OnClickDialogBtnListener<Void>() {
-					@Override
-					public void onClickEnsure(DialogFragment df, Void aVoid) {
-						LogUtils.i(TAG, "跳转到猪拍照界面");
-						df.dismiss();
-					}
-
-					@Override
-					public void onClickCancel(DialogFragment df) {
-						LogUtils.i(TAG, "残忍拒绝");
-						df.dismiss();
-
-					}
-				});
+		PigAddSuccessDialog dialog = PigAddSuccessDialog.newInstance(true, onClickPigAddSuccessListener);
 		Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DIALOG_ADD_PIG_SUCCESS);
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		if (fragment != null)
 			ft.remove(fragment);
 		ft.addToBackStack(null);
-		addPigSuccessDialog.show(ft, TAG_DIALOG_ADD_PIG_SUCCESS);
+		dialog.show(ft, TAG_DIALOG_ADD_PIG_SUCCESS);
 	}
+
+	// 添加猪成功对话框按钮点击监听
+	private OnClickDialogBtnListener<Void> onClickPigAddSuccessListener =
+			new OnClickDialogBtnListener<Void>() {
+				@Override
+				public void onClickEnsure(DialogFragment df, Void aVoid) {
+					LogUtils.i(TAG, "跳转到猪拍照界面");
+					df.dismiss();
+				}
+
+				@Override
+				public void onClickCancel(DialogFragment df) {
+					LogUtils.i(TAG, "残忍拒绝");
+					df.dismiss();
+				}
+			};
 
 	/**
 	 * 处理相册选图和系统相机拍照返回图片逻辑
