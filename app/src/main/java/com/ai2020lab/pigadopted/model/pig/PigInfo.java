@@ -18,7 +18,7 @@ public class PigInfo implements Serializable {
 	 */
 	@Expose
 	@SerializedName("pig_id")
-	public String pigID;
+	public int pigID;
 	/**
 	 * 猪圈信息
 	 */

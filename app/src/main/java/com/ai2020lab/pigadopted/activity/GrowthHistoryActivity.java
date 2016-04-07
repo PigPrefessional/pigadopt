@@ -17,10 +17,12 @@ import com.ai2020lab.aiutils.thread.ThreadUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.adapter.GrowthHistoryRvAdapter;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
+import com.ai2020lab.pigadopted.common.IntentExtra;
 import com.ai2020lab.pigadopted.model.base.PageSplitInfo;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfoRequest;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfoResponse;
+import com.ai2020lab.pigadopted.model.pig.PigInfo;
 import com.ai2020lab.pigadopted.net.HttpManager;
 import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
 import com.ai2020lab.pigadopted.net.UrlName;
@@ -49,10 +51,12 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 
 	private GrowthHistoryRvAdapter growthHistoryRvAdapter;
 
+	private PigInfo pigInfo;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		userInfo = (UserInfo) getIntent().getExtras().get(IntentExtra.USER_INFO);
+		pigInfo = (PigInfo) getIntent().getSerializableExtra(IntentExtra.PIG_INFO);
 		setContentView(R.layout.activity_growth_history);
 		setToolbar();
 		assignViews();
@@ -126,7 +130,7 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 		// 弹出提示
 		showLoading(getString(R.string.prompt_loading));
 		GrowthInfoRequest data = new GrowthInfoRequest();
-		data.pigID = 1;
+		data.pigID = pigInfo.pigID;
 		data.pageSplitInfo = new PageSplitInfo();
 		data.pageSplitInfo.startIndex = 1;
 		data.pageSplitInfo.dataNum = 20;
