@@ -140,7 +140,12 @@ public class GrowthHistoryRvAdapter extends
 	// 根据时间分组
 	@Override
 	public long getHeaderId(int position) {
-		return getItem(position).collectedTime;
+		String YMD = TimeUtils.formatTimeStamp(getItem(position).collectedTime,
+				TimeUtils.Template.YMD);
+		LogUtils.i(TAG, "转换为年月日-->" + YMD);
+		long timeStampYMD = TimeUtils.dateToTimeStamp(YMD, TimeUtils.Template.YMD);
+		LogUtils.i(TAG, "分组时间戳-->" + timeStampYMD);
+		return timeStampYMD;
 	}
 
 	@Override

@@ -41,8 +41,8 @@ public enum UrlName {
 		return "http://" + HOST + ":" + PORT + "/" + name;
 	}
 
-//	private static final String HOST = "171.221.254.231";
-	private static final String HOST = "10.5.1.116";
+	private static final String HOST = "171.221.254.231";
+//	private static final String HOST = "10.5.1.116";
 	private static final int PORT = 3002;
 
 }
