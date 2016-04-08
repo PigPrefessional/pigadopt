@@ -16,6 +16,9 @@
 	<string name="length">长</string>
 	<string name="width">宽</string>
 
+	<string name="prompt_uploading">正在拼了命的为您上传…</string>
+	<string name="prompt_uploading_failure">抱歉，上传失败，请重试</string>
+	<string name="prompt_uploading_success">上传猪照片成功</string>
 	<string name="prompt_loading">正在拼了命的为您加载…</string>
 	<string name="prompt_loading_failure">抱歉，加载失败，请重试</string>
 	<string name="prompt_check_network">世界上最遥远的距离就是没网。检查设置</string>
@@ -99,4 +102,8 @@
 	<!--提示-->
 	<string name="prompt_query_pig_categories_failure">获取猪品种失败，请重新打开应用</string>
 	<string name="prompt_query_pig_parts_failure">获取猪部位失败，请重新打开应用</string>
+
+	<!--拍照界面-->
+	<string name="pig_photo_distance">拍摄距离：</string>
+	<string name="pig_photo_angle">拍摄角度：</string>
 </resources>

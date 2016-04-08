@@ -23,6 +23,8 @@ public enum UrlName {
 	BUYER_INFO_BY_PARTYID("queryCustomerInfo"),
 	// 查询猪生长信息
 	GROWTH_INFO_LIST("queryGrowthInfoList"),
+	// 上传猪成长照片
+	GROWTH_INFO_UPLOAD("uploadGrowthPhoto"),
 	PIG_INFO_CUSTOMER("findCustomerPigInfo"),
 	PIG_INFO_SELLER("findSellerPigInfo"),
 	PIG_WEIGHT_LIST("queryWeightList"),
@@ -39,8 +41,8 @@ public enum UrlName {
 		return "http://" + HOST + ":" + PORT + "/" + name;
 	}
 
-	private static final String HOST = "171.221.254.231";
-//	private static final String HOST = "10.5.1.59";
+//	private static final String HOST = "171.221.254.231";
+	private static final String HOST = "10.5.1.116";
 	private static final int PORT = 3002;
 
 }

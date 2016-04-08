@@ -113,13 +113,13 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 	}
 
 	/**
-	 * 猪成长记录拍照
+	 * 跳转到猪成长记录拍照上传界面
 	 */
 	private void skipToDistanceCameraActivity() {
 		Intent intent = new Intent(this, DistanceCameraActivity.class);
+		intent.putExtra(IntentExtra.PIG_INFO, pigInfo);
 		startActivity(intent);
 	}
-
 
 	/**
 	 * 请求生长记录列表

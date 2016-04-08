@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--定距拍照界面布局-->
-<LinearLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical"
-	android:background="@mipmap/main_bg">
+	android:layout_height="match_parent">
 
-</LinearLayout>
+	<com.ai2020lab.aimedia.CameraSurfaceView
+		android:id="@+id/take_photo_sv"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"/>
+
+	<!--拍照按钮-->
+	<ImageView
+		android:id="@+id/take_photo_iv"
+		android:layout_width="80dp"
+		android:layout_height="80dp"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:src="@drawable/growth_history_camera_selector"
+		tools:ignore="contentDescription"/>
+
+
+</RelativeLayout>

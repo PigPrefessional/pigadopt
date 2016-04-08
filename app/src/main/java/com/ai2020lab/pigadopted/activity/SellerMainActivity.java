@@ -427,7 +427,8 @@ public class SellerMainActivity extends AIBaseActivity {
 	/**
 	 * 添加猪圈
 	 */
-	private void addHogpen(SellerHogpenInfo sellerHogpenInfo) {
+	private void addHogpen(SellerHogpenInfo sellerHogpenInfo, int hogpenID) {
+		sellerHogpenInfo.hogpenID = hogpenID;
 		birdIndicator.addIndicator();
 		hogpenVp.addHogpen(sellerHogpenInfo);
 		// 选中新添加的猪圈
@@ -512,7 +513,7 @@ public class SellerMainActivity extends AIBaseActivity {
 	/**
 	 * 添加猪圈
 	 */
-	private void requestAddHogpen(SellerHogpenInfo sellerHogpenInfo) {
+	private void requestAddHogpen(final SellerHogpenInfo sellerHogpenInfo) {
 		LogUtils.i(TAG, "--添加猪圈请求--");
 		// 弹出提示
 		showLoading(getString(R.string.prompt_add_loading));
@@ -520,20 +521,22 @@ public class SellerMainActivity extends AIBaseActivity {
 		data.hogpenLength = sellerHogpenInfo.hogpenLength;
 		data.hogpenWidth = sellerHogpenInfo.hogpenWidth;
 		data.userID = DataManager.getInstance().getSellerInfo().userID;
+		LogUtils.i(TAG, "卖家用户id" + data.userID);
 		data.hogpenName = "";
+//		final SellerHogpenInfo hogpenInfo = sellerHogpenInfo;
 		HttpManager.postFile(this, UrlName.ADD_HOGPEN.getUrl(),
 				data, sellerHogpenInfo.hogpenPhoto,
 				new JsonHttpResponseHandler<HogpenAddResponse>(this) {
 
 					@Override
 					public void onHandleSuccess(int statusCode, Header[] headers,
-					                            HogpenAddResponse jsonObj) {
+					                            final HogpenAddResponse jsonObj) {
 						ThreadUtils.runOnUIThread(new Runnable() {
 							@Override
 							public void run() {
 								dismissLoading();
 								LogUtils.i(TAG, "--添加猪圈成功--");
-//								addHogpen(hogpenInfo);
+								addHogpen(sellerHogpenInfo, jsonObj.data.hogpenID);
 							}
 						}, 1000);
 					}

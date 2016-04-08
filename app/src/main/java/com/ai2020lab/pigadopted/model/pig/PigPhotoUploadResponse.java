@@ -14,7 +14,7 @@ public class PigPhotoUploadResponse extends ResponseData<PigPhotoUploadResponse.
 	public class PigPhotoUploadResult {
 
 		@Expose
-		@SerializedName("pig_photo")
-		public String pigPhoto;
+		@SerializedName("growth_info_id")
+		public String growthInfoID;
 	}
 }

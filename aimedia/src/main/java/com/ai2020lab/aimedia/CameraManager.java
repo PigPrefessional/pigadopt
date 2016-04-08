@@ -19,6 +19,8 @@ package com.ai2020lab.aimedia;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
@@ -26,40 +28,55 @@ import android.os.Build.VERSION;
 import android.view.SurfaceHolder;
 
 import com.ai2020lab.aiutils.common.LogUtils;
+import com.ai2020lab.aiutils.image.ImageUtils;
+import com.ai2020lab.aiutils.storage.FileUtils;
+
+import java.io.File;
 
 /**
  * 摄像头管理类
- * <p>
+ * <p/>
  * 使用方法:<br>
- * 1.调用CameraManager.init(context)方法初始化<br>
- * 2.打开摄像头CameraManager.openDriver()<br>
+ * 1.打开摄像头CameraManager.openDriver()<br>
  * 这个方法会返回打开摄像头的状态，状态信息在类CameraStatus中定义<br>
  * 3.开始预览CameraManager.startPreview(surfaceHolder),需要传入一个surfaceHolder对象的引用<br>
  * 4.停止预览CameraManager.stopPreview();<br>
  * 5.关闭摄像头释放资源CameraManager.closeDriver();
- *
+ * <p/>
  * Created by Justin on 2016/2/25.
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
 public final class CameraManager {
-	/** 日志标题 */
+	/**
+	 * 日志标题
+	 */
 	private static final String TAG = CameraManager.class.getSimpleName();
-	/** CameraManager对象 */
+	/**
+	 * CameraManager对象
+	 */
 	private static CameraManager cameraManager = null;
 	private final Context context;
-	/** 摄像头配置管理器 */
+	/**
+	 * 摄像头配置管理器
+	 */
 	private final CameraConfigurationManager configManager;
-	/** 摄像头对象的引用 */
+	/**
+	 * 摄像头对象的引用
+	 */
 	private Camera camera;
 
-	/** 是否初始化摄像头标志位，true-已经初始化，false-没有初始化 */
+	/**
+	 * 是否初始化摄像头标志位，true-已经初始化，false-没有初始化
+	 */
 	private boolean initialized = false;
-	/** 是否正在预览标志位，true-正在预览，false-没有预览 */
+	/**
+	 * 是否正在预览标志位，true-正在预览，false-没有预览
+	 */
 	private boolean previewing = false;
 
 	/**
 	 * 私有化构造方法
-	 * <p>
+	 * <p/>
 	 * 初始化上下文引用和相机配置类对象
 	 *
 	 * @param context 上下文引用
@@ -296,6 +313,61 @@ public final class CameraManager {
 				LogUtils.e(TAG, "停止预览异常", e);
 			}
 		}
+	}
+
+	/**
+	 * 拍照
+	 *
+	 */
+	public void takePicture(String filePath, String fileName,
+	                        TakePictureCallback takePictureCallback) {
+		if (camera != null && previewing && FileUtils.makeDir(filePath)) {
+			String path = filePath + File.separator + fileName;
+			LogUtils.i(TAG, "--处理照片路径-->" + path);
+			// TODO:需要实现第一个参数的接口，拍照的同时播放咔嚓声音
+			camera.takePicture(null, null, new HandleJpegCallback(path, takePictureCallback));
+		}
+	}
+
+	/**
+	 * 拍照并处理照片
+	 */
+	private class HandleJpegCallback implements Camera.PictureCallback {
+		String filePath;
+		TakePictureCallback takePictureCallback;
+
+		public HandleJpegCallback(String filePath, TakePictureCallback takePictureCallback) {
+			this.filePath = filePath;
+			this.takePictureCallback = takePictureCallback;
+		}
+
+		@Override
+		public void onPictureTaken(byte[] data, Camera camera) {
+			try {
+				Bitmap bitmap = null;
+				if (data != null) {
+					bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+					// 停止预览
+					camera.startPreview();
+					previewing = false;
+				}
+				if (bitmap != null) {
+					// 保存图片
+					ImageUtils.saveBitmap(ImageUtils.getRotateBitmap(bitmap, 90), filePath);
+					// 再次开始预览
+					camera.startPreview();
+					previewing = true;
+					if (takePictureCallback != null)
+						takePictureCallback.onPictureSaved(filePath);
+				}
+			} catch (Exception e) {
+				LogUtils.e(TAG, "拍照异常", e);
+			}
+		}
+	}
+
+	public interface TakePictureCallback {
+		void onPictureSaved(String path);
 	}
 
 }

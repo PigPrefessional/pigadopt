@@ -14,7 +14,7 @@ public class HogpenAddResponse extends ResponseData<HogpenAddResponse.HogpenAddR
 	public class HogpenAddResult {
 		@Expose
 		@SerializedName("hogpen_id")
-		public String hogpenID;
+		public int hogpenID;
 
 	}
 }

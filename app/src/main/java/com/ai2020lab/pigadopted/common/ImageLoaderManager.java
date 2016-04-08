@@ -24,7 +24,7 @@ import java.io.File;
  */
 public class ImageLoaderManager {
 
-	public final static String IMAGE_CACHE_PATH = "analysis_image";
+	public final static String IMAGE_CACHE_PATH = "download_image";
 	private final static String TAG = ImageLoaderManager.class.getSimpleName();
 
 	/**

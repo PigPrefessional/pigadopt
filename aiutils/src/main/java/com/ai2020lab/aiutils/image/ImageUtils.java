@@ -35,8 +35,10 @@ import com.ai2020lab.aiutils.storage.FileUtils;
 
 import junit.framework.Assert;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -544,12 +546,45 @@ public class ImageUtils {
 	}
 
 	/**
+	 * 旋转Bitmap
+	 *
+	 * @param b            Bitmap
+	 * @param rotateDegree 旋转角度
+	 * @return 返回旋转后的bitmap
+	 */
+	public static Bitmap getRotateBitmap(Bitmap b, float rotateDegree) {
+		Matrix matrix = new Matrix();
+		matrix.postRotate(rotateDegree);
+		return Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, false);
+	}
+
+	/**
+	 * 保存Bitmap到存储
+	 *
+	 * @param b    Bitmap
+	 * @param path 保存路径
+	 */
+	public static void saveBitmap(Bitmap b, String path) throws IOException {
+		if (b == null || b.isRecycled()) {
+			LogUtils.i(TAG, "bitmap对象为空");
+			return;
+		}
+		BufferedOutputStream bos = new BufferedOutputStream(
+				new FileOutputStream(path));
+		b.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+		bos.flush();
+		bos.close();
+
+	}
+
+	/**
 	 * 打开系统相册选择照片<p>
 	 * 返回的照片在onActivityResult方法中处理，请求码必须同传入的requestCode相等
-	 * @param activity Activity
+	 *
+	 * @param activity    Activity
 	 * @param requestCode 请求码
 	 */
-	public static void pickImageFromAlbum(Activity activity, int requestCode){
+	public static void pickImageFromAlbum(Activity activity, int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_PICK,
 				MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		activity.startActivityForResult(intent, requestCode);
@@ -558,11 +593,12 @@ public class ImageUtils {
 	/**
 	 * 处理系统相册选取结果<p>
 	 * 这个方法必须放在onActivityResult中调用
-	 * @param context Context
+	 *
+	 * @param context  Context
 	 * @param imageUri
 	 * @return 返回选择的照片的文件路径，失败返回null
 	 */
-	public static String getPickedImagePath(Context context, Uri imageUri){
+	public static String getPickedImagePath(Context context, Uri imageUri) {
 		String picPath = null;
 		if ("file".equals(imageUri.getScheme())) {
 			String p = imageUri.toString();

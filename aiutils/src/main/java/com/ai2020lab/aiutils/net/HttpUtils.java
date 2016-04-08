@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.system.NetworkUtils;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.ResponseHandlerInterface;
 
 import java.util.HashMap;
@@ -70,6 +71,7 @@ public class HttpUtils {
 		for (Map.Entry<String, String> entry : headerParams.entrySet()) {
 			client.addHeader(entry.getKey(), entry.getValue());
 		}
+		LogUtils.i(TAG, "--发起HTTP post请求--");
 		client.post(context, url, entity, contentType, response);
 		// 监测网络状态，没有连接网络则取消请求
 		boolean isNetAvailable = NetworkUtils.isNetworkAvailable(context);
@@ -79,6 +81,49 @@ public class HttpUtils {
 			client.cancelRequests(context, true);
 		}
 
+	}
+
+	/**
+	 * post请求
+	 *
+	 * @param context       上下文引用
+	 * @param url           请求URL地址
+	 * @param timeOut       请求超时时间
+	 * @param headerParams  请求头参数HashMap对象
+	 * @param requestParams RequestParams
+	 * @param response      ResponseHandlerInterface接口的引用
+	 */
+	public static void post(Context context, String url,
+	                        int timeOut, HashMap<String, String> headerParams,
+	                        RequestParams requestParams,
+	                        ResponseHandlerInterface response) {
+		if (context == null) {
+			LogUtils.i(TAG, "上下文引用context为空");
+			return;
+		}
+		if (TextUtils.isEmpty(url)) {
+			LogUtils.i(TAG, "请求地址url为空");
+			return;
+		}
+		LogUtils.i(TAG, "请求地址->" + url);
+		AsyncHttpClient client = new AsyncHttpClient();
+		// 设置请求超时时间
+		if (timeOut >= 0)
+			client.setTimeout(timeOut);
+		// 设置HTTP请求头
+		for (Map.Entry<String, String> entry : headerParams.entrySet()) {
+			client.addHeader(entry.getKey(), entry.getValue());
+		}
+
+		LogUtils.i(TAG, "--发起HTTP post请求--");
+		client.post(url, requestParams, response);
+		// 监测网络状态，没有连接网络则取消请求
+		boolean isNetAvailable = NetworkUtils.isNetworkAvailable(context);
+		if (!isNetAvailable) {
+			LogUtils.i(TAG, "没有网络连接，将取消请求");
+			// 取消请求要放在发送请求的后面才有效果
+			client.cancelRequests(context, true);
+		}
 	}
 
 

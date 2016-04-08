@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--上传猪照片对话框布局-->
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:gravity="center"
+	android:orientation="vertical">
+	<!--对话框标题-->
+	<ImageView
+		android:id="@+id/pig_photo_title_iv"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@mipmap/upload_pig_dialog_title"
+		tools:ignore="contentDescription"/>
+	<!--对话框内容-->
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp"
+		android:background="@mipmap/add_hogpen_dialog_bg"
+		android:gravity="center_horizontal"
+		android:orientation="vertical">
+
+		<!--添加猪信息布局-->
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:layout_marginTop="5dp"
+			android:background="@mipmap/add_pig_dialog_content_bg"
+			android:orientation="vertical"
+			android:padding="20dp">
+
+			<ImageView
+				android:id="@+id/pig_photo_iv"
+				android:layout_width="250dp"
+				android:layout_height="250dp"
+				android:layout_gravity="center_horizontal"
+				tools:ignore="contentDescription"/>
+
+			<!--猪圈长度选择-->
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="15dp"
+				android:gravity="center_vertical"
+				android:orientation="horizontal">
+				<TextView
+					style="@style/TextNormal"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/pig_photo_distance"/>
+				<!--显示拍摄距离-->
+				<TextView
+					android:id="@+id/pig_photo_distance_tv"
+					style="@style/TextNormal"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+
+			</LinearLayout>
+
+			<!--猪圈宽度选择-->
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="15dp"
+				android:gravity="center_vertical"
+				android:orientation="horizontal">
+				<TextView
+					style="@style/TextNormal"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/pig_photo_angle"/>
+				<!--显示拍摄角度-->
+				<TextView
+					android:id="@+id/pig_photo_angle_tv"
+					style="@style/TextNormal"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+
+			</LinearLayout>
+
+		</LinearLayout>
+		<!--取消，确认按钮布局-->
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginBottom="10dp"
+			android:layout_marginTop="10dp"
+			android:gravity="center"
+			android:orientation="horizontal">
+			<Button
+				android:id="@+id/cancel_btn"
+				style="@style/TextNormal"
+				android:layout_width="80dp"
+				android:layout_height="40dp"
+				android:background="@drawable/cancel_btn_short_selector"
+				android:text="@string/cancel"
+				android:textColor="@android:color/white"/>
+			<Button
+				android:id="@+id/ensure_btn"
+				style="@style/TextNormal"
+				android:layout_width="80dp"
+				android:layout_height="40dp"
+				android:layout_marginLeft="10dp"
+				android:background="@drawable/ensure_btn_short_selector"
+				android:text="@string/ensure"
+				android:textColor="@android:color/white"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+</LinearLayout>
