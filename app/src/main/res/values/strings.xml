@@ -104,6 +104,10 @@
 	<string name="prompt_query_pig_parts_failure">获取猪部位失败，请重新打开应用</string>
 
 	<!--拍照界面-->
+	<string name="pig_photo_height">拍摄高度：</string>
 	<string name="pig_photo_distance">拍摄距离：</string>
 	<string name="pig_photo_angle">拍摄角度：</string>
+	<string name="pig_photo_angle_value" formatted="false">%s度</string>
+	<string name="pig_photo_distance_value" formatted="false">%s米</string>
+	<string name="pig_photo_height_value" formatted="false">%s米</string>
 </resources>

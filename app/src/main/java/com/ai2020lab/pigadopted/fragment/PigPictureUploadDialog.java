@@ -65,7 +65,7 @@ public class PigPictureUploadDialog extends DialogFragment {
 		assignViews(contentView);
 		setTextFonts();
 		setDialogBtnClickListener();
-		setPigPhoto();
+		setPigPhotoInfo();
 		return dialog;
 	}
 
@@ -102,11 +102,16 @@ public class PigPictureUploadDialog extends DialogFragment {
 		ensureBtn.getPaint().setFakeBoldText(true);
 	}
 
-	private void setPigPhoto(){
-		LogUtils.i(TAG, "设置猪圈图片");
+	private void setPigPhotoInfo() {
 		pigPhotoIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 //		hogpenPhotoIv.setImageBitmap(ImageUtils.getBitmapFromSDCard(path, 4));
 		ImageLoader.getInstance().displayImage("file://" + pigPhotoData.pigPhoto, pigPhotoIv);
+		String distanceShow = String.format(getString(R.string.pig_photo_distance_value),
+				pigPhotoData.distance);
+		String angleShow = String.format(getString(R.string.pig_photo_angle_value),
+				pigPhotoData.verticalAngle);
+		pigPhotoDistanceTv.setText(distanceShow);
+		pigPhotoAngleTv.setText(angleShow);
 	}
 
 	/**

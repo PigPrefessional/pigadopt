@@ -6,9 +6,9 @@ package com.ai2020lab.pigadopted.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.animation.BounceInterpolator;
 
 import com.ai2020lab.aiutils.common.LogUtils;
@@ -28,7 +28,6 @@ import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
 import com.ai2020lab.pigadopted.net.UrlName;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -61,8 +60,12 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 		setToolbar();
 		assignViews();
 		setGrowthHistoryRv();
-		// TODO:加载测试数据
-//		loadData();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.i(TAG, "--onResume--");
 		queryCustomerPigList();
 	}
 
@@ -144,6 +147,7 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 							@Override
 							public void run() {
 								dismissLoading();
+								sortList(jsonObj.data.growthInfos);
 								List<GrowthInfo> growthInfos = jsonObj.data.growthInfos;
 								int size = growthInfos.size();
 								if (size > 0) {
@@ -176,70 +180,6 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 
 				});
 
-	}
-
-	// 加载测试数据
-	private void loadData() {
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				loadTestListData();
-
-			}
-		}, 1000);
-	}
-
-	private void loadTestListData() {
-		List<GrowthInfo> growthInfos = getTestListData();
-		sortList(growthInfos);
-		int size = growthInfos.size();
-		for (int i = 0; i < size; i++) {
-			GrowthInfo growthInfo = growthInfos.get(i);
-			// 采用逐项添加的方式才能触发动画
-			this.growthHistoryRvAdapter.add(i, growthInfo);
-		}
-	}
-
-	private List<GrowthInfo> getTestListData() {
-		List<GrowthInfo> growthInfos = new ArrayList<>();
-		GrowthInfo growthInfo;
-
-		growthInfo = new GrowthInfo();
-		growthInfo.increasedWeight = 10;
-		growthInfo.pigWeight = 30;
-		growthInfo.collectedTime = 1445508052553l;
-		growthInfo.pigPhoto = "http://a4.att.hudong.com/13/53/01300000167984122578538815071.jpg";
-		growthInfos.add(growthInfo);
-		//////////////////////////////////////////
-		growthInfo = new GrowthInfo();
-		growthInfo.increasedWeight = 20;
-		growthInfo.pigWeight = 40;
-		growthInfo.collectedTime = 1446372052553l;
-		growthInfo.pigPhoto = "http://pic17.nipic.com/20110821/8203958_145711321167_2.jpg";
-		growthInfos.add(growthInfo);
-		//////////////////////////////////////////
-		growthInfo = new GrowthInfo();
-		growthInfo.increasedWeight = 30;
-		growthInfo.pigWeight = 80;
-		growthInfo.collectedTime = 1451642452553l;
-		growthInfo.pigPhoto = "http://images.quanjing.com/sps032/high/sps255-30779.jpg";
-		growthInfos.add(growthInfo);
-		//////////////////////////////////////////
-		growthInfo = new GrowthInfo();
-		growthInfo.increasedWeight = 10;
-		growthInfo.pigWeight = 90;
-		growthInfo.collectedTime = 1445508052553l;
-		growthInfo.pigPhoto = "http://file.youboy.com/a/93/86/55/5/10297165.jpg";
-		growthInfos.add(growthInfo);
-		//////////////////////////////////////////
-		growthInfo = new GrowthInfo();
-		growthInfo.increasedWeight = 10;
-		growthInfo.pigWeight = 110;
-		growthInfo.collectedTime = 1459155690552l;
-		growthInfo.pigPhoto = "http://a3.att.hudong.com/21/63/20300001248577133465636942467.jpg";
-		growthInfos.add(growthInfo);
-
-		return growthInfos;
 	}
 
 	// 倒序排列

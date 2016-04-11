@@ -160,6 +160,14 @@ public class CommonUtils {
 	}
 
 	/**
+	 * 4舍5入并保留digits位小数
+	 */
+	public static double roundDouble(Double num, int digits){
+		//#0.00 --> 123.4567 = 123.45 | 0.123456 = 0.12
+		return StringUtils.parseDouble(String.format("%." + "" + digits + "f", num));
+	}
+
+	/**
 	 * 4舍5入只保留整数
 	 */
 	public static int roundInt(float num) {
