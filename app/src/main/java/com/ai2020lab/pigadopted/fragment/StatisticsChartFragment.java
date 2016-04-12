@@ -220,6 +220,7 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setYOffset(15);
         //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
         //xAxis.addLimitLine(llXAxis); // add x-axis limit line
 
@@ -240,6 +241,7 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         //     ll2.setTypeface(tf);
 
         YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setXOffset(15);
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
 //        leftAxis.addLimitLine(ll1);
 //        leftAxis.addLimitLine(ll2);
@@ -373,8 +375,6 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
     }
 
     private void setChartData() {
-//        List<WeightData> list = loadWeightDataForWeeks();
-//        LineData data = createChartData(list);
 
         ChartDataAdapter.XYValues xyValues = null;
 
@@ -427,111 +427,6 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
         return new LineData(xyValues.xVals, dataSets);
 
-    }
-
-    private LineData createChartData(List<WeightData> dataList) {
-        ArrayList<String> xVals = new ArrayList<String>();
-        ArrayList<Entry> yVals = new ArrayList<Entry>();
-
-
-        for (int i = 0; i < dataList.size(); i++) {
-            final WeightData data = dataList.get(i);
-
-            xVals.add(data.date);
-            yVals.add(new Entry(data.weight, i));
-
-            if (mMaxYValue < data.weight) {
-                mMaxYValue = data.weight;
-            }
-        }
-
-
-        LineDataSet set1 = new LineDataSet(yVals, "Weight data set");
-
-        set1.setDrawCubic(true);
-
-        set1.setLineWidth(1f);
-        set1.setCircleRadius(3f);
-        set1.setDrawCircleHole(true);
-        set1.setValueTextSize(9f);
-
-
-        set1.setDrawFilled(true);
-
-        setChartColor(set1);
-
-        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        dataSets.add(set1);
-
-
-        return new LineData(xVals, dataSets);
-
-    }
-
-    private List<WeightData> loadWeightData() {
-        List<WeightData> list = new ArrayList<>();
-
-        WeightData data = new WeightData();
-
-        data.date = "周一";
-        data.weight = 10;
-        list.add(data);
-
-        data = new WeightData();
-        data.date = "周二";
-        data.weight = 13;
-        list.add(data);
-
-        data = new WeightData();
-        data.date = "周三";
-        data.weight = 15;
-        list.add(data);
-
-        data = new WeightData();
-        data.date = "周四";
-        data.weight = 19;
-        list.add(data);
-
-        data = new WeightData();
-        data.date = "周五";
-        data.weight = 18;
-        list.add(data);
-
-        data = new WeightData();
-        data.date = "周六";
-        data.weight = 24;
-        list.add(data);
-
-        return list;
-    }
-
-    private List<WeightData> loadWeightDataForWeeks() {
-        List<WeightData> list = new ArrayList<>();
-        Random r = new Random();
-
-        for (int i = 1; i < 11; ++i) {
-            WeightData data = new WeightData();
-
-            data.date = "第" + i + "周";
-            data.weight = 10 * i + 10 * r.nextFloat();
-            list.add(data);
-        }
-
-        return list;
-    }
-
-    private void changeDataSet() {
-        List<WeightData> list = loadWeightData();
-        LineData data = createChartData(list);
-
-        YAxis leftAxis = mChart.getAxisLeft();
-        leftAxis.setAxisMaxValue(mMaxYValue + 5);
-        mChart.setData(data);
-
-        mChart.invalidate();
-
-        mChart.setVisibleXRangeMaximum(10);
-        mChart.setVisibleXRangeMinimum(5);
     }
 
 }

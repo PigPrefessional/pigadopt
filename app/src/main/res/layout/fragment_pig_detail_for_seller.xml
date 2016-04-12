@@ -42,7 +42,6 @@
                     android:lines="2"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:text="我又胖20斤了哦"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="35dp"
                     android:textColor="#8e5339"
@@ -56,7 +55,8 @@
                 android:layout_marginBottom="10dp"
                 android:background="@mipmap/buyers_background"
                 android:layout_marginRight="40dp"
-                android:layout_marginLeft="40dp">
+                android:layout_marginLeft="40dp"
+                android:clickable="false">
                 <TextView
                     android:id="@+id/buyer_number"
                     android:layout_width="wrap_content"
@@ -65,8 +65,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="28dp"
                     android:textColor="#85aa4c"
-                    android:textSize="12sp"
-                    android:text="@string/pig_detail_buyer_number" />
+                    android:textSize="12sp" />
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/buyer_list"
                     android:layout_width="match_parent"
@@ -102,8 +101,7 @@
                             android:text="@string/pig_detail_label_varieties" />
                         <TextView
                             android:id="@+id/pig_type_name"
-                            style="@style/LabelContent"
-                            android:text="内江猪"/>
+                            style="@style/LabelContent" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -113,8 +111,7 @@
                             android:text="@string/pig_detail_label_age" />
                         <TextView
                             android:id="@+id/pig_age"
-                            style="@style/LabelContent"
-                            android:text="2个月"/>
+                            style="@style/LabelContent" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -124,8 +121,7 @@
                             android:text="@string/pig_detail_label_weight" />
                         <TextView
                             android:id="@+id/pig_weight"
-                            style="@style/LabelContent"
-                            android:text="10公斤"/>
+                            style="@style/LabelContent" />
 
                         <Button
                             android:id="@+id/weight_chart"
@@ -139,8 +135,7 @@
                             android:text="@string/pig_detail_label_temperature" />
                         <TextView
                             android:id="@+id/pig_temperature"
-                            style="@style/LabelContent"
-                            android:text="38℃"/>
+                            style="@style/LabelContent" />
 
                         <Button
                             android:id="@+id/temperture_chart"
@@ -154,8 +149,7 @@
                             android:text="@string/pig_detail_label_fat" />
                         <TextView
                             android:id="@+id/pig_fat_rate"
-                            style="@style/LabelContent"
-                            android:text="24%"/>
+                            style="@style/LabelContent" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -165,8 +159,7 @@
                             android:text="@string/pig_detail_label_steps" />
                         <TextView
                             android:id="@+id/pig_steps"
-                            style="@style/LabelContent"
-                            android:text="1333步"/>
+                            style="@style/LabelContent" />
                         <Button
                             android:id="@+id/steps_chart"
                             style="@style/ChartsButton" />
