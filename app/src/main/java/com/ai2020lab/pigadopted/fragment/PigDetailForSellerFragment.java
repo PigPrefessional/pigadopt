@@ -29,6 +29,7 @@ import com.ai2020lab.pigadopted.biz.HttpPigDetailManager;
 import com.ai2020lab.pigadopted.biz.HttpStatisticDataManager;
 import com.ai2020lab.pigadopted.biz.PigDetailManager;
 import com.ai2020lab.pigadopted.biz.StatisticsDataManager;
+import com.ai2020lab.pigadopted.chart.StatisticsChartFragmentFactory;
 import com.ai2020lab.pigadopted.common.DataManager;
 import com.ai2020lab.pigadopted.model.order.PigPart;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
@@ -178,6 +179,7 @@ public class PigDetailForSellerFragment extends Fragment {
 		mIncreaseWeight.setVisibility(View.INVISIBLE);
 		mIncreaseWeight.setText(String.format(getResources().getString(R.string.pig_detail_weight_increase), result.growthInfo.increasedWeight / 2));
 		mPigTypeName.setText(DataManager.getInstance().getPigCategory(result.pigInfo.pigCategory.categoryID).categoryName);
+        mPigWeight.setText(String.format(getResources().getString(R.string.pig_detail_weight), result.growthInfo.pigWeight));
 		mPigSteps.setText(String.format(getResources().getString(R.string.pig_detail_steps), result.healthInfo.steps));
 		mPigFatRate.setText(result.healthInfo.fatRate + "%");
 		mPigTemperature.setText(result.healthInfo.temperature + "℃");
@@ -325,7 +327,7 @@ public class PigDetailForSellerFragment extends Fragment {
 						public void onHandleSuccess(int statusCode, Header[] headers, WeightStaticResponse jsonObj) {
 							mDataSet = (Serializable) jsonObj.data.dataList;
 							activity.dismissLoading();
-							addChartFragment(chartType);
+							addChartFragment(StatisticsChartFragmentFactory.ChartType.WEIGHT);
 						}
 
 						@Override
@@ -348,7 +350,7 @@ public class PigDetailForSellerFragment extends Fragment {
 						public void onHandleSuccess(int statusCode, Header[] headers, StepStaticResponse jsonObj) {
 							mDataSet = (Serializable) jsonObj.data.dataList;
 							activity.dismissLoading();
-							addChartFragment(chartType);
+							addChartFragment(StatisticsChartFragmentFactory.ChartType.STEPS);
 						}
 
 						@Override
@@ -372,7 +374,7 @@ public class PigDetailForSellerFragment extends Fragment {
 						public void onHandleSuccess(int statusCode, Header[] headers, BodyTemperatureResponse jsonObj) {
 							mDataSet = (Serializable) jsonObj.data.dataList;
 							activity.dismissLoading();
-							addChartFragment(chartType);
+							addChartFragment(StatisticsChartFragmentFactory.ChartType.TEMPERATURE);
 						}
 
 						@Override
@@ -392,7 +394,7 @@ public class PigDetailForSellerFragment extends Fragment {
 	}
 
 
-	private void addChartFragment(final int chartType) {
+	private void addChartFragment(final StatisticsChartFragmentFactory.ChartType chartType) {
 		DisplayMetrics metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
 		int width = metric.widthPixels;  // 屏幕宽度（像素）
@@ -412,9 +414,8 @@ public class PigDetailForSellerFragment extends Fragment {
 		int marginWidth = (int) (15 * scale + 0.5f);
 		int marginHeight = (int) (300 * scale + 0.5f);
 
-		DialogFragment newFragment = StatisticsChartFragment
-                .newInstance(width - marginWidth, height - marginHeight, chartType, mDataSet);
-
+        DialogFragment newFragment = StatisticsChartFragmentFactory
+                .createFragment(width - marginWidth, height - marginHeight, chartType, mDataSet);
 
 		newFragment.show(ft, "dialog");
 	}
