@@ -4,6 +4,8 @@
 
 package com.ai2020lab.pigadopted.common;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.text.TextUtils;
 
 import com.ai2020lab.aiutils.common.LogUtils;
@@ -70,6 +72,7 @@ public class CommonUtils {
 
 	/**
 	 * 获取当前日子
+	 *
 	 * @return 返回当前日子
 	 */
 	public static int getCurrentDay() {
@@ -162,7 +165,7 @@ public class CommonUtils {
 	/**
 	 * 4舍5入并保留digits位小数
 	 */
-	public static double roundDouble(Double num, int digits){
+	public static double roundDouble(Double num, int digits) {
 		//#0.00 --> 123.4567 = 123.45 | 0.123456 = 0.12
 		return StringUtils.parseDouble(String.format("%." + "" + digits + "f", num));
 	}
@@ -172,6 +175,21 @@ public class CommonUtils {
 	 */
 	public static int roundInt(float num) {
 		return (int) (num + 0.5);
+	}
+
+	/**
+	 *
+	 * @param context Context
+	 * @param name String
+	 * @return int
+	 */
+	public static int getPixelSizeByName(Context context, String name) {
+		Resources resources = context.getResources();
+		int resourceId = resources.getIdentifier(name, "dimen", "android");
+		if (resourceId > 0) {
+			return resources.getDimensionPixelSize(resourceId);
+		}
+		return 0;
 	}
 
 

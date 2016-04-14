@@ -181,9 +181,9 @@ public class SellerMainActivity extends AIBaseActivity {
 		// 猪添加动画执行完毕监听
 		hogpenVp.setOnPigAddListener(new HogpenViewPager.OnPigAddListener() {
 			@Override
-			public void onEnd() {
+			public void onEnd(PigDetailInfoAndOrder pigInfo) {
 				// 猪添加动画执行完毕弹出提示对话框
-				showAddPigSuccessDialog();
+				showAddPigSuccessDialog(pigInfo);
 			}
 		});
 	}
@@ -212,6 +212,15 @@ public class SellerMainActivity extends AIBaseActivity {
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(IntentExtra.PIG_INFO, pigInfo);
 		intent.putExtras(bundle);
+		startActivity(intent);
+	}
+
+	/**
+	 * 跳转到距离相机拍照界面
+	 */
+	private void skipToDistanceCameraActivity(PigDetailInfoAndOrder pigDetailInfoAndOrder) {
+		Intent intent = new Intent(this, DistanceCameraActivity.class);
+		intent.putExtra(IntentExtra.PIG_INFO, pigDetailInfoAndOrder.pigInfo);
 		startActivity(intent);
 	}
 
@@ -358,8 +367,22 @@ public class SellerMainActivity extends AIBaseActivity {
 	/**
 	 * 弹出添加猪成功提示对话框
 	 */
-	private void showAddPigSuccessDialog() {
-		PigAddSuccessDialog dialog = PigAddSuccessDialog.newInstance(true, onClickPigAddSuccessListener);
+	private void showAddPigSuccessDialog(final PigDetailInfoAndOrder pigInfo) {
+		PigAddSuccessDialog dialog = PigAddSuccessDialog.newInstance(true,
+				new OnClickDialogBtnListener<Void>() {
+					@Override
+					public void onClickEnsure(DialogFragment df, Void aVoid) {
+						LogUtils.i(TAG, "跳转到猪拍照界面");
+						df.dismiss();
+						skipToDistanceCameraActivity(pigInfo);
+					}
+
+					@Override
+					public void onClickCancel(DialogFragment df) {
+						LogUtils.i(TAG, "残忍拒绝");
+						df.dismiss();
+					}
+				});
 		Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DIALOG_ADD_PIG_SUCCESS);
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		if (fragment != null)
@@ -367,22 +390,6 @@ public class SellerMainActivity extends AIBaseActivity {
 		ft.addToBackStack(null);
 		dialog.show(ft, TAG_DIALOG_ADD_PIG_SUCCESS);
 	}
-
-	// 添加猪成功对话框按钮点击监听
-	private OnClickDialogBtnListener<Void> onClickPigAddSuccessListener =
-			new OnClickDialogBtnListener<Void>() {
-				@Override
-				public void onClickEnsure(DialogFragment df, Void aVoid) {
-					LogUtils.i(TAG, "跳转到猪拍照界面");
-					df.dismiss();
-				}
-
-				@Override
-				public void onClickCancel(DialogFragment df) {
-					LogUtils.i(TAG, "残忍拒绝");
-					df.dismiss();
-				}
-			};
 
 	/**
 	 * 处理相册选图和系统相机拍照返回图片逻辑

@@ -17,21 +17,28 @@
 package com.ai2020lab.aimedia;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
-import android.os.Build.VERSION;
-import android.util.DisplayMetrics;
+import android.os.Build;
+import android.util.Log;
 
+import com.ai2020lab.aimedia.model.FlashMode;
+import com.ai2020lab.aimedia.model.HDRMode;
+import com.ai2020lab.aimedia.model.Quality;
+import com.ai2020lab.aimedia.model.Ratio;
 import com.ai2020lab.aiutils.common.LogUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -40,11 +47,11 @@ import java.util.regex.Pattern;
  * Created by Justin on 2016/2/25.
  * Email:502953057@qq.com,zhenghx3@asiainfo.com
  */
-final class CameraConfigurationManager {
+final class CameraSettingManager {
 	/**
 	 * 日志标题
 	 */
-	private static final String TAG = CameraConfigurationManager.class
+	private static final String TAG = CameraSettingManager.class
 			.getSimpleName();
 	/**
 	 * 正则表达式表现模式
@@ -53,45 +60,303 @@ final class CameraConfigurationManager {
 	/**
 	 * 上下文引用
 	 */
-	private final Context context;
+	private Context context;
+
+	private Camera camera;
+	private Camera.Parameters parameters;
 
 	/**
-	 * 屏幕分辨率
+	 * 预览分辨率Map
 	 */
-	private Point screenResolution;
+	private Map<Ratio, Size> previewSizes;
 	/**
-	 * 摄像头预览分辨率
+	 * 拍照分辨率Map
 	 */
-	private Point previewResolution;
+	private Map<Ratio, Map<Quality, Camera.Size>> pictureSizes;
 	/**
-	 * 摄像头录像使用分辨率
+	 * 是否支持HDR模式 high dynamic range imaging
+	 * 高动态范围成像，用来实现比普通数字图像技术更大曝光动态范围
+	 * 适合场景：阴暗变化明显的场景下，可以使明处的景物不至于过曝，
+	 * 暗处的景物不至于欠曝,特别是在逆光下，可以将人物和环境都拍清晰
 	 */
-	private Point videoResolution;
-
+	private boolean supportedHDR = false;
 	/**
-	 * 预览格式
+	 * 是否支持闪光灯
 	 */
-	private int previewFormat;
-	private String previewFormatString;
+	private boolean supportedFlash = false;
 
 	/**
 	 * 构造方法
 	 * <p/>
-	 *
-	 * @param context Context
 	 */
-	CameraConfigurationManager(Context context) {
+	CameraSettingManager() {
+	}
+
+	/**
+	 * 初始化相机配置参数，根据设备屏幕分辨率计算得到<br>
+	 *
+	 * @param camera Camera
+	 */
+	void initFromCameraParameters(Context context, Camera camera) {
+		if (context == null) {
+			LogUtils.i(TAG, "context为空，初始化相机参数失败");
+			return;
+		}
+		if (camera == null) {
+			LogUtils.i(TAG, "-->camera对象为空，初始化相机参数失败");
+			return;
+		}
 		this.context = context;
-		getScreenResolution(context);
+		this.camera = camera;
+		parameters = camera.getParameters();
+		// 得到预览分辨率集合
+		previewSizes = buildPreviewSizesRatioMap(parameters.getSupportedPreviewSizes());
+		// 得到拍照分辨率集合
+		pictureSizes = buildPictureSizesRatioMap(parameters.getSupportedPictureSizes());
+		// 检查相机是否支持闪光灯
+		List<String> flashModes = parameters.getSupportedFlashModes();
+		if (flashModes == null || flashModes.size() <= 1) {
+			supportedFlash = false;
+		} else {
+			supportedFlash = true;
+		}
+		// 检查相机是否支持HDR模式
+		List<String> sceneModes = parameters.getSupportedSceneModes();
+		if (sceneModes != null) {
+			for (String mode : sceneModes) {
+				if (mode.equals(Camera.Parameters.SCENE_MODE_HDR)) {
+					supportedHDR = true;
+					break;
+				}
+			}
+		}
+		LogUtils.i(TAG, "是否支持闪光灯-->" + supportedFlash);
+		LogUtils.i(TAG, "是否支持HDR模式-->" + supportedHDR);
+	}
+
+	/**
+	 * 设置拍照分辨率
+	 */
+	void setPictureSize(Quality quality, Ratio ratio) {
+		if (pictureSizes == null || parameters == null) {
+			LogUtils.i(TAG, "--还没有初始化，设置拍照分辨率失败");
+			return;
+		}
+		Camera.Size size = pictureSizes.get(ratio).get(quality);
+		if (size != null) {
+			Log.i(TAG, "照片分辨率-->" + size.width + "x" + size.height);
+			parameters.setPictureSize(size.width, size.height);
+		}
+	}
+
+	/**
+	 * 设置预览分辨率
+	 */
+	void setPreviewSize(Ratio ratio) {
+		if (previewSizes == null || parameters == null) {
+			LogUtils.i(TAG, "--还没有初始化，设置预览分辨率失败");
+			return;
+		}
+		Camera.Size size = previewSizes.get(ratio);
+		Log.i(TAG, "预览分辨率-->" + size.width + "x" + size.height);
+		parameters.setPreviewSize(size.width, size.height);
+	}
+
+	/**
+	 * 获取相机是否支持闪光灯
+	 *
+	 * @return true-支持闪光灯，false-不支持闪光灯
+	 */
+	boolean isSupportedFlash() {
+		if (parameters == null) {
+			LogUtils.i(TAG, "--还没有初始化，获取闪光灯支持失败");
+			return false;
+		}
+		return supportedFlash;
+	}
+
+	/**
+	 * 获取相机是否支持HDR模式
+	 *
+	 * @return true-支持HDR,false-不支持HDR
+	 */
+	boolean isSupportedHDR() {
+		if (parameters == null) {
+			LogUtils.i(TAG, "--还没有初始化，获取HDR支持失败");
+			return false;
+		}
+		return supportedHDR;
+	}
+
+	/**
+	 * 设置闪光灯模式
+	 */
+	void setFlashMode(FlashMode flashMode) {
+		if (parameters == null || context == null) {
+			LogUtils.i(TAG, "--初始化相机后才能设置闪光灯模式");
+			return;
+
+		}
+		if (!supportedFlash) {
+			LogUtils.i(TAG, "--相机不支持闪光灯,无法设置闪光灯模式");
+			return;
+		}
+		switch (flashMode) {
+			case ON:
+				parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+				break;
+			case OFF:
+				parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+				break;
+			case AUTO:
+				parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+				break;
+		}
+		CameraSettingPrefManager.setFlashMode(context, flashMode);
+	}
+
+	/**
+	 * 设置HDR模式
+	 */
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	void setHDRMode(HDRMode hdrMode) {
+		if (parameters == null || context == null) {
+			LogUtils.i(TAG, "--初始化相机后才能设置HDR模式");
+			return;
+
+		}
+		if (supportedHDR && hdrMode == HDRMode.NONE) {
+			hdrMode = HDRMode.OFF;
+		}
+		switch (hdrMode) {
+			case ON:
+				parameters.setSceneMode(Camera.Parameters.SCENE_MODE_HDR);
+				break;
+			case OFF:
+				parameters.setSceneMode(Camera.Parameters.SCENE_MODE_AUTO);
+				break;
+		}
+		CameraSettingPrefManager.setHDRMode(context, hdrMode);
+	}
+
+	/**
+	 * 改变相机参数后必须调用这个方法才能生效
+	 */
+	void setParameters() {
+		if (camera == null || parameters == null) {
+			LogUtils.i(TAG, "--先初始化再调用设置参数方法");
+			return;
+		}
+		camera.setParameters(parameters);
+	}
+
+	/**
+	 * 设置相机参数
+	 */
+	void setDesiredCameraParameters() {
+		if (camera == null) {
+			LogUtils.i(TAG, "--还没有初始化");
+			return;
+		}
+		// 设置相机闪光灯模式
+		setFlashMode(FlashMode.AUTO);
+		// 开启HDR模式
+		setHDRMode(HDRMode.OFF);
+		// 设置相机预览分辨率，预览画面宽高比为4:3
+		setPreviewSize(Ratio.R_4x3);
+		// 设置相机拍照分辨率，使用高画质，画面宽高比为4:3
+		setPictureSize(Quality.HIGH, Ratio.R_4x3);
+		// 可以直接调用系统的setDisplayOrientation，不考虑低版本问题
+//		setDisplayOrientation(camera, 90);
+		camera.setDisplayOrientation(90);
+		setParameters();
+	}
+
+	/**
+	 * compatible 1.6
+	 */
+	private void setDisplayOrientation(Camera camera, int angle) {
+		Method downPolymorphic;
+		try {
+			downPolymorphic = camera.getClass().getMethod(
+					"setDisplayOrientation", int.class);
+			if (downPolymorphic != null)
+				downPolymorphic.invoke(camera, angle);
+		} catch (Exception e) {
+			LogUtils.e(TAG, "Exception", e);
+		}
+	}
+
+	private Map<Ratio, Camera.Size> buildPreviewSizesRatioMap(List<Camera.Size> sizes) {
+		Map<Ratio, Camera.Size> map = new HashMap<>();
+
+		for (Camera.Size size : sizes) {
+			Ratio ratio = Ratio.pickRatio(size.width, size.height);
+			if (ratio != null) {
+				Camera.Size oldSize = map.get(ratio);
+				if (oldSize == null || (oldSize.width < size.width || oldSize.height < size.height)) {
+					map.put(ratio, size);
+				}
+			}
+		}
+		return map;
+	}
+
+	private Map<Ratio, Map<Quality, Camera.Size>> buildPictureSizesRatioMap(List<Camera.Size> sizes) {
+		Map<Ratio, Map<Quality, Camera.Size>> map = new HashMap<>();
+
+		Map<Ratio, List<Camera.Size>> ratioListMap = new HashMap<>();
+		for (Camera.Size size : sizes) {
+			Ratio ratio = Ratio.pickRatio(size.width, size.height);
+			if (ratio != null) {
+				List<Camera.Size> sizeList = ratioListMap.get(ratio);
+				if (sizeList == null) {
+					sizeList = new ArrayList<>();
+					ratioListMap.put(ratio, sizeList);
+				}
+				sizeList.add(size);
+			}
+		}
+		for (Ratio r : ratioListMap.keySet()) {
+			List<Camera.Size> list = ratioListMap.get(r);
+			ratioListMap.put(r, sortSizes(list));
+			Map<Quality, Camera.Size> sizeMap = new HashMap<>();
+			int i = 0;
+			for (Quality q : Quality.values()) {
+				Camera.Size size = null;
+				if (i < list.size()) {
+					size = list.get(i++);
+				}
+				sizeMap.put(q, size);
+			}
+			map.put(r, sizeMap);
+		}
+
+		return map;
+	}
+
+	private List<Camera.Size> sortSizes(List<Camera.Size> sizes) {
+		int count = sizes.size();
+
+		while (count > 2) {
+			for (int i = 0; i < count - 1; i++) {
+				Camera.Size current = sizes.get(i);
+				Camera.Size next = sizes.get(i + 1);
+
+				if (current.width < next.width || current.height < next.height) {
+					sizes.set(i, next);
+					sizes.set(i + 1, current);
+				}
+			}
+			count--;
+		}
+
+		return sizes;
 	}
 
 	/**
 	 * 得到相机预览分辨率<br>
 	 * 根据相机参数和屏幕分辨率计算得到
-	 *
-	 * @param parameters
-	 * @param screenResolution
-	 * @return
 	 */
 	private static Point getPreviewResolution(Parameters parameters,
 	                                          Point screenResolution) {
@@ -124,10 +389,6 @@ final class CameraConfigurationManager {
 
 	/**
 	 * 找到最好的预览分辨率
-	 *
-	 * @param previewSizeValueString
-	 * @param screenResolution
-	 * @return
 	 */
 	private static Point findBestPreviewSizeValue(
 			CharSequence previewSizeValueString, Point screenResolution) {
@@ -245,7 +506,7 @@ final class CameraConfigurationManager {
 		List<Size> sizes = null;
 		Size size = null;
 		// API 10以上
-		if (VERSION.SDK_INT > 10) {
+		if (Build.VERSION.SDK_INT > 10) {
 			// 这个方法在摄像头预览和视频输出分开的时候才有返回
 			sizes = parameters.getSupportedVideoSizes();
 			if (sizes != null) {
@@ -274,7 +535,7 @@ final class CameraConfigurationManager {
 	 * <p/>
 	 * 如果有多个，则返回中间大小的分辨率
 	 *
-	 * @param sizes List
+	 * @param sizes            List
 	 * @param screenResolution Point
 	 * @return Size
 	 */
@@ -336,7 +597,7 @@ final class CameraConfigurationManager {
 	 * 找到视频录制分辨率<br>
 	 * 这个方法找到和屏幕比率一样的分辨率
 	 *
-	 * @param parameters Parameters
+	 * @param parameters       Parameters
 	 * @param screenResolution Point
 	 * @return Point
 	 */
@@ -346,7 +607,7 @@ final class CameraConfigurationManager {
 		List<Size> sizes = null;
 		Size size = null;
 		// API 10以上
-		if (VERSION.SDK_INT > 10) {
+		if (Build.VERSION.SDK_INT > 10) {
 			// 这个方法在摄像头预览和视频输出分开的时候才有返回
 			sizes = parameters.getSupportedVideoSizes();
 			if (sizes != null) {
@@ -374,119 +635,5 @@ final class CameraConfigurationManager {
 		return screenResolution;
 	}
 
-	/**
-	 * 得到预览分辨率
-	 *
-	 * @return Point
-	 */
-	public Point getPreViewResolution() {
-		return previewResolution;
-	}
-
-	/**
-	 * 得到视频拍摄分辨率
-	 *
-	 * @return Point
-	 */
-	public Point getVideoResolution() {
-		return videoResolution;
-	}
-
-	/**
-	 * 获取屏幕分辨率,构造方法初始化的时候加载,只获取一次<br>
-	 */
-	private void getScreenResolution(Context context) {
-		DisplayMetrics dm = context.getResources().getDisplayMetrics();
-		screenResolution = new Point(dm.widthPixels, dm.heightPixels);
-		LogUtils.i(TAG, "屏幕分辨率: " + screenResolution);
-
-	}
-
-	/**
-	 * 初始化相机配置参数，根据设备屏幕分辨率计算得到<br>
-	 *
-	 * @param camera Camera
-	 */
-	void initFromCameraParameters(Camera camera) {
-		// 得到相机参数
-		Parameters parameters = camera.getParameters();
-		previewFormat = parameters.getPreviewFormat();
-		previewFormatString = parameters.get("preview-format");
-		LogUtils.i(TAG, "默认预览格式: " + previewFormat + '/'
-				+ previewFormatString);
-		// 得到屏幕分辨率
-		// WindowManager manager = (WindowManager) context
-		// .getSystemService(Context.WINDOW_SERVICE);
-		// Display display = manager.getDefaultDisplay();
-		//
-		// DisplayMetrics dm = context.getResources().getDisplayMetrics();
-		// // getSize方法从API 13开始
-		// if (VERSION.SDK_INT >= 13) {
-		// screenResolution = new Point();
-		// display.getSize(screenResolution);
-		// }
-		// // 13以下使用老方法
-		// else {
-		// screenResolution = new Point(display.getWidth(),
-		// display.getHeight());
-		// }
-		// DisplayMetrics dm = context.getResources().getDisplayMetrics();
-		// screenResolution = new Point(dm.widthPixels, dm.heightPixels);
-		// System.out.println("屏幕分辨率: " + screenResolution);
-		// System.out.println("屏幕分辨率:  " + dm.widthPixels + ","
-		// + dm.heightPixels);
-		// 得到相机分辨率
-		previewResolution = getPreviewResolution(parameters, screenResolution);
-		// 得到相机录像分辨率
-		videoResolution = getVideoSizeValue(parameters);
-
-		// videoResolution = getVideoSizeValue(parameters, screenResolution);
-		// videoResolution = getMidVideoSizeValue(parameters);
-		// videoResolution = getMidVideoSizeValue(parameters, screenResolution);
-		LogUtils.i(TAG, "预览分辨率: " + previewResolution);
-		LogUtils.i(TAG, "录像分辨率: " + videoResolution);
-
-	}
-
-	/**
-	 * 设置相机参数
-	 *
-	 * @param camera
-	 */
-	void setDesiredCameraParameters(Camera camera) {
-		Parameters parameters = camera.getParameters();
-		// 设置相机预览分辨率
-		parameters.setPreviewSize(previewResolution.x, previewResolution.y);
-		// setFlash(parameters);
-		// setZoom(parameters);
-		// // setSharpness(parameters);
-		// // modify here
-		//
-		// // camera.setDisplayOrientation(90);
-		// 如何计算得到正确的旋转角度？
-		setDisplayOrientation(camera, 90);
-		camera.setParameters(parameters);
-	}
-
-	/**
-	 * compatible 1.6
-	 *
-	 * @param camera
-	 * @param angle
-	 */
-	protected void setDisplayOrientation(Camera camera, int angle) {
-		Method downPolymorphic;
-		try {
-			downPolymorphic = camera.getClass().getMethod(
-					"setDisplayOrientation", new Class[]{
-							int.class
-					});
-			if (downPolymorphic != null)
-				downPolymorphic.invoke(camera, new Object[]{
-						angle
-				});
-		} catch (Exception e1) {
-		}
-	}
 
 }

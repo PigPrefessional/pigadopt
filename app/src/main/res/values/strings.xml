@@ -16,6 +16,7 @@
 	<string name="length">长</string>
 	<string name="width">宽</string>
 
+	<string name="prompt_open_camera_failure">相机打开失败，请重试</string>
 	<string name="prompt_uploading">正在拼了命的为您上传…</string>
 	<string name="prompt_uploading_failure">抱歉，上传失败，请重试</string>
 	<string name="prompt_uploading_success">上传猪照片成功</string>
@@ -104,6 +105,8 @@
 	<string name="prompt_query_pig_parts_failure">获取猪部位失败，请重新打开应用</string>
 
 	<!--拍照界面-->
+	<string name="pig_photo_prompt_saving">正在拼了命的为您处理，请稍后…</string>
+	<string name="pig_photo_prompt_saving_failure">照片保存失败，请重新拍照</string>
 	<string name="pig_photo_height">拍摄高度：</string>
 	<string name="pig_photo_distance">拍摄距离：</string>
 	<string name="pig_photo_angle">拍摄角度：</string>
