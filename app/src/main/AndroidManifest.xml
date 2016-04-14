@@ -101,7 +101,6 @@
 		<activity
 			android:name=".activity.LoginActivity"
 			android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
-			android:launchMode="singleTask"
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
