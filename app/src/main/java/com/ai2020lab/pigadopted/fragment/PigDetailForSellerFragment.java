@@ -29,13 +29,9 @@ import com.ai2020lab.pigadopted.biz.HttpPigDetailManager;
 import com.ai2020lab.pigadopted.biz.HttpStatisticDataManager;
 import com.ai2020lab.pigadopted.biz.PigDetailManager;
 import com.ai2020lab.pigadopted.biz.StatisticsDataManager;
+import com.ai2020lab.pigadopted.chart.StatisticsChartFragmentFactory;
 import com.ai2020lab.pigadopted.common.DataManager;
-import com.ai2020lab.pigadopted.model.order.OrderInfo;
 import com.ai2020lab.pigadopted.model.order.PigPart;
-import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
-import com.ai2020lab.pigadopted.model.pig.HealthInfo;
-import com.ai2020lab.pigadopted.model.pig.PigCategory;
-import com.ai2020lab.pigadopted.model.pig.PigDetailInfo;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrderResponse;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
@@ -44,6 +40,7 @@ import com.ai2020lab.pigadopted.model.statistic.StepStaticResponse;
 import com.ai2020lab.pigadopted.model.statistic.WeightStaticResponse;
 import com.ai2020lab.pigadopted.model.user.UserInfo;
 import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
+import com.loopj.android.http.AsyncHttpClient;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.Serializable;
@@ -146,30 +143,30 @@ public class PigDetailForSellerFragment extends Fragment {
 		activity.showLoading(getString(R.string.prompt_loading));
 
 		pigDetailManager.findSellerPigDetailInfo("" + pigInfo.pigID, new JsonHttpResponseHandler<PigDetailInfoAndOrderResponse>(activity) {
-			@Override
-			public void onHandleFailure(String errorMsg) {
-				Log.i(TAG, errorMsg);
-				activity.dismissLoading();
-				ToastUtils.getInstance().showToast(activity, errorMsg);
-			}
+            @Override
+            public void onHandleFailure(String errorMsg) {
+                Log.i(TAG, errorMsg);
+                activity.dismissLoading();
+                ToastUtils.getInstance().showToast(activity, errorMsg);
+            }
 
-			@Override
-			public void onHandleSuccess(int statusCode, Header[] headers, PigDetailInfoAndOrderResponse jsonObj) {
-				activity.dismissLoading();
+            @Override
+            public void onHandleSuccess(int statusCode, Header[] headers, PigDetailInfoAndOrderResponse jsonObj) {
+                activity.dismissLoading();
 
-				final PigDetailInfoAndOrderResponse response = jsonObj;
-				final PigDetailInfoAndOrder result = response.data;
-				result.pigInfo = mPigInfo;
+                final PigDetailInfoAndOrderResponse response = jsonObj;
+                final PigDetailInfoAndOrder result = response.data;
+                result.pigInfo = mPigInfo;
 
-				setupPigInfoUI(result);
-			}
+                setupPigInfoUI(result);
+            }
 
-			@Override
-			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-				activity.dismissLoading();
-				ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
-			}
-		});
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                activity.dismissLoading();
+                ToastUtils.getInstance().showToast(activity, R.string.prompt_loading_failure);
+            }
+        });
 	}
 
 	protected void setupPigInfoUI(PigDetailInfoAndOrder result) {
@@ -178,72 +175,11 @@ public class PigDetailForSellerFragment extends Fragment {
 		loadBuyersData(result.orderInfo.pigParts);
 	}
 
-	protected PigDetailInfoAndOrderResponse fakeLoadData() {
-
-
-		PigDetailInfoAndOrderResponse response = new PigDetailInfoAndOrderResponse();
-
-		PigDetailInfo detailInfo = new PigDetailInfo();
-
-		PigInfo pigInfo = new PigInfo();
-		pigInfo.attendedAge = 2;
-		detailInfo.pigInfo = pigInfo;
-
-		PigCategory category = new PigCategory();
-		category.categoryName = "内江猪";
-		pigInfo.pigCategory = category;
-
-		GrowthInfo growthInfo = new GrowthInfo();
-		growthInfo.increasedWeight = 10;
-		growthInfo.pigWeight = 20;
-
-
-		detailInfo.growthInfo = growthInfo;
-
-		HealthInfo healthInfo = new HealthInfo();
-		healthInfo.fatRate = 24;
-		healthInfo.steps = 46;
-		healthInfo.temperature = 38.2f;
-
-		detailInfo.healthInfo = healthInfo;
-
-
-		OrderInfo orderInfo = new OrderInfo();
-
-		List<PigPart> partList = new ArrayList<>();
-
-		for (int i = 0; i < 6; i++) {
-			PigPart part = new PigPart();
-			part.partID = i + 1;
-			part.partName = "后腿肉";
-
-			UserInfo userInfo = new UserInfo();
-			userInfo.userID = i + 1;
-			userInfo.userName = "买家" + (i + 1);
-			userInfo.userPortrait = "http://tse4.mm.bing.net/th?id=OIP.Md7bcb36c7db90393682b4bf44487d9f2o0&pid=15.1";
-
-			part.userInfo = userInfo;
-
-			partList.add(part);
-		}
-
-		orderInfo.pigParts = partList;
-
-		PigDetailInfoAndOrder result = new PigDetailInfoAndOrder();
-		result.pigInfo = pigInfo;
-		result.growthInfo = growthInfo;
-		result.healthInfo = healthInfo;
-		result.orderInfo = orderInfo;
-
-		response.data = result;
-
-		return response;
-	}
-
 	private void setupPigInfo(PigDetailInfoAndOrder result) {
 		mIncreaseWeight.setVisibility(View.INVISIBLE);
 		mIncreaseWeight.setText(String.format(getResources().getString(R.string.pig_detail_weight_increase), result.growthInfo.increasedWeight / 2));
 		mPigTypeName.setText(DataManager.getInstance().getPigCategory(result.pigInfo.pigCategory.categoryID).categoryName);
+        mPigWeight.setText(String.format(getResources().getString(R.string.pig_detail_weight), result.growthInfo.pigWeight));
 		mPigSteps.setText(String.format(getResources().getString(R.string.pig_detail_steps), result.healthInfo.steps));
 		mPigFatRate.setText(result.healthInfo.fatRate + "%");
 		mPigTemperature.setText(result.healthInfo.temperature + "℃");
@@ -391,7 +327,7 @@ public class PigDetailForSellerFragment extends Fragment {
 						public void onHandleSuccess(int statusCode, Header[] headers, WeightStaticResponse jsonObj) {
 							mDataSet = (Serializable) jsonObj.data.dataList;
 							activity.dismissLoading();
-							addChartFragment(chartType);
+							addChartFragment(StatisticsChartFragmentFactory.ChartType.WEIGHT);
 						}
 
 						@Override
@@ -414,7 +350,7 @@ public class PigDetailForSellerFragment extends Fragment {
 						public void onHandleSuccess(int statusCode, Header[] headers, StepStaticResponse jsonObj) {
 							mDataSet = (Serializable) jsonObj.data.dataList;
 							activity.dismissLoading();
-							addChartFragment(chartType);
+							addChartFragment(StatisticsChartFragmentFactory.ChartType.STEPS);
 						}
 
 						@Override
@@ -431,13 +367,14 @@ public class PigDetailForSellerFragment extends Fragment {
 
 					});
 		} else if (chartType == StatisticsChartFragment.CHART_TYPE_TEMPERATURE) {
+
 			statisticsDataManager.queryTemperatureList("" + mPigInfo.pigID, StatisticsDataManager.DataType.DAY,
 					null, null, new JsonHttpResponseHandler<BodyTemperatureResponse>(getContext()) {
 						@Override
 						public void onHandleSuccess(int statusCode, Header[] headers, BodyTemperatureResponse jsonObj) {
 							mDataSet = (Serializable) jsonObj.data.dataList;
 							activity.dismissLoading();
-							addChartFragment(chartType);
+							addChartFragment(StatisticsChartFragmentFactory.ChartType.TEMPERATURE);
 						}
 
 						@Override
@@ -457,7 +394,7 @@ public class PigDetailForSellerFragment extends Fragment {
 	}
 
 
-	private void addChartFragment(final int chartType) {
+	private void addChartFragment(final StatisticsChartFragmentFactory.ChartType chartType) {
 		DisplayMetrics metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
 		int width = metric.widthPixels;  // 屏幕宽度（像素）
@@ -477,9 +414,8 @@ public class PigDetailForSellerFragment extends Fragment {
 		int marginWidth = (int) (15 * scale + 0.5f);
 		int marginHeight = (int) (300 * scale + 0.5f);
 
-		DialogFragment newFragment = StatisticsChartFragment
-				.newInstance(width - marginWidth, height - marginHeight, chartType, mDataSet);
-
+        DialogFragment newFragment = StatisticsChartFragmentFactory
+                .createFragment(width - marginWidth, height - marginHeight, chartType, mDataSet);
 
 		newFragment.show(ft, "dialog");
 	}
@@ -516,7 +452,7 @@ public class PigDetailForSellerFragment extends Fragment {
 			ViewHolder viewHolder = new ViewHolder(view);
 
 			viewHolder.mPortrait = (ImageView) view
-					.findViewById(R.id.buyer_portrait);
+                    .findViewById(R.id.buyer_portrait);
 			viewHolder.mName = (TextView) view.findViewById(R.id.buyer_name);
 
 			return viewHolder;

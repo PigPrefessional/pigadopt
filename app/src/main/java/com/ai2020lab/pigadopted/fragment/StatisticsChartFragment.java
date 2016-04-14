@@ -44,12 +44,12 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 /**
  * Created by Rocky on 16/3/14.
  */
-public class StatisticsChartFragment extends DialogFragment implements OnChartGestureListener  {
+public abstract class StatisticsChartFragment<T> extends DialogFragment implements OnChartGestureListener  {
 
-    private static final String WIDTH = "width";
-    private static final String HEIGHT = "height";
+    public static final String WIDTH = "width";
+    public static final String HEIGHT = "height";
     private static final String TYPE = "type";
-    private static final String DATA_SET = "dataSet";
+    public static final String DATA_SET = "dataSet";
 
     public static final int CHART_TYPE_STEPS = 1;
     public static final int CHART_TYPE_TEMPERATURE = 2;
@@ -58,6 +58,7 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
     private List<WeightData> mWeightDataSet;
     private List<StepData> mStepDataSet;
     private List<BodyTemperatureData> mTemperatureDataSet;
+    private List<T> mDataList;
 
     private LineChart mChart;
     private ImageView mChartIcon;
@@ -65,22 +66,10 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
     private int mWidth = -1;
     private int mHeight = -1;
-    private int mType = CHART_TYPE_STEPS;
+
 
     private float mMaxYValue;
 
-    static StatisticsChartFragment newInstance(int width, int height, int chartType, Serializable dataSet) {
-        StatisticsChartFragment f = new StatisticsChartFragment();
-
-        Bundle args = new Bundle();
-        args.putInt(WIDTH, width);
-        args.putInt(HEIGHT, height);
-        args.putInt(TYPE, chartType);
-        args.putSerializable(DATA_SET, dataSet);
-
-        f.setArguments(args);
-        return f;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,23 +78,9 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
         mWidth = getArguments().getInt(WIDTH);
         mHeight = getArguments().getInt(HEIGHT);
-        mType = getArguments().getInt(TYPE);
 
         Serializable list = getArguments().getSerializable(DATA_SET);
-
-        switch (mType) {
-            case CHART_TYPE_STEPS:
-                mStepDataSet = (List<StepData>) list;
-                break;
-            case CHART_TYPE_WEIGHT:
-                mWeightDataSet = (List<WeightData>) list;
-                break;
-            case CHART_TYPE_TEMPERATURE:
-                mTemperatureDataSet = (List<BodyTemperatureData>) list;
-                break;
-            default:
-                break;
-        }
+        mDataList = (List<T>) getArguments().getSerializable(DATA_SET);
 
     }
 
@@ -119,7 +94,7 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         mChartIcon = (ImageView) rootView.findViewById(R.id.chart_type_icon);
         mChartTitle = (TextView) rootView.findViewById(R.id.chart_type_title);
 
-        setChartIconAndTitle(mType);
+        setChartIconAndTitle();
 
         setChartProperties();
         setChartAxis();
@@ -158,28 +133,12 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         }
     }
 
-    private void setChartIconAndTitle(int chartType) {
-        int iconID;
-        int titleID;
+    protected abstract int getTitleID();
+    protected abstract int getIconID();
 
-        switch (chartType) {
-            case CHART_TYPE_STEPS:
-                iconID = R.mipmap.pig_chart_icon_steps;
-                titleID = R.string.pig_chart_title_steps;
-                break;
-            case CHART_TYPE_TEMPERATURE:
-                iconID = R.mipmap.pig_chart_icon_temperature;
-                titleID = R.string.pig_chart_title_temperature;
-                break;
-            case CHART_TYPE_WEIGHT:
-                iconID = R.mipmap.pig_chart_icon_weight;
-                titleID = R.string.pig_chart_title_weight;
-                break;
-            default:
-                iconID = R.mipmap.pig_chart_icon_weight;
-                titleID = R.string.pig_chart_title_weight;
-                break;
-        }
+    private void setChartIconAndTitle() {
+        int titleID = getTitleID();
+        int iconID = getIconID();
 
         mChartIcon.setImageResource(iconID);
         mChartTitle.setText(titleID);
@@ -220,6 +179,7 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setYOffset(15);
         //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
         //xAxis.addLimitLine(llXAxis); // add x-axis limit line
 
@@ -240,6 +200,7 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         //     ll2.setTypeface(tf);
 
         YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setXOffset(15);
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
 //        leftAxis.addLimitLine(ll1);
 //        leftAxis.addLimitLine(ll2);
@@ -373,25 +334,11 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
     }
 
     private void setChartData() {
-//        List<WeightData> list = loadWeightDataForWeeks();
-//        LineData data = createChartData(list);
 
         ChartDataAdapter.XYValues xyValues = null;
 
+        xyValues = convertDataSet(mDataList);
 
-        switch (mType) {
-            case CHART_TYPE_STEPS:
-                xyValues = ChartDataAdapter.convertStepData(mStepDataSet);
-                break;
-            case CHART_TYPE_WEIGHT:
-                xyValues = ChartDataAdapter.convertWeightData(mWeightDataSet);
-                break;
-            case CHART_TYPE_TEMPERATURE:
-                xyValues = ChartDataAdapter.convertTemperatureData(mTemperatureDataSet);
-                break;
-            default:
-                break;
-        }
 
         LineData data = createChartData(xyValues);
 
@@ -403,11 +350,17 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
         mChart.setVisibleXRangeMaximum(5);
     }
 
+    protected ChartDataAdapter.XYValues convertDataSet(List<T> dataList) {
+        return ChartDataAdapter.convertToXYValues(dataList);
+    }
+
+
+
     private LineData createChartData(ChartDataAdapter.XYValues xyValues) {
 
         mMaxYValue = xyValues.maxYValue;
 
-        LineDataSet set1 = new LineDataSet(xyValues.yVals, "Weight data set");
+        LineDataSet set1 = new LineDataSet(xyValues.yVals, "Data set");
 
         set1.setDrawCubic(true);
 
@@ -427,111 +380,6 @@ public class StatisticsChartFragment extends DialogFragment implements OnChartGe
 
         return new LineData(xyValues.xVals, dataSets);
 
-    }
-
-    private LineData createChartData(List<WeightData> dataList) {
-        ArrayList<String> xVals = new ArrayList<String>();
-        ArrayList<Entry> yVals = new ArrayList<Entry>();
-
-
-        for (int i = 0; i < dataList.size(); i++) {
-            final WeightData data = dataList.get(i);
-
-            xVals.add(data.date);
-            yVals.add(new Entry(data.weight, i));
-
-            if (mMaxYValue < data.weight) {
-                mMaxYValue = data.weight;
-            }
-        }
-
-
-        LineDataSet set1 = new LineDataSet(yVals, "Weight data set");
-
-        set1.setDrawCubic(true);
-
-        set1.setLineWidth(1f);
-        set1.setCircleRadius(3f);
-        set1.setDrawCircleHole(true);
-        set1.setValueTextSize(9f);
-
-
-        set1.setDrawFilled(true);
-
-        setChartColor(set1);
-
-        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        dataSets.add(set1);
-
-
-        return new LineData(xVals, dataSets);
-
-    }
-
-    private List<WeightData> loadWeightData() {
-        List<WeightData> list = new ArrayList<>();
-
-        WeightData data = new WeightData();
-
-        data.date = "周一";
-        data.weight = 10;
-        list.add(data);
-
-        data = new WeightData();
-        data.date = "周二";
-        data.weight = 13;
-        list.add(data);
-
-        data = new WeightData();
-        data.date = "周三";
-        data.weight = 15;
-        list.add(data);
-
-        data = new WeightData();
-        data.date = "周四";
-        data.weight = 19;
-        list.add(data);
-
-        data = new WeightData();
-        data.date = "周五";
-        data.weight = 18;
-        list.add(data);
-
-        data = new WeightData();
-        data.date = "周六";
-        data.weight = 24;
-        list.add(data);
-
-        return list;
-    }
-
-    private List<WeightData> loadWeightDataForWeeks() {
-        List<WeightData> list = new ArrayList<>();
-        Random r = new Random();
-
-        for (int i = 1; i < 11; ++i) {
-            WeightData data = new WeightData();
-
-            data.date = "第" + i + "周";
-            data.weight = 10 * i + 10 * r.nextFloat();
-            list.add(data);
-        }
-
-        return list;
-    }
-
-    private void changeDataSet() {
-        List<WeightData> list = loadWeightData();
-        LineData data = createChartData(list);
-
-        YAxis leftAxis = mChart.getAxisLeft();
-        leftAxis.setAxisMaxValue(mMaxYValue + 5);
-        mChart.setData(data);
-
-        mChart.invalidate();
-
-        mChart.setVisibleXRangeMaximum(10);
-        mChart.setVisibleXRangeMinimum(5);
     }
 
 }

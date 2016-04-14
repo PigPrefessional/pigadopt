@@ -54,6 +54,7 @@
 	<string name="pig_detail_label_environment">环境:</string>
 	<string name="pig_detail_buyer_number">已有%1$d人购买</string>
 	<string name="pig_detail_weight_increase">我又胖%1$.0f公斤了哦</string>
+	<string name="pig_detail_weight">%1$.0f公斤</string>
 	<string name="pig_detail_steps">%1$d步</string>
 	<string name="pig_detail_age">%1$.1f月</string>
 	<string name="pig_detail_title">详细信息</string>

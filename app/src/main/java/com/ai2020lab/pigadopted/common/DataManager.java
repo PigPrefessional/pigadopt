@@ -220,7 +220,7 @@ public class DataManager {
 		ArrayList<PigPart> parts = getPigParts();
 
 		final int firstPartId = 1;
-		final int firstPartImageId = R.mipmap.pig_part_01;
+		final int firstPartImageId = R.mipmap.pig_part_has_number_01;
 
 		return firstPartImageId + (pigPart.partID - firstPartId);
 	}

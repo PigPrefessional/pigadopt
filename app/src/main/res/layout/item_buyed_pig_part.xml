@@ -10,22 +10,19 @@
             android:id="@+id/buyed_part_1"
             style="@style/TextLittle"
             android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:text="4:小里脊" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/buyed_part_2"
             style="@style/TextLittle"
             android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:text="4:小里脊" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/buyed_part_3"
             style="@style/TextLittle"
             android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:text="4:小里脊" />
+            android:layout_height="wrap_content" />
 
     </TableRow>
 
