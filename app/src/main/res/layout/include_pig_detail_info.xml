@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:stretchColumns="*"
+    >
+
+    <TableRow>
+
+        <LinearLayout
+            style="@style/LabelLayout">
+            <TextView
+                style="@style/Label"
+                android:text="@string/pig_detail_label_varieties" />
+            <TextView
+                android:id="@+id/pig_type_name"
+                style="@style/LabelContent" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/LabelLayout">
+            <TextView
+                style="@style/Label"
+                android:text="@string/pig_detail_label_age" />
+            <TextView
+                android:id="@+id/pig_age"
+                style="@style/LabelContent" />
+        </LinearLayout>
+
+    </TableRow>
+
+    <TableRow>
+        <LinearLayout
+            style="@style/LabelLayout">
+            <TextView
+                style="@style/Label"
+                android:text="@string/pig_detail_label_weight" />
+            <TextView
+                android:id="@+id/pig_weight"
+                style="@style/LabelContent" />
+
+            <Button
+                android:id="@+id/weight_chart"
+                style="@style/ChartsButton" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/LabelLayout">
+            <TextView
+                style="@style/Label"
+                android:text="@string/pig_detail_label_temperature" />
+            <TextView
+                android:id="@+id/pig_temperature"
+                style="@style/LabelContent" />
+
+            <Button
+                android:id="@+id/temperture_chart"
+                style="@style/ChartsButton" />
+        </LinearLayout>
+    </TableRow>
+
+    <TableRow>
+        <LinearLayout
+            style="@style/LabelLayout">
+            <TextView
+                style="@style/Label"
+                android:text="@string/pig_detail_label_fat" />
+            <TextView
+                android:id="@+id/pig_fat_rate"
+                style="@style/LabelContent" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/LabelLayout">
+            <TextView
+                style="@style/Label"
+                android:text="@string/pig_detail_label_steps" />
+            <TextView
+                android:id="@+id/pig_steps"
+                style="@style/LabelContent" />
+            <Button
+                android:id="@+id/steps_chart"
+                style="@style/ChartsButton" />
+        </LinearLayout>
+    </TableRow>
+
+
+</TableLayout>

@@ -1,4 +1,3 @@
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -20,160 +19,195 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
+
                 <FrameLayout
                     android:id="@+id/pig_parts_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="40dp">
+
                     <ImageView
                         android:id="@+id/whole_pig"
-                        android:scaleType="centerInside"
                         android:layout_width="250dp"
                         android:layout_height="150dp"
-                        android:src="@mipmap/pig_whole_has_number"/>
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/pig_whole_has_number" />
                 </FrameLayout>
+
                 <TextView
-                    style="@style/TextLittle.Light"
                     android:id="@+id/pig_detail_increase_weight"
+                    style="@style/TextLittle.Light"
                     android:layout_width="84dp"
                     android:layout_height="70dp"
-                    android:layout_marginTop="3dp"
-                    android:lines="2"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:text="我又胖20斤了哦"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="35dp"
-                    android:textColor="#8e5339"
-                    android:background="@drawable/msg_bubble"/>
+                    android:layout_marginTop="3dp"
+                    android:background="@drawable/msg_bubble"
+                    android:gravity="center"
+                    android:lines="2"
+                    android:padding="8dp"
+                    android:text="我又胖20斤了哦"
+                    android:textColor="#8e5339" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
                 android:layout_marginBottom="10dp"
-                android:background="@mipmap/buyed_parts_background"
+                android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginLeft="40dp">
+                android:layout_marginTop="0dp"
+                android:background="@mipmap/buyed_parts_background">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/part_list"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="50dp"
+                    android:layout_height="50dp"
                     android:layout_marginBottom="5dp"
                     android:layout_marginLeft="65dp"
                     android:layout_marginRight="10dp"
-                    android:layout_height="50dp">
+                    android:layout_marginTop="50dp">
 
                 </android.support.v7.widget.RecyclerView>
             </RelativeLayout>
 
-            <LinearLayout
+            <include
+                layout="@layout/include_pig_detail_info"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="2"/>
+            <LinearLayout style="@style/LabelLayout"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="0">
+                <TextView
+                    style="@style/Label"
+                    android:text="@string/pig_detail_label_environment" />
 
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_varieties" />
-                        <TextView
-                            android:id="@+id/pig_type_name"
-                            style="@style/LabelContent" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_age" />
-                        <TextView
-                            android:id="@+id/pig_age"
-                            style="@style/LabelContent" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_weight" />
-                        <TextView
-                            android:id="@+id/pig_weight"
-                            style="@style/LabelContent" />
-
-                        <Button
-                            android:id="@+id/weight_chart"
-                            style="@style/ChartsButton" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_temperature" />
-                        <TextView
-                            android:id="@+id/pig_temperature"
-                            style="@style/LabelContent" />
-
-                        <Button
-                            android:id="@+id/temperture_chart"
-                            style="@style/ChartsButton" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_fat" />
-                        <TextView
-                            android:id="@+id/pig_fat_rate"
-                            style="@style/LabelContent" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_steps" />
-                        <TextView
-                            android:id="@+id/pig_steps"
-                            style="@style/LabelContent" />
-                        <Button
-                            android:id="@+id/steps_chart"
-                            style="@style/ChartsButton" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_environment" />
-                        <Button
-                            style="@style/ChartsButton"
-                            android:background="@mipmap/button_for_image"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="2"/>
-
+                <ImageView
+                    android:id="@+id/hogpen_1"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginRight="5dp"/>
+                <ImageView
+                    android:id="@+id/hogpen_2"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginRight="5dp"/>
+                <ImageView
+                    android:id="@+id/hogpen_3"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginRight="5dp"/>
             </LinearLayout>
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
+
+            <!--<View-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_weight="2"/>-->
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_weight="0">-->
+
+            <!--<LinearLayout-->
+            <!--style="@style/LabelLayout">-->
+            <!--<TextView-->
+            <!--style="@style/Label"-->
+            <!--android:text="@string/pig_detail_label_varieties" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/pig_type_name"-->
+            <!--style="@style/LabelContent" />-->
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+            <!--style="@style/LabelLayout">-->
+            <!--<TextView-->
+            <!--style="@style/Label"-->
+            <!--android:text="@string/pig_detail_label_age" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/pig_age"-->
+            <!--style="@style/LabelContent" />-->
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+            <!--style="@style/LabelLayout">-->
+            <!--<TextView-->
+            <!--style="@style/Label"-->
+            <!--android:text="@string/pig_detail_label_weight" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/pig_weight"-->
+            <!--style="@style/LabelContent" />-->
+
+            <!--<Button-->
+            <!--android:id="@+id/weight_chart"-->
+            <!--style="@style/ChartsButton" />-->
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+            <!--style="@style/LabelLayout">-->
+            <!--<TextView-->
+            <!--style="@style/Label"-->
+            <!--android:text="@string/pig_detail_label_temperature" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/pig_temperature"-->
+            <!--style="@style/LabelContent" />-->
+
+            <!--<Button-->
+            <!--android:id="@+id/temperture_chart"-->
+            <!--style="@style/ChartsButton" />-->
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+            <!--style="@style/LabelLayout">-->
+            <!--<TextView-->
+            <!--style="@style/Label"-->
+            <!--android:text="@string/pig_detail_label_fat" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/pig_fat_rate"-->
+            <!--style="@style/LabelContent" />-->
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+            <!--style="@style/LabelLayout">-->
+            <!--<TextView-->
+            <!--style="@style/Label"-->
+            <!--android:text="@string/pig_detail_label_steps" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/pig_steps"-->
+            <!--style="@style/LabelContent" />-->
+            <!--<Button-->
+            <!--android:id="@+id/steps_chart"-->
+            <!--style="@style/ChartsButton" />-->
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+            <!--style="@style/LabelLayout">-->
+            <!--<TextView-->
+            <!--style="@style/Label"-->
+            <!--android:text="@string/pig_detail_label_environment" />-->
+            <!--<Button-->
+            <!--style="@style/ChartsButton"-->
+            <!--android:background="@mipmap/button_for_image"/>-->
+            <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
+
+
+            <!--<View-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_weight="2"/>-->
+
+            <!--</LinearLayout>-->
 
         </LinearLayout>
     </ScrollView>

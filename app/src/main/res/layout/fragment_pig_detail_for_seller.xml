@@ -79,100 +79,12 @@
                 </android.support.v7.widget.RecyclerView>
             </RelativeLayout>
 
-            <LinearLayout
+            <include
+                layout="@layout/include_pig_detail_info"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="2"/>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="0">
-
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_varieties" />
-                        <TextView
-                            android:id="@+id/pig_type_name"
-                            style="@style/LabelContent" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_age" />
-                        <TextView
-                            android:id="@+id/pig_age"
-                            style="@style/LabelContent" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_weight" />
-                        <TextView
-                            android:id="@+id/pig_weight"
-                            style="@style/LabelContent" />
-
-                        <Button
-                            android:id="@+id/weight_chart"
-                            style="@style/ChartsButton" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_temperature" />
-                        <TextView
-                            android:id="@+id/pig_temperature"
-                            style="@style/LabelContent" />
-
-                        <Button
-                            android:id="@+id/temperture_chart"
-                            style="@style/ChartsButton" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_fat" />
-                        <TextView
-                            android:id="@+id/pig_fat_rate"
-                            style="@style/LabelContent" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        style="@style/LabelLayout">
-                        <TextView
-                            style="@style/Label"
-                            android:text="@string/pig_detail_label_steps" />
-                        <TextView
-                            android:id="@+id/pig_steps"
-                            style="@style/LabelContent" />
-                        <Button
-                            android:id="@+id/steps_chart"
-                            style="@style/ChartsButton" />
-                    </LinearLayout>
-                </LinearLayout>
-
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="2"/>
-
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp" />
 
         </LinearLayout>
     </ScrollView>

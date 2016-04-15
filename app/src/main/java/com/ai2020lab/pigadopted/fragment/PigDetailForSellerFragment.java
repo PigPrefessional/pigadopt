@@ -471,4 +471,6 @@ public class PigDetailForSellerFragment extends Fragment {
 
 	}
 
+
+
 }

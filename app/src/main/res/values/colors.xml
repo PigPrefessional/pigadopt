@@ -3,6 +3,10 @@
 
 	<color name="pig_chart_weight_line">#ff3f4953</color>
 	<color name="pig_chart_weight_fill">#198d9ea6</color>
+	<color name="pig_chart_temperature_line">#ff729315</color>
+	<color name="pig_chart_temperature_fill">#19729315</color>
+	<color name="pig_chart_step_line">#fff9735b</color>
+	<color name="pig_chart_step_fill">#19f9735b</color>
 
 	<color name="dialog_content_bg">#ffc100</color>
 	<color name="dialog_divider">#8e5339</color>
