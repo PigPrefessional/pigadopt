@@ -36,12 +36,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:paddingRight">15dp</item>
     </style>
 
     <style name="ChartsButton">
         <item name="android:layout_width">20dp</item>
         <item name="android:layout_height">20dp</item>
-        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_weight">0</item>
         <item name="android:background">@drawable/pig_detail_charts_button_selector</item>
     </style>

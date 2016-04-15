@@ -3,62 +3,57 @@ package com.ai2020lab.pigadopted.fragment;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.ai2020lab.pigadopted.chart.ChartDataAdapter;
-import com.ai2020lab.pigadopted.model.statistic.BodyTemperatureData;
-import com.ai2020lab.pigadopted.model.statistic.StepData;
-import com.ai2020lab.pigadopted.model.statistic.WeightData;
+import com.ai2020lab.pigadopted.chart.LineChartPoint;
+import com.ai2020lab.pigadopted.chart.LineChartPointFactory;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Rocky on 16/3/14.
  */
 public abstract class StatisticsChartFragment<T> extends DialogFragment implements OnChartGestureListener  {
 
+    private static final String TAG = "Statistics";
+
     public static final String WIDTH = "width";
     public static final String HEIGHT = "height";
-    private static final String TYPE = "type";
     public static final String DATA_SET = "dataSet";
 
     public static final int CHART_TYPE_STEPS = 1;
     public static final int CHART_TYPE_TEMPERATURE = 2;
     public static final int CHART_TYPE_WEIGHT = 3;
 
-    private List<WeightData> mWeightDataSet;
-    private List<StepData> mStepDataSet;
-    private List<BodyTemperatureData> mTemperatureDataSet;
-    private List<T> mDataList;
+    private List<LineChartPoint> mPoints;
+
+    private final int FADE_IN_DURATION = 1000;
+    private final int FADE_OUT_DURATION = 1000;
 
     private LineChart mChart;
     private ImageView mChartIcon;
@@ -70,6 +65,11 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
 
     private float mMaxYValue;
 
+    protected final int VIEW_DAY = 0;
+    protected final int VIEW_WEEK = 1;
+    protected final int VIEW_MONTH = 2;
+
+    protected int mViewType = VIEW_DAY;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,8 +79,8 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
         mWidth = getArguments().getInt(WIDTH);
         mHeight = getArguments().getInt(HEIGHT);
 
-        Serializable list = getArguments().getSerializable(DATA_SET);
-        mDataList = (List<T>) getArguments().getSerializable(DATA_SET);
+        List<T> dataList = (List<T>) getArguments().getSerializable(DATA_SET);
+        mPoints = LineChartPointFactory.createPointList(dataList);
 
     }
 
@@ -99,26 +99,19 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
         setChartProperties();
         setChartAxis();
 
+        mViewType = VIEW_DAY;
 
         //mChart.getViewPortHandler().setMaximumScaleY(2f);
         //mChart.getViewPortHandler().setMaximumScaleX(2f);
 
-        // add data
 
-        setChartData();
-    //    setData(45, 100);
+        setChartData(convertDataSet(mPoints));
 
-//        mChart.setVisibleXRange(20);
-//        mChart.setVisibleYRange(20f, AxisDependency.LEFT);
-//        mChart.centerViewTo(20, 50, AxisDependency.LEFT);
 
         mChart.animateX(1000, Easing.EasingOption.EaseInOutQuart);
 //        mChart.invalidate();
 
         setChartLegend();
-
-        // // dont forget to refresh the drawing
-        // mChart.invalidate();
 
         return rootView;
     }
@@ -153,17 +146,11 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
         mChart.setDescription("");
         mChart.setNoDataTextDescription("You need to provide data for the chart.");
 
-        // enable touch gestures
-        mChart.setTouchEnabled(true);
-
-        // enable scaling and dragging
-        mChart.setDragEnabled(true);
-        mChart.setScaleEnabled(true);
-        // mChart.setScaleXEnabled(true);
-        // mChart.setScaleYEnabled(true);
+        setChartTouchEnabled(true);
 
         // if disabled, scaling can be done on x- and y-axis separately
-        mChart.setPinchZoom(true);
+      //  mChart.setPinchZoom(false);
+
     }
 
 
@@ -251,14 +238,7 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
 
     @Override
     public void onChartSingleTapped(MotionEvent me) {
-//        changeDataSet();
-//        if (mChart.getAlpha() < 0.01) {
-//            mChart.animate().alpha(1f)
-//                    .setDuration(1000);
-//        } else {
-//            mChart.animate().alpha(0f)
-//                    .setDuration(1000);
-//        }
+
     }
 
     @Override
@@ -268,8 +248,19 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
 
     @Override
     public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-//        mChart.animate().alpha(0f)
-//                .setDuration(5000);
+
+        if (scaleX > 1.3) {
+            boolean canZoomIn = mViewType != VIEW_DAY;
+            if (canZoomIn) {
+                zoomIn();
+            }
+
+        } else if (scaleX < 0.8) {
+            boolean canZoomOut = mViewType != VIEW_MONTH;
+            if (canZoomOut) {
+                zoomOut();
+            }
+        }
     }
 
     @Override
@@ -277,69 +268,13 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
 
     }
 
-
-    private void setData(int count, float range) {
-
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            xVals.add((i) + "");
-        }
-
-        ArrayList<Entry> yVals = new ArrayList<Entry>();
-
-        for (int i = 0; i < count; i++) {
-
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult) + 3;// + (float)
-            // ((mult *
-            // 0.1) / 10);
-            yVals.add(new Entry(val, i));
-        }
-
-        // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(yVals, "DataSet 1");
-        // set1.setFillAlpha(110);
-        // set1.setFillColor(Color.RED);
-
-        // set the line to be drawn like this "- - - - - -"
-   //     set1.enableDashedLine(10f, 5f, 0f);
-   //     set1.enableDashedHighlightLine(10f, 5f, 0f);
-        set1.setDrawCubic(true);
-
-        set1.setLineWidth(1f);
-        set1.setCircleRadius(3f);
-        set1.setDrawCircleHole(true);
-        set1.setValueTextSize(9f);
-    //    Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.chart_fade_red);
-     //   set1.setFillDrawable(drawable);
-
-        set1.setDrawFilled(true);
-
-        setChartColor(set1);
-
-        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        dataSets.add(set1); // add the datasets
-
-        // create a data object with the datasets
-        LineData data = new LineData(xVals, dataSets);
-
-        // set data
-        mChart.setData(data);
-    }
-
-    private void setChartColor(LineDataSet set) {
+    protected void setChartColor(LineDataSet set) {
         set.setColor(getResources().getColor(R.color.pig_chart_weight_line));
         set.setCircleColor(getResources().getColor(R.color.pig_chart_weight_line));
         set.setFillColor(getResources().getColor(R.color.pig_chart_weight_fill));
     }
 
-    private void setChartData() {
-
-        ChartDataAdapter.XYValues xyValues = null;
-
-        xyValues = convertDataSet(mDataList);
-
-
+    private void setChartData(ChartDataAdapter.XYValues xyValues) {
         LineData data = createChartData(xyValues);
 
 
@@ -347,11 +282,13 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
         leftAxis.setAxisMaxValue(mMaxYValue + 5);
         mChart.setData(data);
 
-        mChart.setVisibleXRangeMaximum(5);
+        mChart.setVisibleXRange(1, 7);
+        mChart.invalidate();
+
     }
 
-    protected ChartDataAdapter.XYValues convertDataSet(List<T> dataList) {
-        return ChartDataAdapter.convertToXYValues(dataList);
+    protected ChartDataAdapter.XYValues convertDataSet(List<LineChartPoint> dataList) {
+        return ChartDataAdapter.convertToChartValues(dataList);
     }
 
 
@@ -374,7 +311,7 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
 
         setChartColor(set1);
 
-        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set1);
 
 
@@ -382,4 +319,104 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
 
     }
 
+    private void zoomOut() {
+        zoomOutViewType();
+
+        startScale();
+    }
+
+    protected void zoomOutViewType() {
+        switch (mViewType) {
+            case VIEW_DAY:
+                mViewType = VIEW_WEEK;
+                break;
+            case VIEW_WEEK:
+                mViewType = VIEW_MONTH;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void zoomIn() {
+        zoomInViewType();
+
+        startScale();
+    }
+
+    protected void zoomInViewType() {
+        switch (mViewType) {
+            case VIEW_MONTH:
+                mViewType = VIEW_WEEK;
+                break;
+            case VIEW_WEEK:
+                mViewType = VIEW_DAY;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void changeChartDate() {
+        ChartDataAdapter.XYValues xyValues = convertToChartValues(mPoints, mViewType);
+
+
+        if (xyValues != null) {
+            setChartData(xyValues);
+        }
+    }
+
+    protected ChartDataAdapter.XYValues convertToChartValues(List<LineChartPoint> points, int viewType) {
+        ChartDataAdapter.XYValues xyValues = null;
+
+        switch (viewType) {
+            case VIEW_MONTH:
+                xyValues = ChartDataAdapter.convertToChartValues(ChartDataAdapter.groupByMonth(points));
+                break;
+            case VIEW_WEEK:
+                xyValues = ChartDataAdapter.convertToChartValues(ChartDataAdapter.groupByWeek(points));
+                break;
+            default:
+                break;
+        }
+
+        return xyValues;
+    }
+
+    private void startScale() {
+        setChartTouchEnabled(false);
+
+        Animation anim = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out);
+        anim.setDuration(FADE_OUT_DURATION);
+        anim.setAnimationListener(new AnimSimpleListener() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                super.onAnimationEnd(animation);
+                changeChartDate();
+                endScale();
+            }
+        });
+
+        mChart.startAnimation(anim);
+    }
+
+    private void endScale() {
+        Animation anim = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
+        anim.setDuration(FADE_IN_DURATION);
+        anim.setAnimationListener(new AnimSimpleListener() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                super.onAnimationEnd(animation);
+                setChartTouchEnabled(true);
+            }
+        });
+
+        mChart.startAnimation(anim);
+    }
+
+    private void setChartTouchEnabled(boolean enabled) {
+        mChart.setTouchEnabled(enabled);
+        mChart.setDragEnabled(enabled);
+        mChart.setScaleXEnabled(enabled);
+    }
 }

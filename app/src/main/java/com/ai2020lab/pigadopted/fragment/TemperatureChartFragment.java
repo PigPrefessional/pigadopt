@@ -2,7 +2,9 @@ package com.ai2020lab.pigadopted.fragment;
 
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.chart.ChartDataAdapter;
+import com.ai2020lab.pigadopted.chart.LineChartPoint;
 import com.ai2020lab.pigadopted.model.statistic.BodyTemperatureData;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.List;
 
@@ -20,5 +22,30 @@ public class TemperatureChartFragment extends StatisticsChartFragment<BodyTemper
         return R.mipmap.pig_chart_icon_temperature;
     }
 
+    @Override
+    protected void setChartColor(LineDataSet set) {
+        set.setColor(getResources().getColor(R.color.pig_chart_temperature_line));
+        set.setCircleColor(getResources().getColor(R.color.pig_chart_temperature_line));
+        set.setFillColor(getResources().getColor(R.color.pig_chart_temperature_fill));
+    }
 
+    @Override
+    protected ChartDataAdapter.XYValues convertToChartValues(List<LineChartPoint> points, int viewType) {
+        ChartDataAdapter.XYValues xyValues = null;
+
+        switch (viewType) {
+            case VIEW_MONTH:
+                xyValues = ChartDataAdapter.convertToChartValues(
+                        ChartDataAdapter.groupPoints(points, ChartDataAdapter.monthGroupStrategy, ChartDataAdapter.maxStrategy));
+                break;
+            case VIEW_WEEK:
+                xyValues = ChartDataAdapter.convertToChartValues(
+                        ChartDataAdapter.groupPoints(points, ChartDataAdapter.weekGroupStrategy, ChartDataAdapter.maxStrategy));
+                break;
+            default:
+                break;
+        }
+
+        return xyValues;
+    }
 }
