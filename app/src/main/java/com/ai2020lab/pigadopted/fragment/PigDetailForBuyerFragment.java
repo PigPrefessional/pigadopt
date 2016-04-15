@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ai2020lab.aiutils.common.ToastUtils;
@@ -21,6 +22,7 @@ import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrder;
 import com.ai2020lab.pigadopted.model.pig.PigDetailInfoAndOrderResponse;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
 import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -31,11 +33,18 @@ import cz.msebera.android.httpclient.Header;
  */
 public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
 
+    private ImageView mHogpen1;
+    private ImageView mHogpen2;
+    private ImageView mHogpen3;
+
     private static final String TAG = "PigDetailForBuyer";
 
     @Override
     protected void setupOtherViews(View rootView) {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.part_list);
+        mHogpen1 = (ImageView) rootView.findViewById(R.id.hogpen_1);
+        mHogpen2 = (ImageView) rootView.findViewById(R.id.hogpen_2);
+        mHogpen3 = (ImageView) rootView.findViewById(R.id.hogpen_3);
     }
 
     @Override
@@ -45,6 +54,8 @@ public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
 
     @Override
     protected void loadPigDetailData(PigInfo pigInfo) {
+        setupHogpenImages();
+        
         PigDetailManager pigDetailManager = new HttpPigDetailManager(getContext());
 
         final AIBaseActivity activity = (AIBaseActivity) getActivity();
@@ -79,6 +90,12 @@ public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
         });
     }
 
+    private void setupHogpenImages() {
+        if (mPigInfo.hogpenInfo != null && mPigInfo.hogpenInfo.hogpenPhoto != null) {
+            initHogpenImage(mHogpen1, mPigInfo.hogpenInfo.hogpenPhoto);
+        }
+    }
+
     @Override
     protected void loadBuyersData(List<PigPart> pigParts) {
         mRecyclerView.setHasFixedSize(true);
@@ -91,6 +108,17 @@ public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
     @Override
     protected int getPigPartImageResID(PigPart  pigPart) {
         return DataManager.getInstance().getPigPartWithNumberImageResID(pigPart);
+    }
+
+    private void initHogpenImage(ImageView imageView, final String url) {
+        ImageLoader.getInstance().displayImage(url, imageView);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private class PartsAdapter extends
@@ -162,8 +190,6 @@ public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
                         break;
                 }
             }
-
         }
-
     }
 }

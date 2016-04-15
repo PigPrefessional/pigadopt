@@ -87,9 +87,21 @@
                     style="@style/Label"
                     android:text="@string/pig_detail_label_environment" />
 
-                <Button
-                    style="@style/ChartsButton"
-                    android:background="@mipmap/button_for_image" />
+                <ImageView
+                    android:id="@+id/hogpen_1"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginRight="5dp"/>
+                <ImageView
+                    android:id="@+id/hogpen_2"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginRight="5dp"/>
+                <ImageView
+                    android:id="@+id/hogpen_3"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginRight="5dp"/>
             </LinearLayout>
 
             <!--<LinearLayout-->

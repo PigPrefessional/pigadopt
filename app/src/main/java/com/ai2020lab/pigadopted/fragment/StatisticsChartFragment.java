@@ -257,7 +257,7 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
                 zoomIn();
             }
 
-        } else if (scaleX < 0.8) {
+        } else if (scaleX < 0.5) {
             boolean canZoomOut = mViewType != VIEW_MONTH;
             if (canZoomOut) {
                 zoomOut();
