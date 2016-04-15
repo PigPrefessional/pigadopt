@@ -22,6 +22,7 @@
 	<!--根据不同项目来配置-->
 	<!--主色-->
 	<color name="colorPrimary">#8e5339</color>
+	<!--<color name="colorPrimary">#00000000</color>-->
 	<!--辅色-->
 	<color name="colorPrimaryDark">#a15737</color>
 	<!--控件颜色-->

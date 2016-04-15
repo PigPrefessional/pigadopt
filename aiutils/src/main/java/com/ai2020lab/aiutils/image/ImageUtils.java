@@ -35,7 +35,6 @@ import com.ai2020lab.aiutils.storage.FileUtils;
 
 import junit.framework.Assert;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -552,29 +551,29 @@ public class ImageUtils {
 	 * @param rotateDegree 旋转角度
 	 * @return 返回旋转后的bitmap
 	 */
-	public static Bitmap getRotateBitmap(Bitmap b, float rotateDegree) {
+	public static Bitmap getRotateBitmap(Bitmap b, float rotateDegree, boolean isFilter) {
 		Matrix matrix = new Matrix();
 		matrix.postRotate(rotateDegree);
-		return Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, false);
+		return Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, true);
 	}
 
 	/**
 	 * 保存Bitmap到存储
 	 *
-	 * @param b    Bitmap
-	 * @param path 保存路径
+	 * @param b     Bitmap
+	 * @param path  保存路径
+	 * @param ratio 压缩比例
 	 */
-	public static void saveBitmap(Bitmap b, String path) throws IOException {
+	public static void saveBitmapAsJpeg(Bitmap b, String path, int ratio) throws IOException {
 		if (b == null || b.isRecycled()) {
 			LogUtils.i(TAG, "bitmap对象为空");
 			return;
 		}
-		BufferedOutputStream bos = new BufferedOutputStream(
-				new FileOutputStream(path));
-		b.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-		bos.flush();
-		bos.close();
-
+		FileOutputStream fos = new FileOutputStream(path);
+		b.compress(Bitmap.CompressFormat.JPEG, ratio, fos);
+		fos.flush();
+		fos.close();
+		b.recycle();
 	}
 
 	/**

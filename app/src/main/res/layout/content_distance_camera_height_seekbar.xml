@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--测距相机拍摄高度调节-->
+<SeekBar
+	android:id="@+id/take_photo_height_sb"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:maxHeight="1dp"
+	android:minHeight="1dp"
+	android:progressDrawable="@drawable/height_seekbar"
+	android:rotation="270"/>

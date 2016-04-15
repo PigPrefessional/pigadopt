@@ -95,6 +95,7 @@ public class CameraSurfaceView extends SurfaceView implements
 		// underlying surface is created and destroyed.
 		mHolder = getHolder();
 		mHolder.addCallback(this);
+		mHolder.setKeepScreenOn(true);
 		// deprecated setting, but required on Android versions prior to 3.0
 		// 经测试发现Android 4.0.3以下没有废弃
 		if (VERSION.SDK_INT < 15) {

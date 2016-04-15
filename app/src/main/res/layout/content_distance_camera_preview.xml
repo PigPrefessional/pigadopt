@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--拍照预览surfaceView-->
+<com.ai2020lab.aimedia.CameraSurfaceView
+	android:id="@+id/take_photo_sv"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"/>

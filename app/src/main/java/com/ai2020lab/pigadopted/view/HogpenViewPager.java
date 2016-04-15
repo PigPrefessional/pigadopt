@@ -247,7 +247,7 @@ public class HogpenViewPager extends LinearLayout {
 	/**
 	 * 添加猪到当前选中的猪圈中
 	 */
-	public void addPig(PigDetailInfoAndOrder pigInfo) {
+	public void addPig(final PigDetailInfoAndOrder pigInfo) {
 		if (currentIndex == -1) {
 			LogUtils.i(TAG, "请先选中一个猪圈");
 			return;
@@ -275,7 +275,7 @@ public class HogpenViewPager extends LinearLayout {
 			@Override
 			public void onEnd() {
 				if (onPigAddListener != null) {
-					onPigAddListener.onEnd();
+					onPigAddListener.onEnd(pigInfo);
 				}
 			}
 		});
@@ -366,7 +366,7 @@ public class HogpenViewPager extends LinearLayout {
 	}
 
 	public interface OnPigAddListener {
-		void onEnd();
+		void onEnd(PigDetailInfoAndOrder pigInfo);
 	}
 
 

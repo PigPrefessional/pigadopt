@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--拍照及其他控制按钮-->
+<RelativeLayout
+	android:id="@+id/take_photo_control_rl"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/colorPrimary">
+
+	<!--拍照按钮-->
+	<ImageView
+		android:id="@+id/take_photo_take_iv"
+		android:layout_width="80dp"
+		android:layout_height="80dp"
+		android:layout_centerInParent="true"
+		android:src="@drawable/growth_history_camera_selector"
+		tools:ignore="contentDescription"/>
+	<!--闪光灯模式切换按钮-->
+	<ImageView
+		android:id="@+id/take_photo_flash_iv"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:layout_marginRight="20dp"
+		android:src="@mipmap/flash_auto"
+		tools:ignore="contentDescription"/>
+
+</RelativeLayout>

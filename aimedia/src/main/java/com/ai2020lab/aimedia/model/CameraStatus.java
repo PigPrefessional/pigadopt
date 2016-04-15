@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ai2020lab.aimedia;
+package com.ai2020lab.aimedia.model;
 
 /**
  * 摄像头状态常量类

@@ -16,22 +16,18 @@
 
 package com.ai2020lab.aimedia;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.os.Build.VERSION;
+import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 
+import com.ai2020lab.aimedia.interfaces.PhotoTakenCallback;
+import com.ai2020lab.aimedia.model.CameraStatus;
+import com.ai2020lab.aimedia.model.FlashMode;
 import com.ai2020lab.aiutils.common.LogUtils;
-import com.ai2020lab.aiutils.image.ImageUtils;
-import com.ai2020lab.aiutils.storage.FileUtils;
-
-import java.io.File;
+import com.ai2020lab.aiutils.system.DeviceUtils;
 
 /**
  * 摄像头管理类
@@ -55,45 +51,50 @@ public final class CameraManager {
 	 * CameraManager对象
 	 */
 	private static CameraManager cameraManager = null;
-	private final Context context;
+	private Context context;
 	/**
 	 * 摄像头配置管理器
 	 */
-	private final CameraConfigurationManager configManager;
+	private final CameraSettingManager configManager;
 	/**
 	 * 摄像头对象的引用
 	 */
 	private Camera camera;
 
 	/**
-	 * 是否初始化摄像头标志位，true-已经初始化，false-没有初始化
-	 */
-	private boolean initialized = false;
-	/**
 	 * 是否正在预览标志位，true-正在预览，false-没有预览
 	 */
 	private boolean previewing = false;
+	/**
+	 * 当前打开的相机id
+	 */
+	private int cameraId;
+	/**
+	 * 照片旋转方向
+	 */
+	private int outputOrientation;
+
+	private OrientationEventListener orientationListener;
+	/**
+	 * 拍照监听
+	 */
+	private PhotoTakenCallback photoTakenCallback;
 
 	/**
 	 * 私有化构造方法
 	 * <p/>
-	 * 初始化上下文引用和相机配置类对象
-	 *
-	 * @param context 上下文引用
+	 * 初始化相机配置类对象
 	 */
-	private CameraManager(Context context) {
-		this.context = context;
-		this.configManager = new CameraConfigurationManager(context);
+	private CameraManager() {
+		this.configManager = new CameraSettingManager();
 	}
 
 	/**
 	 * 工厂方法得到相机管理类单例,并初始化相机管理类对象
-	 *
-	 * @param context 上下文引用
 	 */
-	public synchronized static CameraManager getInstance(Context context) {
+	public synchronized static CameraManager getInstance() {
 		if (cameraManager == null) {
-			cameraManager = new CameraManager(context);
+			cameraManager = new CameraManager();
 		}
 		return cameraManager;
 
@@ -104,58 +105,17 @@ public final class CameraManager {
 	 *
 	 * @return true-正在预览，false-没有预览
 	 */
-	public boolean getIsPreviewing() {
+	public boolean isPreviewing() {
 		return previewing;
-	}
-
-	/**
-	 * 得到当前上下文引用
-	 *
-	 * @return
-	 */
-	public Context getContext() {
-		return context;
 	}
 
 	/**
 	 * 得到摄像头对象
 	 *
-	 * @return
+	 * @return Camera
 	 */
 	public Camera getCamera() {
 		return camera;
-	}
-
-	/**
-	 * 得到预览分辨率
-	 *
-	 * @return
-	 */
-	public Point getPreViewResolution() {
-		return configManager.getPreViewResolution();
-	}
-
-	/**
-	 * 得到视频录制分辨率
-	 *
-	 * @return
-	 */
-	public Point getVideoResolution() {
-		return configManager.getVideoResolution();
-	}
-
-	/**
-	 * 检查设备是否有可用的摄像头
-	 *
-	 * @return true-有可用的摄像头，false-没有可用的摄像头
-	 */
-	private boolean checkCamera() {
-		if (context.getPackageManager().hasSystemFeature(
-				PackageManager.FEATURE_CAMERA)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	/**
@@ -165,7 +125,7 @@ public final class CameraManager {
 	 *
 	 * @return 返回摄像头的ID, 多余一个摄像头的情况返回找到的第一个后置摄像头ID，只有一个则返回当前摄像头ID，没有找到返回-1
 	 */
-	@SuppressLint("NewApi")
+	@Deprecated
 	private int getDefCameraId() {
 		int defCameraId = -1;
 		CameraInfo cameraInfo = new CameraInfo();
@@ -198,7 +158,7 @@ public final class CameraManager {
 	 *
 	 * @return 返回打开摄像头的状态
 	 */
-	@SuppressLint("NewApi")
+	@Deprecated
 	private int openCamera() {
 		int result = CameraStatus.OPEN_FAIL;
 		try {
@@ -222,13 +182,59 @@ public final class CameraManager {
 				result = CameraStatus.FACING_BACK;
 				camera = Camera.open();
 			}
-			// 测试异常情况
-			// throw new Exception();
 		} catch (Exception e) {
 			closeDriver();
 			result = CameraStatus.OPEN_FAIL;
 			LogUtils.e(TAG, "相机打开异常", e);
 		}
+		return result;
+	}
+
+
+	/**
+	 * 获取相机id
+	 *
+	 * @param useFrontCamera true-使用前置摄像头，false-使用后置摄像头
+	 * @return 返回cameraId，只有一个摄像头会返回0
+	 */
+	private int getCameraId(boolean useFrontCamera) {
+		int count = Camera.getNumberOfCameras();
+		int result = -1;
+		if (count > 0) {
+			result = 0;
+			Camera.CameraInfo info = new Camera.CameraInfo();
+			for (int i = 0; i < count; i++) {
+				Camera.getCameraInfo(i, info);
+				if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK
+						&& !useFrontCamera) {
+					result = i;
+					break;
+				} else if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT
+						&& useFrontCamera) {
+					result = i;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 打开摄像头方法，不考虑API 9 以下
+	 *
+	 * @param useFrontCamera true-使用前置摄像头,false-使用后置摄像头
+	 * @return 返回打开的cameraId，失败返回-1
+	 */
+	private int openCamera(boolean useFrontCamera) {
+		int result = getCameraId(useFrontCamera);
+		try {
+			camera = Camera.open(result);
+		} catch (Exception e) {
+			LogUtils.e(TAG, "打开相机失败", e);
+			closeDriver();
+		}
+		// 赋值当前打开的相机id
+		cameraId = result;
 		return result;
 	}
 
@@ -238,40 +244,86 @@ public final class CameraManager {
 	 * 返回打开的摄像头的状态，状态码在常量类CameraStatus中定义<br>
 	 * 客户端可通过返回的状态来判断相机是否正确打开并提示用户或者做其他的操作
 	 *
+	 * @param context Context
 	 * @return 返回打开摄像头的状态
 	 */
-	public int openDriver() {
+	@Deprecated
+	public int openDriver(Context context) {
+		this.context = context;
 		int result = CameraStatus.INVALID;
 		// 检查是否有摄像头
-		if (checkCamera()) {
-			if (camera == null) {
-				// 打开摄像头
-				result = openCamera();
-				LogUtils.i(TAG, "打开摄像头的状态-->" + result);
-				if (camera != null) {
-					// 如果没有初始化则配置初始化参数
-					if (!initialized) {
-						initialized = true;
-						configManager.initFromCameraParameters(camera);
-					}
-					// 设置相机参数
-					configManager.setDesiredCameraParameters(camera);
-				}
+		if (DeviceUtils.isSupportedCamera(context)) {
+			// 打开摄像头
+			result = openCamera();
+			LogUtils.i(TAG, "打开摄像头的状态-->" + result);
+			if (result != CameraStatus.INVALID && result != CameraStatus.OPEN_FAIL) {
+				configManager.initFromCameraParameters(context, camera);
+				configManager.setDesiredCameraParameters();
 			}
 		}
 		return result;
 	}
 
 	/**
-	 * 计算并设置摄像头参数，在此之前必须调用openDriver(surfaceHolder)方法确保Camera已经初始化，否则无效
+	 * 打开摄像头
+	 *
+	 * @param context        Context
+	 * @param useFrontCamera true-使用前置摄像头，false-使用后置摄像头
+	 * @return 返回打开的摄像头id, 失败返回-1
 	 */
-	public void setParameters() {
-		if (camera != null) {
-			// 计算相机参数
-			configManager.initFromCameraParameters(camera);
-			// 设置相机参数
-			configManager.setDesiredCameraParameters(camera);
+	public int openDriver(Context context, boolean useFrontCamera) {
+		this.context = context;
+		int result = -1;
+		// 检查是否有摄像头
+		if (DeviceUtils.isSupportedCamera(context)) {
+			// 打开摄像头
+			result = openCamera(useFrontCamera);
+			LogUtils.i(TAG, "打开摄像头的id-->" + result);
+			if (result != -1) {
+				// 初始化摄像头参数
+				configManager.initFromCameraParameters(context, camera);
+				configManager.setDesiredCameraParameters();
+				// 方向监听
+				if (orientationListener == null) {
+					initOrientationListener(context);
+				}
+				orientationListener.enable();
+			}
 		}
+		return result;
+	}
+
+	/**
+	 * 获取相机是否支持闪光灯
+	 *
+	 * @return true-支持闪光灯，false-不支持闪光灯
+	 */
+	public boolean isSupportedFlash() {
+		return configManager.isSupportedFlash();
+	}
+
+	/**
+	 * 设置闪光灯模式
+	 *
+	 * @param flashMode FlashMode
+	 */
+	public void setFlashMode(FlashMode flashMode) {
+		if (camera == null) {
+			LogUtils.i(TAG, "--请先打开相机--");
+			return;
+		}
+		LogUtils.i(TAG, "切换闪光灯模式-->" + flashMode.toString());
+		configManager.setFlashMode(flashMode);
+		configManager.setParameters();
+	}
+
+	/**
+	 * 获取当前闪光灯模式
+	 *
+	 * @return FlashMode
+	 */
+	public FlashMode getFlashMode() {
+		return CameraSettingPrefManager.getFlashMode(context);
 	}
 
 	/**
@@ -281,6 +333,10 @@ public final class CameraManager {
 		if (camera != null) {
 			camera.release();
 			camera = null;
+		}
+		if (orientationListener != null) {
+			orientationListener.disable();
+			orientationListener = null;
 		}
 	}
 
@@ -316,58 +372,80 @@ public final class CameraManager {
 	}
 
 	/**
-	 * 拍照
+	 * 拍照方法
 	 *
+	 * @param photoTakenCallback PhotoTakenCallback
 	 */
-	public void takePicture(String filePath, String fileName,
-	                        TakePictureCallback takePictureCallback) {
-		if (camera != null && previewing && FileUtils.makeDir(filePath)) {
-			String path = filePath + File.separator + fileName;
-			LogUtils.i(TAG, "--处理照片路径-->" + path);
-			// TODO:需要实现第一个参数的接口，拍照的同时播放咔嚓声音
-			camera.takePicture(null, null, new HandleJpegCallback(path, takePictureCallback));
+	public void takePicture(PhotoTakenCallback photoTakenCallback) {
+		if (camera == null || !previewing) {
+			LogUtils.i(TAG, "--请先初始化再拍照");
+			return;
 		}
+		this.photoTakenCallback = photoTakenCallback;
+		// 对焦成功后拍照
+		camera.autoFocus(new Camera.AutoFocusCallback() {
+			@Override
+			public void onAutoFocus(boolean success, Camera camera) {
+				if (success) {
+					camera.takePicture(null, null, pictureCallback);
+				}
+
+			}
+		});
 	}
 
-	/**
-	 * 拍照并处理照片
-	 */
-	private class HandleJpegCallback implements Camera.PictureCallback {
-		String filePath;
-		TakePictureCallback takePictureCallback;
-
-		public HandleJpegCallback(String filePath, TakePictureCallback takePictureCallback) {
-			this.filePath = filePath;
-			this.takePictureCallback = takePictureCallback;
-		}
+	private Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
 
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
-			try {
-				Bitmap bitmap = null;
-				if (data != null) {
-					bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-					// 停止预览
-					camera.startPreview();
-					previewing = false;
-				}
-				if (bitmap != null) {
-					// 保存图片
-					ImageUtils.saveBitmap(ImageUtils.getRotateBitmap(bitmap, 90), filePath);
-					// 再次开始预览
-					camera.startPreview();
-					previewing = true;
-					if (takePictureCallback != null)
-						takePictureCallback.onPictureSaved(filePath);
-				}
-			} catch (Exception e) {
-				LogUtils.e(TAG, "拍照异常", e);
+			if (photoTakenCallback != null) {
+				photoTakenCallback.photoTaken(data.clone(), outputOrientation);
 			}
+			// 拍照过程会自动停止预览,需要手动重新开始预览
+			camera.startPreview();
+			previewing = true;
 		}
+
+	};
+
+	private void initOrientationListener(Context context) {
+		orientationListener = new OrientationEventListener(context) {
+
+			@Override
+			public void onOrientationChanged(int orientation) {
+				if (camera != null && orientation != ORIENTATION_UNKNOWN) {
+					int newOutputOrientation = getCameraPictureRotation(orientation);
+
+					if (newOutputOrientation != outputOrientation) {
+						outputOrientation = newOutputOrientation;
+
+						Camera.Parameters params = camera.getParameters();
+						params.setRotation(outputOrientation);
+						try {
+							camera.setParameters(params);
+						} catch (Exception e) {
+							LogUtils.e(TAG, "设置相机旋转方向参数异常", e);
+						}
+					}
+				}
+			}
+		};
 	}
 
-	public interface TakePictureCallback {
-		void onPictureSaved(String path);
+	private int getCameraPictureRotation(int orientation) {
+		Camera.CameraInfo info = new Camera.CameraInfo();
+		Camera.getCameraInfo(cameraId, info);
+		int rotation;
+
+		orientation = (orientation + 45) / 90 * 90;
+
+		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+			rotation = (info.orientation - orientation + 360) % 360;
+		} else { // back-facing camera
+			rotation = (info.orientation + orientation) % 360;
+		}
+
+		return (rotation);
 	}
 
 }

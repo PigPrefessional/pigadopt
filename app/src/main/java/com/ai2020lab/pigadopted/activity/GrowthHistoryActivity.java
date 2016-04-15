@@ -147,10 +147,13 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 							@Override
 							public void run() {
 								dismissLoading();
-								sortList(jsonObj.data.growthInfos);
+//								growthHistoryRv.smoothScrollToPosition(0);
+								growthHistoryRvAdapter.clear();
 								List<GrowthInfo> growthInfos = jsonObj.data.growthInfos;
 								int size = growthInfos.size();
 								if (size > 0) {
+									// 排序
+									sortList(growthInfos);
 									for (int i = 0; i < size; i++) {
 										GrowthInfo growthInfo = growthInfos.get(i);
 										growthHistoryRvAdapter.add(i, growthInfo);
