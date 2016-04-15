@@ -5,42 +5,43 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="vertical"
 	android:background="@color/add_page_bg"
-	android:gravity="center">
+	android:gravity="center_horizontal"
+	android:orientation="vertical">
 
 	<!--照片选择-->
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginTop="30dp"
 		android:gravity="center"
 		android:orientation="vertical">
 
 		<ImageView
 			android:id="@+id/hogpen_photo_iv"
-			tools:ignore="contentDescription"
 			android:layout_width="150dp"
 			android:layout_height="150dp"
 			android:layout_marginLeft="10dp"
-			android:src="@mipmap/add_photo_bg"/>
+			android:src="@mipmap/add_photo_bg"
+			tools:ignore="contentDescription"/>
 		<TextView
 			android:id="@+id/hogpen_photo_tv"
 			style="@style/TextLittle.Light"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/hogpen_photo"
 			android:layout_marginTop="10dp"
-			android:gravity="center"/>
+			android:gravity="center"
+			android:text="@string/hogpen_photo"/>
 	</LinearLayout>
 
 	<!--分隔线-->
 	<ImageView
 		android:layout_width="match_parent"
 		android:layout_height="1dp"
-		android:layout_marginBottom="10dp"
+		android:layout_marginBottom="15dp"
 		android:layout_marginLeft="2dp"
 		android:layout_marginRight="2dp"
-		android:layout_marginTop="10dp"
+		android:layout_marginTop="15dp"
 		android:src="@color/add_page_divider"
 		tools:ignore="contentDescription"/>
 
@@ -67,10 +68,10 @@
 	<ImageView
 		android:layout_width="match_parent"
 		android:layout_height="1dp"
-		android:layout_marginBottom="10dp"
+		android:layout_marginBottom="15dp"
 		android:layout_marginLeft="2dp"
 		android:layout_marginRight="2dp"
-		android:layout_marginTop="10dp"
+		android:layout_marginTop="15dp"
 		android:src="@color/add_page_divider"
 		tools:ignore="contentDescription"/>
 
@@ -78,6 +79,7 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginTop="15dp"
 		android:gravity="center"
 		android:orientation="horizontal">
 		<TextView
