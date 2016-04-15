@@ -51,7 +51,17 @@
 				android:layout_height="50dp"
 				android:layout_gravity="right|center_vertical"
 				android:layout_marginRight="10dp"
-				tools:ignore="contentDescription"/>
+				tools:ignore="contentDescription"
+				android:visibility="visible"/>
+			<TextView
+				android:id="@+id/toolbar_right_tv"
+				style="@style/TextNormal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="right|center_vertical"
+				android:layout_marginRight="10dp"
+				android:textColor="@android:color/white"
+				android:visibility="gone"/>
 
 		</android.support.v7.widget.Toolbar>
 
@@ -64,10 +74,10 @@
 	</android.support.design.widget.AppBarLayout>
 
 	<!--activity的内容容器，注意要设置app:layout_behavior属性-->
-	<RelativeLayout
+	<FrameLayout
 		android:id="@+id/activity_content"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

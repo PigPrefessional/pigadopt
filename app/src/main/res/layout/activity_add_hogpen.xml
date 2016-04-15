@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--添加猪圈界面布局-->
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:background="@color/add_page_bg"
+	android:gravity="center">
+
+	<!--照片选择-->
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:orientation="vertical">
+
+		<ImageView
+			android:id="@+id/hogpen_photo_iv"
+			tools:ignore="contentDescription"
+			android:layout_width="150dp"
+			android:layout_height="150dp"
+			android:layout_marginLeft="10dp"
+			android:src="@mipmap/add_photo_bg"/>
+		<TextView
+			android:id="@+id/hogpen_photo_tv"
+			style="@style/TextLittle.Light"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/hogpen_photo"
+			android:layout_marginTop="10dp"
+			android:gravity="center"/>
+	</LinearLayout>
+
+	<!--分隔线-->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginBottom="10dp"
+		android:layout_marginLeft="2dp"
+		android:layout_marginRight="2dp"
+		android:layout_marginTop="10dp"
+		android:src="@color/add_page_divider"
+		tools:ignore="contentDescription"/>
+
+	<!--猪圈长度选择-->
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:orientation="horizontal">
+		<TextView
+			android:id="@+id/hogpen_length_tv"
+			style="@style/TextNormal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/length"/>
+		<com.ai2020lab.pigadopted.view.pickerview.DimensionPickerView
+			android:id="@+id/hogpen_length_pv"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"/>
+	</LinearLayout>
+
+	<!--分隔线-->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginBottom="10dp"
+		android:layout_marginLeft="2dp"
+		android:layout_marginRight="2dp"
+		android:layout_marginTop="10dp"
+		android:src="@color/add_page_divider"
+		tools:ignore="contentDescription"/>
+
+	<!--猪圈宽度选择-->
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:orientation="horizontal">
+		<TextView
+			android:id="@+id/hogpen_width_tv"
+			style="@style/TextNormal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/width"/>
+		<!--选择入栏体重-->
+		<com.ai2020lab.pigadopted.view.pickerview.DimensionPickerView
+			android:id="@+id/hogpen_width_pv"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"/>
+	</LinearLayout>
+
+</LinearLayout>

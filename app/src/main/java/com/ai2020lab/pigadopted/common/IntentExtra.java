@@ -9,5 +9,11 @@ public interface IntentExtra {
 
 	String PIG_INFO = "com.ai2020lab.pigadopted.model.pig.PigInfo";
 
+	String HOGPEN_ID = "com.ai2020lab.pigadopted.model.hogpen.HogpenInfo.hogpenId";
+
+	String PIG_INFO_AND_ORDER = "com.ai2020lab.pigadopted.model.pig.PigInfoAndOrder";
+
+	String SELLER_HOGPEN_INFO = "com.ai2020lab.pigadopted.model.hogpen.SellerHogpenInfo";
+
 
 }

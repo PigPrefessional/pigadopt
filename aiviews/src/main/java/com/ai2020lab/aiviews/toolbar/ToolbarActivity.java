@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ai2020lab.aiutils.common.ResourcesUtils;
@@ -29,13 +29,14 @@ public class ToolbarActivity extends AppCompatActivity {
 
 	private Toolbar toolbar;
 
-	private RelativeLayout contentContainer;
+	private FrameLayout contentContainer;
 
 	private AppBarLayout toolbarContainer;
 
 	private TextView toolbarTitle;
 	private ImageView toolbarLeftIv;
 	private ImageView toolbarRightIv;
+	private TextView toolbarRightTv;
 
 	private OnLeftClickListener onLeftClickListener;
 
@@ -65,7 +66,7 @@ public class ToolbarActivity extends AppCompatActivity {
 	private void init() {
 		activity = this;
 		super.setContentView(R.layout.activity_toolbar);
-		contentContainer = (RelativeLayout) findViewById(R.id.activity_content);
+		contentContainer = (FrameLayout) findViewById(R.id.activity_content);
 		toolbarContainer = (AppBarLayout) findViewById(R.id.toolbar_layout);
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 	}
@@ -134,8 +135,10 @@ public class ToolbarActivity extends AppCompatActivity {
 		toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
 		toolbarLeftIv = (ImageView) findViewById(R.id.toolbar_left_iv);
 		toolbarRightIv = (ImageView) findViewById(R.id.toolbar_right_iv);
+		toolbarRightTv = (TextView) findViewById(R.id.toolbar_right_tv);
 		toolbarLeftIv.setVisibility(View.GONE);
 		toolbarRightIv.setVisibility(View.GONE);
+		toolbarRightTv.setVisibility(View.GONE);
 		setSupportActionBar(toolbar);
 		toolbarLeftIv.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -145,6 +148,13 @@ public class ToolbarActivity extends AppCompatActivity {
 			}
 		});
 		toolbarRightIv.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (onRightClickListener != null)
+					onRightClickListener.onClick();
+			}
+		});
+		toolbarRightTv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (onRightClickListener != null)
@@ -180,7 +190,8 @@ public class ToolbarActivity extends AppCompatActivity {
 
 	/**
 	 * 设置工具栏左边按钮的尺寸
-	 * @param width 宽度
+	 *
+	 * @param width  宽度
 	 * @param height 高度
 	 */
 	public void setToolbarLeftDemension(int width, int height) {
@@ -200,6 +211,7 @@ public class ToolbarActivity extends AppCompatActivity {
 	 * @param drawableResID Drawable资源ID
 	 */
 	public void setToolbarRight(int drawableResID) {
+		toolbarRightTv.setVisibility(View.GONE);
 		toolbarRightIv.setVisibility(View.VISIBLE);
 		Drawable drawable = ResourcesUtils.getDrawable(drawableResID);
 		if (drawable == null) {
@@ -209,19 +221,57 @@ public class ToolbarActivity extends AppCompatActivity {
 	}
 
 	/**
+	 * 设置工具栏右边文字按钮的文字
+	 *
+	 * @param rightText 文字按钮的文字
+	 */
+	public void setToolbarRight(CharSequence rightText) {
+		toolbarRightTv.setVisibility(View.VISIBLE);
+		toolbarRightIv.setVisibility(View.GONE);
+		toolbarRightTv.setText(rightText);
+		toolbarRightTv.getPaint().setFakeBoldText(true);
+	}
+
+	/**
+	 * 设置工具栏右边文字按钮的文字
+	 *
+	 * @param rightText 文字按钮的文字
+	 * @param color     文字颜色
+	 */
+	public void setToolbarRight(CharSequence rightText, int color) {
+		toolbarRightTv.setVisibility(View.VISIBLE);
+		toolbarRightIv.setVisibility(View.GONE);
+		toolbarRightTv.setText(rightText);
+		toolbarRightTv.setTextColor(color);
+		toolbarRightTv.getPaint().setFakeBoldText(true);
+	}
+
+	/**
 	 * 设置工具栏右边按钮的尺寸
-	 * @param width 宽度
+	 *
+	 * @param width  宽度
 	 * @param height 高度
 	 */
 	public void setToolbarRightDemension(int width, int height) {
-		ViewGroup.LayoutParams lp = toolbarRightIv.getLayoutParams();
-		if (width > -2) {
-			lp.width = width;
+		if (toolbarRightIv.getVisibility() == View.VISIBLE) {
+			ViewGroup.LayoutParams lp = toolbarRightIv.getLayoutParams();
+			if (width > -2) {
+				lp.width = width;
+			}
+			if (height > -2) {
+				lp.height = height;
+			}
+			toolbarRightIv.setLayoutParams(lp);
+		} else if (toolbarRightTv.getVisibility() == View.VISIBLE) {
+			ViewGroup.LayoutParams lp = toolbarRightTv.getLayoutParams();
+			if (width > -2) {
+				lp.width = width;
+			}
+			if (height > -2) {
+				lp.height = height;
+			}
+			toolbarRightTv.setLayoutParams(lp);
 		}
-		if (height > -2) {
-			lp.height = height;
-		}
-		toolbarRightIv.setLayoutParams(lp);
 	}
 
 	/**

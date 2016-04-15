@@ -14,4 +14,10 @@
 	<!--成长历程时间线颜色-->
 	<color name="growth_info_line">#ffffff</color>
 
+	<color name="add_page_divider">#dcc6ab</color>
+
+	<color name="add_page_bg">#f4e9cd</color>
+
+	<color name="wheelview_divider_color">#a15737</color>
+
 </resources>

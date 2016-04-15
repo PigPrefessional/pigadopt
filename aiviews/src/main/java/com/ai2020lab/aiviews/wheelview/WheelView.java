@@ -67,7 +67,7 @@ public class WheelView extends View {
 	int dividerColor;
 
 	// 条目间距倍数
-	static final float lineSpacingMultiplier = 1.4F;
+	static final float lineSpacingMultiplier = 1.0F;
 	boolean isLoop;
 
 	// 第一条线Y坐标值
@@ -88,7 +88,7 @@ public class WheelView extends View {
 	int change;
 
 	// 显示几个条目
-	int itemsVisible = 7;
+	int itemsVisible = 11;
 
 	int measuredHeight;
 	int measuredWidth;

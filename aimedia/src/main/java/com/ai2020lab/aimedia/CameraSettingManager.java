@@ -265,7 +265,7 @@ final class CameraSettingManager {
 		// 设置相机预览分辨率，预览画面宽高比为4:3
 		setPreviewSize(Ratio.R_4x3);
 		// 设置相机拍照分辨率，使用高画质，画面宽高比为4:3
-		setPictureSize(Quality.HIGH, Ratio.R_4x3);
+		setPictureSize(Quality.LOW, Ratio.R_4x3);
 		// 可以直接调用系统的setDisplayOrientation，不考虑低版本问题
 //		setDisplayOrientation(camera, 90);
 		camera.setDisplayOrientation(90);
