@@ -20,6 +20,7 @@ import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.chart.ChartDataAdapter;
 import com.ai2020lab.pigadopted.chart.LineChartPoint;
 import com.ai2020lab.pigadopted.chart.LineChartPointFactory;
+import com.ai2020lab.pigadopted.chart.PigLineChartTouchListener;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -138,6 +139,7 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
     }
 
     private void setChartProperties() {
+        mChart.setOnTouchListener(new PigLineChartTouchListener(mChart, mChart.getViewPortHandler().getMatrixTouch()));
         mChart.setOnChartGestureListener(this);
         //    mChart.setOnChartValueSelectedListener(this);
         mChart.setDrawGridBackground(false);
