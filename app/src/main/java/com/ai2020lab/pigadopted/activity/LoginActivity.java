@@ -6,8 +6,6 @@ package com.ai2020lab.pigadopted.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,6 +16,7 @@ import android.widget.RelativeLayout;
 
 import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.common.ToastUtils;
+import com.ai2020lab.aiutils.storage.PreferencesUtils;
 import com.ai2020lab.aiutils.thread.ThreadUtils;
 import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
@@ -26,7 +25,6 @@ import com.ai2020lab.pigadopted.common.Constants;
 import com.ai2020lab.pigadopted.common.DataManager;
 import com.ai2020lab.pigadopted.model.user.BuyerInfoByPartyIDRequest;
 import com.ai2020lab.pigadopted.model.user.BuyerInfoByPartyIDResponse;
-import com.ai2020lab.pigadopted.model.user.PartyID;
 import com.ai2020lab.pigadopted.model.user.SellerInfoByPartyIDRequest;
 import com.ai2020lab.pigadopted.model.user.SellerInfoByPartyIDResponse;
 import com.ai2020lab.pigadopted.net.HttpManager;
@@ -51,13 +49,13 @@ public class LoginActivity extends AIBaseActivity {
 	private ImageView buyerIv;
 	private CircleImageView buyerCiv;
 	private ImageView buyerSelectIv;
-//	private TextView buyerTv;
+	//	private TextView buyerTv;
 	private RelativeLayout sellerInfoRl;
 	private ImageView sellerIv;
 	private CircleImageView sellerCiv;
 	private ImageView sellerSelectIv;
 //	private TextView sellerTv;
-	private CoordinatorLayout snackContainerCl;
+	private View switchRoleV;
 	/**
 	 * 当前选中的登录用户角色类型
 	 */
@@ -85,6 +83,7 @@ public class LoginActivity extends AIBaseActivity {
 		setToolbar();
 		assignViews();
 		setOnSelectRoleTypeListener(selectIn, selectOut);
+		setSwitchRoleV();
 	}
 
 	// 初始化数据
@@ -103,13 +102,11 @@ public class LoginActivity extends AIBaseActivity {
 		buyerIv = (ImageView) findViewById(R.id.buyer_iv);
 		buyerCiv = (CircleImageView) findViewById(R.id.buyer_civ);
 		buyerSelectIv = (ImageView) findViewById(R.id.buyer_select_iv);
-//		buyerTv = (TextView) findViewById(R.id.buyer_tv);
 		sellerInfoRl = (RelativeLayout) findViewById(R.id.seller_info_rl);
 		sellerIv = (ImageView) findViewById(R.id.seller_iv);
 		sellerCiv = (CircleImageView) findViewById(R.id.seller_civ);
 		sellerSelectIv = (ImageView) findViewById(R.id.seller_select_iv);
-//		sellerTv = (TextView) findViewById(R.id.seller_tv);
-		snackContainerCl = (CoordinatorLayout) findViewById(R.id.snack_container_cl);
+		switchRoleV = findViewById(R.id.switch_role_v);
 	}
 
 
@@ -295,7 +292,8 @@ public class LoginActivity extends AIBaseActivity {
 		// 弹出提示
 		showLoading(getString(R.string.login_login_in));
 		SellerInfoByPartyIDRequest data = new SellerInfoByPartyIDRequest();
-		data.partyID = PartyID.SELLER_1;
+		data.partyID = PreferencesUtils.getInt(this, Constants.SP_KEY_PARTY_ID_PROVIDER,
+				Constants.PARTY_ID_DEFAULT_PROVIDER);
 		HttpManager.postJson(this, UrlName.SELLER_INFO_BY_PARTYID.getUrl(), data,
 				new JsonHttpResponseHandler<SellerInfoByPartyIDResponse>(this) {
 					/**
@@ -354,7 +352,8 @@ public class LoginActivity extends AIBaseActivity {
 		// 弹出提示
 		showLoading(getString(R.string.login_login_in));
 		BuyerInfoByPartyIDRequest data = new BuyerInfoByPartyIDRequest();
-		data.partyID = PartyID.BUYER_1;
+		data.partyID = PreferencesUtils.getInt(this, Constants.SP_KEY_PARTY_ID_CUSTOMER,
+				Constants.PARTY_ID_DEFAULT_CUSTOMER);
 		HttpManager.postJson(this, UrlName.BUYER_INFO_BY_PARTYID.getUrl(), data,
 				new JsonHttpResponseHandler<BuyerInfoByPartyIDResponse>(this) {
 					/**
@@ -406,6 +405,27 @@ public class LoginActivity extends AIBaseActivity {
 	}
 
 	/**
+	 * 角色切换触发按钮点击监听
+	 */
+	private void setSwitchRoleV(){
+		switchRoleV.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				skipToSwitchRoleActivity();
+				return true;
+			}
+		});
+	}
+
+	/**
+	 * 跳转到角色切换界面
+	 */
+	private void skipToSwitchRoleActivity(){
+		Intent intent = new Intent(this, SwitchRoleActivity.class);
+		startActivity(intent);
+	}
+
+	/**
 	 * 跳转到买家或卖家主页
 	 */
 	private void skipToMainActivity(int currentRoleType) {
@@ -420,8 +440,7 @@ public class LoginActivity extends AIBaseActivity {
 			startActivity(intent);
 		} else {
 			// 弹出角色选择提示
-			Snackbar.make(snackContainerCl, getString(R.string.login_prompt_select_role),
-					Snackbar.LENGTH_LONG).show();
+			ToastUtils.getInstance().showToast(this, R.string.login_prompt_select_role);
 		}
 	}
 

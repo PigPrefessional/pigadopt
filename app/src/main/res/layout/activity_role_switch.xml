@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--用户切换界面布局-->
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/add_page_bg"
+	android:orientation="vertical"
+	android:padding="16dp">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+		<TextView
+			style="@style/TextNormal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/select_provider"
+			android:layout_marginBottom="10dp"
+			android:layout_marginTop="10dp"/>
+		<com.rey.material.widget.Spinner
+			android:id="@+id/provider_sp"
+			style="@style/Material.Widget.Spinner"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="15dp"
+			android:popupBackground="@color/add_page_bg"
+			app:rd_style="@style/Material.Drawable.Ripple.Wave"
+			app:spn_dividerColor="#a15737"
+			app:spn_dividerHeight="1dp"
+			app:spn_labelPadding="10dp"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="40dp"
+		android:orientation="horizontal">
+		<TextView
+			style="@style/TextNormal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/select_customer"
+			android:layout_marginBottom="10dp"
+			android:layout_marginTop="10dp"/>
+		<com.rey.material.widget.Spinner
+			android:id="@+id/customer_sp"
+			style="@style/Material.Widget.Spinner"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="15dp"
+			android:popupBackground="@color/add_page_bg"
+			app:rd_style="@style/Material.Drawable.Ripple.Wave"
+			app:spn_dividerColor="#a15737"
+			app:spn_dividerHeight="1dp"
+			app:spn_labelPadding="10dp"/>
+
+	</LinearLayout>
+
+</LinearLayout>

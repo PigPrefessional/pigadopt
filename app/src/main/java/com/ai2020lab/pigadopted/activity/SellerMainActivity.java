@@ -290,17 +290,20 @@ public class SellerMainActivity extends AIBaseActivity {
 				LogUtils.i(TAG, "添加猪成功，加入界面--");
 				PigDetailInfoAndOrder pigInfo = (PigDetailInfoAndOrder) intent
 						.getSerializableExtra(IntentExtra.PIG_INFO_AND_ORDER);
-				hogpenVp.addPig(pigInfo);
-				setAddPigBtnVisibility(hogpenVp.getPigNumber()
-						< HogpenViewPager.PIG_LIMIT);
+				if (pigInfo != null) {
+					hogpenVp.addPig(pigInfo);
+					setAddPigBtnVisibility(hogpenVp.getPigNumber()
+							< HogpenViewPager.PIG_LIMIT);
+				}
 
 			}
 			// 添加猪圈返回逻辑
 			else if (requestCode == RESULT_ADD_HOGPEN) {
-
 				SellerHogpenInfo sellerHogpenInfo = (SellerHogpenInfo) intent
 						.getSerializableExtra(IntentExtra.SELLER_HOGPEN_INFO);
-				addHogpen(sellerHogpenInfo);
+				if (sellerHogpenInfo != null) {
+					addHogpen(sellerHogpenInfo);
+				}
 			}
 
 		}

@@ -236,22 +236,25 @@ public class AddPigActivity extends AIBaseActivity {
 	 * 返回添加猪测试数据
 	 */
 	private PigDetailInfoAndOrder getAddPigInfoAndOrder(PigInfo pigInfo) {
-		PigDetailInfoAndOrder pigInfoAndOrder = new PigDetailInfoAndOrder();
+		if (pigInfo != null) {
+			PigDetailInfoAndOrder pigInfoAndOrder = new PigDetailInfoAndOrder();
 //		pigInfoAndOrder.orderInfo = new OrderInfoForSeller();
 //		pigInfoAndOrder.orderInfo.buyerNumber = 0;
 //		pigInfoAndOrder.healthInfo = new HealthInfo();
 //		pigInfoAndOrder.healthInfo.temperature = 36.5f;
 //		pigInfoAndOrder.healthInfo.status = PigStatus.WALKING;
-		pigInfoAndOrder.growthInfo = new GrowthInfo();
-		pigInfoAndOrder.growthInfo.pigWeight = pigInfo.attendedWeight;
-		pigInfoAndOrder.pigInfo = pigInfo;
-		return pigInfoAndOrder;
+			pigInfoAndOrder.growthInfo = new GrowthInfo();
+			pigInfoAndOrder.growthInfo.pigWeight = pigInfo.attendedWeight;
+			pigInfoAndOrder.pigInfo = pigInfo;
+			return pigInfoAndOrder;
+		}
+		return null;
 	}
 
 	/**
 	 * 将添加的猪数据返回给卖家主页
 	 */
-	private void finishActivity(PigInfo pigInfo){
+	private void finishActivity(PigInfo pigInfo) {
 		PigDetailInfoAndOrder pigInfoAndOrder = getAddPigInfoAndOrder(pigInfo);
 		Intent intent = new Intent();
 		intent.putExtra(IntentExtra.PIG_INFO_AND_ORDER, pigInfoAndOrder);

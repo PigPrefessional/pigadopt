@@ -180,6 +180,14 @@
 			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
 		</activity>
+		<!--角色切换界面-->
+		<activity
+			android:name=".activity.SwitchRoleActivity"
+			android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+		</activity>
 	</application>
 
 </manifest>

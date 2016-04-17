@@ -5,13 +5,15 @@
 package com.ai2020lab.pigadopted.model.user;
 
 /**
- * Created by Justin Z on 2016/4/5.
+ * Created by Justin Z on 2016/4/17.
  * 502953057@qq.com
  */
-public interface PartyID {
+public class Party {
 
-//	int SELLER_1 = 13;
-	int SELLER_1 = 13;
-	int BUYER_1 = 3;
+	public int id;
+
+	public String name;
+
+	public RoleType roleType;
+
 }
-

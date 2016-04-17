@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<color name="aiview_ripple">#FFFFFF</color>
-	<color name="aiview_none">#FFFFFFFF</color>
+	<color name="aiview_none">#00000000</color>
 
 	<color name="aiview_toolbar_btn_rv">#99daf7</color>
 	<color name="aiview_toolbar_bg">#356734</color>

@@ -33,8 +33,6 @@ import com.ai2020lab.pigadopted.net.UrlName;
 import com.ai2020lab.pigadopted.view.pickerview.DimensionPickerView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.util.ArrayList;
-
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -68,9 +66,13 @@ public class AddHogpenActivity extends AIBaseActivity {
 	private DimensionPickerView hogpenWidthPv;
 
 	/**
+	 * 猪圈照片保存路径
+	 */
+	private String hogpenPhotoPath;
+	/**
 	 * 返回的卖家猪圈对象数据
 	 */
-	private SellerHogpenInfo selectHogpenInfo = new SellerHogpenInfo();
+	private SellerHogpenInfo sellerHogpenInfo;
 
 	/**
 	 * 入口
@@ -99,8 +101,7 @@ public class AddHogpenActivity extends AIBaseActivity {
 		setOnRightClickListener(new OnRightClickListener() {
 			@Override
 			public void onClick() {
-				// 确定发起添加猪请求
-				setHogpenInfo();
+				// 确定发起添加猪圈请求
 				requestAddHogpen();
 			}
 		});
@@ -174,16 +175,20 @@ public class AddHogpenActivity extends AIBaseActivity {
 	 */
 	private void requestAddHogpen() {
 		LogUtils.i(TAG, "--添加猪圈请求--");
+		sellerHogpenInfo = getHogpenInfo();
+		if (sellerHogpenInfo == null) {
+			return;
+		}
+		HogpenAddRequest data = new HogpenAddRequest();
+		data.hogpenLength = sellerHogpenInfo.hogpenLength;
+		data.hogpenWidth = sellerHogpenInfo.hogpenWidth;
+		data.userID = DataManager.getInstance().getSellerInfo().userID;
+		LogUtils.i(TAG, "卖家用户id-->" + data.userID);
+		data.hogpenName = "";
 		// 弹出提示
 		showLoading(getString(R.string.prompt_add_loading));
-		HogpenAddRequest data = new HogpenAddRequest();
-		data.hogpenLength = selectHogpenInfo.hogpenLength;
-		data.hogpenWidth = selectHogpenInfo.hogpenWidth;
-		data.userID = DataManager.getInstance().getSellerInfo().userID;
-		LogUtils.i(TAG, "卖家用户id" + data.userID);
-		data.hogpenName = "";
 		HttpManager.postFile(this, UrlName.ADD_HOGPEN.getUrl(),
-				data, selectHogpenInfo.hogpenPhoto,
+				data, sellerHogpenInfo.hogpenPhoto,
 				new JsonHttpResponseHandler<HogpenAddResponse>(this) {
 
 					@Override
@@ -195,8 +200,8 @@ public class AddHogpenActivity extends AIBaseActivity {
 								dismissLoading();
 								LogUtils.i(TAG, "--添加猪圈成功--");
 								// 给猪圈ID赋值并返回到卖家主页去
-								selectHogpenInfo.hogpenID = jsonObj.data.hogpenID;
-								finishActivity(selectHogpenInfo);
+								sellerHogpenInfo.hogpenID = jsonObj.data.hogpenID;
+								finishActivity(sellerHogpenInfo);
 							}
 						}, 1000);
 					}
@@ -233,27 +238,31 @@ public class AddHogpenActivity extends AIBaseActivity {
 	/**
 	 * 将添加的猪圈数据返回给卖家主页
 	 */
-	private void finishActivity(SellerHogpenInfo selectHogpenInfo) {
+	private void finishActivity(SellerHogpenInfo sellerHogpenInfo) {
 		Intent intent = new Intent();
-		intent.putExtra(IntentExtra.SELLER_HOGPEN_INFO, selectHogpenInfo);
+		intent.putExtra(IntentExtra.SELLER_HOGPEN_INFO, sellerHogpenInfo);
 		setResult(RESULT_OK, intent);
 		finish();
 	}
 
 	/**
-	 * 将选择的长宽返回
+	 * 组合上传猪圈数据
 	 */
-	private void setHogpenInfo() {
+	private SellerHogpenInfo getHogpenInfo() {
+		SellerHogpenInfo sellerHogpenInfo = new SellerHogpenInfo();
 		// 宽度
-		selectHogpenInfo.hogpenWidth = hogpenLengthPv.getSelectDimension();
+		sellerHogpenInfo.hogpenWidth = hogpenLengthPv.getSelectDimension();
 		// 高度
-		selectHogpenInfo.hogpenLength = hogpenWidthPv.getSelectDimension();
-		selectHogpenInfo.pigInfos = new ArrayList<>();
-		LogUtils.i(TAG, "猪圈宽度-->" + selectHogpenInfo.hogpenWidth);
-		LogUtils.i(TAG, "猪圈长度-->" + selectHogpenInfo.hogpenLength);
-		if (TextUtils.isEmpty(selectHogpenInfo.hogpenPhoto)) {
+		sellerHogpenInfo.hogpenLength = hogpenWidthPv.getSelectDimension();
+//		selectHogpenInfo.pigInfos = new ArrayList<>();
+		LogUtils.i(TAG, "选择的猪圈宽度-->" + sellerHogpenInfo.hogpenWidth);
+		LogUtils.i(TAG, "选择的猪圈长度-->" + sellerHogpenInfo.hogpenLength);
+		if (TextUtils.isEmpty(hogpenPhotoPath)) {
 			ToastUtils.getInstance().showToast(getActivity(), R.string.prompt_select_hogpen_photo);
+			return null;
 		}
+		sellerHogpenInfo.hogpenPhoto = hogpenPhotoPath;
+		return sellerHogpenInfo;
 	}
 
 	/**
@@ -283,11 +292,11 @@ public class AddHogpenActivity extends AIBaseActivity {
 	}
 
 	/**
-	 * 设置图片显示
+	 * 显示相册选择或者拍摄返回的猪圈照片
 	 */
 	public void setHogpenPhotoPath(String path) {
 		LogUtils.i(TAG, "--设置猪圈图片");
-		selectHogpenInfo.hogpenPhoto = path;
+		hogpenPhotoPath = path;
 		hogpenPhotoIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 		ImageLoader.getInstance().displayImage("file://" + path, hogpenPhotoIv);
 	}
