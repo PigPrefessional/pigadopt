@@ -4,11 +4,13 @@
 
 package com.ai2020lab.pigadopted.model.user;
 
+import java.io.Serializable;
+
 /**
  * Created by Justin Z on 2016/4/17.
  * 502953057@qq.com
  */
-public class Party {
+public class Party implements Serializable{
 
 	public int id;
 
@@ -16,4 +18,12 @@ public class Party {
 
 	public RoleType roleType;
 
+	@Override
+	public String toString() {
+		return "Party{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", roleType=" + roleType +
+				'}';
+	}
 }

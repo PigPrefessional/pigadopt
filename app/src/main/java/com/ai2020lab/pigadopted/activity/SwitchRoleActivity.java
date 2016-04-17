@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.common.ViewUtils;
 import com.ai2020lab.aiutils.storage.PreferencesUtils;
 import com.ai2020lab.pigadopted.R;
@@ -87,11 +88,14 @@ public class SwitchRoleActivity extends AIBaseActivity {
 		providerSp.setAdapter(partyAdapter);
 		int partyID = PreferencesUtils.getInt(this, Constants.SP_KEY_PARTY_ID_PROVIDER,
 				Constants.PARTY_ID_DEFAULT_PROVIDER);
+		LogUtils.i(TAG, "保存的provider partyid-->" + partyID);
+		partyAdapter.notifyDataSetChanged();
 		providerSp.setSelection(getIndex(partyID, providerParties));
 		providerSp.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(Spinner parent, View view, int position, long id) {
 				Party party = partyAdapter.getItem(position);
+				LogUtils.i(TAG, "选择的provider party-->" + party.toString());
 				// 保存到SharedPreferences中
 				PreferencesUtils.setInt(getActivity(), Constants.SP_KEY_PARTY_ID_PROVIDER,
 						party.id);
@@ -107,11 +111,14 @@ public class SwitchRoleActivity extends AIBaseActivity {
 		customerSp.setAdapter(partyAdapter);
 		int partyID = PreferencesUtils.getInt(this, Constants.SP_KEY_PARTY_ID_CUSTOMER,
 				Constants.PARTY_ID_DEFAULT_CUSTOMER);
-		customerSp.setSelection(getIndex(partyID, providerParties));
+		LogUtils.i(TAG, "保存的customer partyid-->" + partyID);
+		partyAdapter.notifyDataSetChanged();
+		customerSp.setSelection(getIndex(partyID, customerParties));
 		customerSp.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(Spinner parent, View view, int position, long id) {
 				Party party = partyAdapter.getItem(position);
+				LogUtils.i(TAG, "选择的customer party-->" + party.toString());
 				// 保存到SharedPreferences中
 				PreferencesUtils.setInt(getActivity(), Constants.SP_KEY_PARTY_ID_CUSTOMER,
 						party.id);
@@ -256,13 +263,16 @@ public class SwitchRoleActivity extends AIBaseActivity {
 	 * 根据partyID找到Party对象在列表中的下标
 	 */
 	private int getIndex(int partyID, List<Party> parties) {
+		LogUtils.i(TAG, "输入partyID-->" + partyID);
 		int size = parties.size();
+		int index = -1;
 		for (int i = 0; i < size; i++) {
 			if (parties.get(i).id == partyID) {
-				return i;
+				index = i;
 			}
 		}
-		return -1;
+		LogUtils.i(TAG, "得到的位置为-->" + index);
+		return index;
 	}
 
 
