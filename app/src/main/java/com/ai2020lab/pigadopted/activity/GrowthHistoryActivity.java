@@ -18,11 +18,13 @@ import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.adapter.GrowthHistoryRvAdapter;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
 import com.ai2020lab.pigadopted.common.IntentExtra;
+import com.ai2020lab.pigadopted.common.PrefManager;
 import com.ai2020lab.pigadopted.model.base.PageSplitInfo;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfoRequest;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfoResponse;
 import com.ai2020lab.pigadopted.model.pig.PigInfo;
+import com.ai2020lab.pigadopted.model.user.RoleType;
 import com.ai2020lab.pigadopted.net.HttpManager;
 import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
 import com.ai2020lab.pigadopted.net.UrlName;
@@ -77,7 +79,6 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 		supportToolbar(true);
 		setToolbarTitle(getString(R.string.activity_title_growth_history));
 		setToolbarLeft(R.drawable.toolbar_back_selector);
-		setToolbarRight(R.drawable.growth_history_camera_selector);
 		// 返回按钮监听
 		setOnLeftClickListener(new OnLeftClickListener() {
 			@Override
@@ -85,13 +86,17 @@ public class GrowthHistoryActivity extends AIBaseActivity {
 				finish();
 			}
 		});
-		// 拍照按钮监听
-		setOnRightClickListener(new OnRightClickListener() {
-			@Override
-			public void onClick() {
-				skipToDistanceCameraActivity();
-			}
-		});
+		// 卖家的成长记录才能上传照片
+		if (PrefManager.getRoleType(this) == RoleType.PROVIDER) {
+			setToolbarRight(R.drawable.growth_history_camera_selector);
+			// 拍照按钮监听
+			setOnRightClickListener(new OnRightClickListener() {
+				@Override
+				public void onClick() {
+					skipToDistanceCameraActivity();
+				}
+			});
+		}
 	}
 
 	/**

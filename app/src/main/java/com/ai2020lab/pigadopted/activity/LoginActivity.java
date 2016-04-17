@@ -16,15 +16,16 @@ import android.widget.RelativeLayout;
 
 import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.common.ToastUtils;
-import com.ai2020lab.aiutils.storage.PreferencesUtils;
 import com.ai2020lab.aiutils.thread.ThreadUtils;
 import com.ai2020lab.aiviews.anim.AnimSimpleListener;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
 import com.ai2020lab.pigadopted.common.Constants;
 import com.ai2020lab.pigadopted.common.DataManager;
+import com.ai2020lab.pigadopted.common.PrefManager;
 import com.ai2020lab.pigadopted.model.user.BuyerInfoByPartyIDRequest;
 import com.ai2020lab.pigadopted.model.user.BuyerInfoByPartyIDResponse;
+import com.ai2020lab.pigadopted.model.user.RoleType;
 import com.ai2020lab.pigadopted.model.user.SellerInfoByPartyIDRequest;
 import com.ai2020lab.pigadopted.model.user.SellerInfoByPartyIDResponse;
 import com.ai2020lab.pigadopted.net.HttpManager;
@@ -292,8 +293,7 @@ public class LoginActivity extends AIBaseActivity {
 		// 弹出提示
 		showLoading(getString(R.string.login_login_in));
 		SellerInfoByPartyIDRequest data = new SellerInfoByPartyIDRequest();
-		data.partyID = PreferencesUtils.getInt(this, Constants.SP_KEY_PARTY_ID_PROVIDER,
-				Constants.PARTY_ID_DEFAULT_PROVIDER);
+		data.partyID = PrefManager.getPartyIDForProvider(this);
 		HttpManager.postJson(this, UrlName.SELLER_INFO_BY_PARTYID.getUrl(), data,
 				new JsonHttpResponseHandler<SellerInfoByPartyIDResponse>(this) {
 					/**
@@ -311,6 +311,8 @@ public class LoginActivity extends AIBaseActivity {
 							public void run() {
 								dismissLoading();
 								DataManager.getInstance().setSellerInfo(jsonObj);
+								// 缓存当前登录用户类型，可全局获取
+								PrefManager.setRoleType(getActivity(), RoleType.PROVIDER);
 								skipToMainActivity(currentRoleType);
 							}
 						}, 1000);
@@ -352,8 +354,7 @@ public class LoginActivity extends AIBaseActivity {
 		// 弹出提示
 		showLoading(getString(R.string.login_login_in));
 		BuyerInfoByPartyIDRequest data = new BuyerInfoByPartyIDRequest();
-		data.partyID = PreferencesUtils.getInt(this, Constants.SP_KEY_PARTY_ID_CUSTOMER,
-				Constants.PARTY_ID_DEFAULT_CUSTOMER);
+		data.partyID = PrefManager.getPartyIDForCustomer(this);
 		HttpManager.postJson(this, UrlName.BUYER_INFO_BY_PARTYID.getUrl(), data,
 				new JsonHttpResponseHandler<BuyerInfoByPartyIDResponse>(this) {
 					/**
@@ -371,6 +372,8 @@ public class LoginActivity extends AIBaseActivity {
 							public void run() {
 								dismissLoading();
 								DataManager.getInstance().setBuyerInfo(jsonObj);
+								// 缓存当前登录用户类型，可全局获取
+								PrefManager.setRoleType(getActivity(), RoleType.CUSTOMER);
 								skipToMainActivity(currentRoleType);
 							}
 						}, 1000);

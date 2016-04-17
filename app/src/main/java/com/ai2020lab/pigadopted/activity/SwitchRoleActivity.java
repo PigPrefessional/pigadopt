@@ -13,10 +13,9 @@ import android.widget.TextView;
 
 import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.common.ViewUtils;
-import com.ai2020lab.aiutils.storage.PreferencesUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
-import com.ai2020lab.pigadopted.common.Constants;
+import com.ai2020lab.pigadopted.common.PrefManager;
 import com.ai2020lab.pigadopted.model.user.Party;
 import com.ai2020lab.pigadopted.model.user.RoleType;
 import com.rey.material.widget.Spinner;
@@ -86,8 +85,7 @@ public class SwitchRoleActivity extends AIBaseActivity {
 	private void setProviderSp() {
 		final PartyAdapter partyAdapter = new PartyAdapter(this, providerParties);
 		providerSp.setAdapter(partyAdapter);
-		int partyID = PreferencesUtils.getInt(this, Constants.SP_KEY_PARTY_ID_PROVIDER,
-				Constants.PARTY_ID_DEFAULT_PROVIDER);
+		int partyID = PrefManager.getPartyIDForProvider(this);
 		LogUtils.i(TAG, "保存的provider partyid-->" + partyID);
 		partyAdapter.notifyDataSetChanged();
 		providerSp.setSelection(getIndex(partyID, providerParties));
@@ -97,8 +95,7 @@ public class SwitchRoleActivity extends AIBaseActivity {
 				Party party = partyAdapter.getItem(position);
 				LogUtils.i(TAG, "选择的provider party-->" + party.toString());
 				// 保存到SharedPreferences中
-				PreferencesUtils.setInt(getActivity(), Constants.SP_KEY_PARTY_ID_PROVIDER,
-						party.id);
+				PrefManager.setPartyIDForProvider(getActivity(), party.id);
 			}
 		});
 	}
@@ -109,8 +106,7 @@ public class SwitchRoleActivity extends AIBaseActivity {
 	private void setCustomerSp() {
 		final PartyAdapter partyAdapter = new PartyAdapter(this, customerParties);
 		customerSp.setAdapter(partyAdapter);
-		int partyID = PreferencesUtils.getInt(this, Constants.SP_KEY_PARTY_ID_CUSTOMER,
-				Constants.PARTY_ID_DEFAULT_CUSTOMER);
+		int partyID = PrefManager.getPartyIDForCustomer(this);
 		LogUtils.i(TAG, "保存的customer partyid-->" + partyID);
 		partyAdapter.notifyDataSetChanged();
 		customerSp.setSelection(getIndex(partyID, customerParties));
@@ -120,8 +116,7 @@ public class SwitchRoleActivity extends AIBaseActivity {
 				Party party = partyAdapter.getItem(position);
 				LogUtils.i(TAG, "选择的customer party-->" + party.toString());
 				// 保存到SharedPreferences中
-				PreferencesUtils.setInt(getActivity(), Constants.SP_KEY_PARTY_ID_CUSTOMER,
-						party.id);
+				PrefManager.setPartyIDForCustomer(getActivity(), party.id);
 			}
 		});
 	}

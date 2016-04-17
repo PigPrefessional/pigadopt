@@ -16,9 +16,4 @@ public interface Constants {
 	int ROLE_TYPE_SELLER = 1;
 	int ROLE_TYPE_BUYER = 2;
 
-	String SP_KEY_PARTY_ID_PROVIDER = "sp_key_party_id_provider";
-	String SP_KEY_PARTY_ID_CUSTOMER = "sp_key_party_id_customer";
-
-	int PARTY_ID_DEFAULT_CUSTOMER = 2;
-	int PARTY_ID_DEFAULT_PROVIDER = 1;
 }
