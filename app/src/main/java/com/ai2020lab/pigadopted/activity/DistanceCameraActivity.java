@@ -476,29 +476,31 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	 * 调用异步任务保存照片
 	 */
 	private void savePhoto(byte[] data, int orientation) {
-		SavingPhotoTask savingPhotoTask = new SavingPhotoTask(data, getPhotoFileName(),
-				getPhotoPath(), orientation, new PhotoSavedListener() {
+		SavingPhotoTask savingPhotoTask = new SavingPhotoTask(getActivity(), data,
+				getPhotoFileName(), getPhotoPath(),
+				orientation, true,
+				new PhotoSavedListener() {
 
-			@Override
-			public void savedBefore() {
-				showLoading(getString(R.string.pig_photo_prompt_saving));
-			}
+					@Override
+					public void savedBefore() {
+						showLoading(getString(R.string.pig_photo_prompt_saving));
+					}
 
-			@Override
-			public void savedFailure() {
-				dismissLoading();
-				ToastUtils.getInstance().showToast(getActivity(),
-						R.string.pig_photo_prompt_saving_failure);
-			}
+					@Override
+					public void savedFailure() {
+						dismissLoading();
+						ToastUtils.getInstance().showToast(getActivity(),
+								R.string.pig_photo_prompt_saving_failure);
+					}
 
-			@Override
-			public void savedSuccess(File file) {
-				dismissLoading();
-				LogUtils.i(TAG, "拍照成功，照片路径-->" + file.getPath());
-				setPigPhotoPath(file.getPath());
-				showPigPictureUploadDialog();
-			}
-		});
+					@Override
+					public void savedSuccess(File file) {
+						dismissLoading();
+						LogUtils.i(TAG, "拍照成功，照片路径-->" + file.getPath());
+						setPigPhotoPath(file.getPath());
+						showPigPictureUploadDialog();
+					}
+				});
 		savingPhotoTask.execute();
 	}
 

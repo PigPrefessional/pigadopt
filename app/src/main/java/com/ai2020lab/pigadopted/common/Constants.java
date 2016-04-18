@@ -15,4 +15,5 @@ public interface Constants {
 
 	int ROLE_TYPE_SELLER = 1;
 	int ROLE_TYPE_BUYER = 2;
+
 }

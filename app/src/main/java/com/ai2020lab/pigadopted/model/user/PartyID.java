@@ -10,7 +10,8 @@ package com.ai2020lab.pigadopted.model.user;
  */
 public interface PartyID {
 
-	int SELLER_1 = 1;
-	int BUYER_1 = 11;
+//	int SELLER_1 = 13;
+	int SELLER_1 = 13;
+	int BUYER_1 = 3;
 }
 

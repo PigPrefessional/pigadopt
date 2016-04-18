@@ -11,8 +11,8 @@ android {
         applicationId "com.ai2020lab.pigadopted"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 1
-        versionName "0.1.0"
+        versionCode 3
+        versionName "0.3.0"
     }
     buildTypes {
         release {

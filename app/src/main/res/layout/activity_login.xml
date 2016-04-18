@@ -60,16 +60,6 @@
 						android:src="@mipmap/symbol_right"
 						android:visibility="gone"
 						tools:ignore="contentDescription"/>
-					<!--<TextView
-						android:id="@+id/buyer_tv"
-						style="@style/TextNormal"
-						android:layout_width="70dp"
-						android:layout_height="wrap_content"
-						android:layout_below="@+id/buyer_civ"
-						android:layout_marginTop="5dp"
-						android:gravity="center"
-						android:text="@string/login_buyer_name"
-						android:visibility="gone"/>-->
 				</RelativeLayout>
 			</LinearLayout>
 
@@ -131,16 +121,6 @@
 						android:src="@mipmap/symbol_right"
 						android:visibility="gone"
 						tools:ignore="contentDescription"/>
-					<!--<TextView
-						android:id="@+id/seller_tv"
-						style="@style/TextNormal"
-						android:layout_width="70dp"
-						android:layout_height="wrap_content"
-						android:layout_below="@+id/seller_civ"
-						android:layout_marginTop="5dp"
-						android:gravity="center"
-						android:text="@string/login_seller_name"
-						android:visibility="gone"/>-->
 				</RelativeLayout>
 
 			</LinearLayout>
@@ -149,9 +129,12 @@
 
 	</RelativeLayout>
 
-	<android.support.design.widget.CoordinatorLayout
-		android:id="@+id/snack_container_cl"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"/>
+	<View
+		android:id="@+id/switch_role_v"
+		android:layout_width="80dp"
+		android:layout_height="80dp"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:background="@color/aiview_none"/>
 
 </RelativeLayout>
