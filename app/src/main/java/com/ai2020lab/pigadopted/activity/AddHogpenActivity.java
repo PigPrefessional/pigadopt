@@ -4,15 +4,21 @@
 
 package com.ai2020lab.pigadopted.activity;
 
+import android.Manifest;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ai2020lab.aimedia.SysCameraManager;
 import com.ai2020lab.aiutils.common.LogUtils;
@@ -21,6 +27,7 @@ import com.ai2020lab.aiutils.image.ImageUtils;
 import com.ai2020lab.aiutils.thread.ThreadUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
+import com.ai2020lab.pigadopted.common.Constants;
 import com.ai2020lab.pigadopted.common.DataManager;
 import com.ai2020lab.pigadopted.common.IntentExtra;
 import com.ai2020lab.pigadopted.fragment.PhotoSourceSelectDialog;
@@ -166,9 +173,59 @@ public class AddHogpenActivity extends AIBaseActivity {
 				public void onSelectCamera(DialogFragment df) {
 					LogUtils.i(TAG, "打开系统相机拍照");
 					df.dismiss();
-					SysCameraManager.getInstance().openCamera(getActivity(), RESULT_TAKE_PICTURE);
+					checkCameraPermission();
 				}
 			};
+
+	/**
+	 * 检查摄像头权限，android 6.0需要
+	 */
+	private void checkCameraPermission() {
+		// 没有授权的情况下询问用户是否授权
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
+				PackageManager.PERMISSION_GRANTED) {
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+					Manifest.permission.CAMERA)) {
+				LogUtils.i(TAG, "--向用户解释相机权限的作用--");
+				// 向用户解释需要该权限的原因
+				ToastUtils.getInstance().showToast(this, R.string.prompt_camera_permission,
+						Toast.LENGTH_LONG);
+			} else {
+				// 请求相机权限
+				LogUtils.i(TAG, "--请求相机权限--");
+				ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+						Constants.PERMISSION_CAMERA_REQUEST_CODE);
+			}
+		} else {
+			LogUtils.i(TAG, "--已经授权相机，直接初始化拍照界面--");
+			SysCameraManager.getInstance().openCamera(getActivity(), RESULT_TAKE_PICTURE);
+		}
+	}
+
+	/**
+	 * 授权操作回调
+	 */
+	@Override
+	public void onRequestPermissionsResult(int requestCode,
+	                                       @NonNull String[] permissions,
+	                                       @NonNull int[] grantResults) {
+		switch (requestCode) {
+			case Constants.PERMISSION_CAMERA_REQUEST_CODE:
+				LogUtils.i(TAG, "--请求相机权限回调--");
+				if (grantResults.length > 0
+						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					LogUtils.i(TAG, "--请求相机权限回调中授权成功--");
+					SysCameraManager.getInstance().openCamera(getActivity(), RESULT_TAKE_PICTURE);
+				} else {
+					LogUtils.i(TAG, "--请求相机权限回调中授权失败");
+					// 请求相机权限
+					ToastUtils.getInstance().showToast(this, R.string.prompt_get_permission,
+							Toast.LENGTH_LONG);
+				}
+				break;
+		}
+	}
+
 
 	/**
 	 * 添加猪圈请求

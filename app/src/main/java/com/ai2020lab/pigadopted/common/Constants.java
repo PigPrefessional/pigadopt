@@ -14,6 +14,7 @@ public interface Constants {
 	int OPEN_DIALOG_ADD_PIG_SUCCESS = 2;
 
 	int ROLE_TYPE_SELLER = 1;
-	int ROLE_TYPE_BUYER = 2;
+
+	int PERMISSION_CAMERA_REQUEST_CODE = 0x0030;
 
 }

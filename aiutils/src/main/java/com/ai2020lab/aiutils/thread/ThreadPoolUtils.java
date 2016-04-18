@@ -29,7 +29,7 @@ public class ThreadPoolUtils {
 		if (executor == null)
 			executor = Executors.newCachedThreadPool();
 		if (tasks == null)
-			tasks = new HashMap<>();
+			tasks = new HashMap<String, AIFutureTask>();
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class ThreadPoolUtils {
 		if (executor == null)
 			executor = threadPool;
 		if (tasks == null)
-			tasks = new HashMap<>();
+			tasks = new HashMap<String, AIFutureTask>();
 	}
 
 	/**

@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-    compile project(':aiviews')
+	compile project(':aiviews')
 	// 图表工具类
 	compile 'com.github.PhilJay:MPAndroidChart:v2.2.2'
 	compile 'uk.co.chrisjenx:calligraphy:2.1.0'

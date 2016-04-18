@@ -4,16 +4,21 @@
 
 package com.ai2020lab.pigadopted.activity;
 
+import android.Manifest;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -21,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ai2020lab.aimedia.CameraManager;
 import com.ai2020lab.aimedia.CameraSurfaceView;
@@ -39,6 +45,7 @@ import com.ai2020lab.aiutils.thread.ThreadUtils;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.AIBaseActivity;
 import com.ai2020lab.pigadopted.common.CommonUtils;
+import com.ai2020lab.pigadopted.common.Constants;
 import com.ai2020lab.pigadopted.common.IntentExtra;
 import com.ai2020lab.pigadopted.fragment.OnClickDialogBtnListener;
 import com.ai2020lab.pigadopted.fragment.PigPictureUploadDialog;
@@ -63,6 +70,7 @@ import cz.msebera.android.httpclient.Header;
 public class DistanceCameraActivity extends AIBaseActivity implements SensorEventListener {
 
 	private final static String TAG = DistanceCameraActivity.class.getSimpleName();
+
 	public final static String PIG_DISTANCE_PHOTO_PATH = "pig_distance_photo";
 	private final static int HEIGHT_BASE = 100;
 	/**
@@ -164,13 +172,76 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	 */
 	private int previewHeight;
 
+	/**
+	 * 程序入口
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_distance_camera);
+		setToolbar();
+		// 检查权限
+		checkCameraPermission();
+	}
+
+	/**
+	 * 检查摄像头权限，android 6.0需要
+	 */
+	private void checkCameraPermission() {
+		// 没有授权的情况下询问用户是否授权
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
+				PackageManager.PERMISSION_GRANTED) {
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+					Manifest.permission.CAMERA)) {
+				LogUtils.i(TAG, "--向用户解释相机权限的作用--");
+				// 向用户解释需要该权限的原因
+				ToastUtils.getInstance().showToast(this, R.string.prompt_camera_permission,
+						Toast.LENGTH_LONG);
+			} else {
+				// 请求相机权限
+				LogUtils.i(TAG, "--请求相机权限--");
+				ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+						Constants.PERMISSION_CAMERA_REQUEST_CODE);
+			}
+		} else {
+			LogUtils.i(TAG, "--已经授权相机，直接初始化拍照界面--");
+			init();
+		}
+	}
+
+	/**
+	 * 授权操作回调
+	 */
+	@Override
+	public void onRequestPermissionsResult(int requestCode,
+	                                       @NonNull String[] permissions,
+	                                       @NonNull int[] grantResults) {
+		switch (requestCode) {
+			case Constants.PERMISSION_CAMERA_REQUEST_CODE:
+				LogUtils.i(TAG, "--请求相机权限回调--");
+				if (grantResults.length > 0
+						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					LogUtils.i(TAG, "--请求相机权限回调中授权成功--");
+					init();
+				} else {
+					LogUtils.i(TAG, "--请求相机权限回调中授权失败");
+					// 请求相机权限
+					ToastUtils.getInstance().showToast(this, R.string.prompt_get_permission,
+							Toast.LENGTH_LONG);
+					ThreadUtils.runOnUIThread(new Runnable() {
+						@Override
+						public void run() {
+							finish();
+						}
+					}, 3000);
+				}
+				break;
+		}
+	}
+
+	private void init() {
 		initData();
 		setSensor();
-		setToolbar();
 		initViews();
 		setLayoutParams();
 		addViews();
@@ -634,8 +705,16 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	 * 注册监听
 	 */
 	private void registerSensorListener() {
-		sensorManager.registerListener(this, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
-		sensorManager.registerListener(this, magSensor, SensorManager.SENSOR_DELAY_NORMAL);
+		if (sensorManager != null) {
+			sensorManager.registerListener(this, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
+			sensorManager.registerListener(this, magSensor, SensorManager.SENSOR_DELAY_NORMAL);
+		}
+	}
+
+	private void unRegisterSensoListener() {
+		// 界面回到后台解除传感器监听
+		if (sensorManager != null)
+			sensorManager.unregisterListener(this);
 	}
 
 	@Override
@@ -650,8 +729,7 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	protected void onPause() {
 		super.onPause();
 		Log.i(TAG, "--onPause--");
-		// 界面回到后台解除传感器监听
-		sensorManager.unregisterListener(this);
+		unRegisterSensoListener();
 	}
 
 	@Override
@@ -684,11 +762,13 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 		double rotateAngle = CommonUtils.roundDouble(currentRotationValue, 1);
 		String rotateAngleShow = String.format(getString(R.string.pig_photo_angle_value), rotateAngle);
 		// 设置显示当前角度
-		takePhotoAngleTv.setText(rotateAngleShow);
+		if (takePhotoAngleTv != null)
+			takePhotoAngleTv.setText(rotateAngleShow);
 		// 根据当前拍摄高度计算拍摄距离
 		double distance = calculateDistance(currentHeight);
 		String distanceShow = String.format(getString(R.string.pig_photo_distance_value), distance);
-		takePhotoDistanceTv.setText(distanceShow);
+		if (takePhotoDistanceTv != null)
+			takePhotoDistanceTv.setText(distanceShow);
 		setPigPhotoData((float) distance, (float) rotateAngle);
 
 	}

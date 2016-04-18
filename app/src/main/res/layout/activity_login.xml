@@ -49,7 +49,7 @@
 						android:id="@+id/buyer_civ"
 						android:layout_width="60dp"
 						android:layout_height="60dp"
-						android:src="@mipmap/buyer_1"
+						android:src="@mipmap/seller_1"
 						android:visibility="gone"/>
 					<ImageView
 						android:id="@+id/buyer_select_iv"
@@ -110,7 +110,7 @@
 						android:id="@+id/seller_civ"
 						android:layout_width="60dp"
 						android:layout_height="60dp"
-						android:src="@mipmap/seller_1"
+						android:src="@mipmap/buyer3"
 						android:visibility="gone"/>
 					<ImageView
 						android:id="@+id/seller_select_iv"

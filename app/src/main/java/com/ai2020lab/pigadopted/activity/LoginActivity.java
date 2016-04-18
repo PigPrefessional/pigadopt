@@ -55,12 +55,12 @@ public class LoginActivity extends AIBaseActivity {
 	private ImageView sellerIv;
 	private CircleImageView sellerCiv;
 	private ImageView sellerSelectIv;
-//	private TextView sellerTv;
+	//	private TextView sellerTv;
 	private View switchRoleV;
 	/**
 	 * 当前选中的登录用户角色类型
 	 */
-	private int currentRoleType = -1;
+	private int currentRoleTypeID = -1;
 
 	private boolean isLoadAnim = false;
 
@@ -119,7 +119,8 @@ public class LoginActivity extends AIBaseActivity {
 				isFirstLoad = false;
 			}
 			// 选择角色
-			setRoleType(currentRoleType, selectIn, selectOut, false);
+			setRoleType(RoleType.getRoleTypeById(currentRoleTypeID),
+					selectIn, selectOut, false);
 		}
 	}
 
@@ -190,27 +191,28 @@ public class LoginActivity extends AIBaseActivity {
 		scaleIn.setAnimationListener(new AnimSimpleListener() {
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				setRoleType(currentRoleType, selectIn, selectOut, false);
+				setRoleType(RoleType.getRoleTypeById(currentRoleTypeID),
+						selectIn, selectOut, false);
 			}
 		});
 	}
 
 	private void setOnSelectRoleTypeListener(Animation animIn, Animation animOut) {
-		buyerInfoRl.setOnClickListener(new OnSelectRoleTypeListener(Constants.ROLE_TYPE_BUYER,
+		buyerInfoRl.setOnClickListener(new OnSelectRoleTypeListener(RoleType.CUSTOMER.getId(),
 				animIn, animOut));
-		sellerInfoRl.setOnClickListener(new OnSelectRoleTypeListener(Constants.ROLE_TYPE_SELLER,
+		sellerInfoRl.setOnClickListener(new OnSelectRoleTypeListener(RoleType.PROVIDER.getId(),
 				animIn, animOut));
 	}
 
 	/**
 	 * 设置买家，卖家选中状态，并执行动画
 	 */
-	private void setRoleType(int roleType, Animation animIn, Animation animOut,
+	private void setRoleType(RoleType roleType, Animation animIn, Animation animOut,
 	                         final boolean isClick) {
 		LogUtils.i(TAG, "设置角色选中");
-		LogUtils.i(TAG, "角色:" + roleType + " 当前角色:" + currentRoleType);
+		LogUtils.i(TAG, "角色:" + roleType + " 当前角色:" + currentRoleTypeID);
 		// 设置买家
-		if (roleType == Constants.ROLE_TYPE_BUYER &&
+		if (roleType == RoleType.CUSTOMER &&
 				buyerSelectIv.getVisibility() == View.GONE) {
 			LogUtils.i(TAG, "设置买家选中");
 			buyerSelectIv.setVisibility(View.VISIBLE);
@@ -220,10 +222,10 @@ public class LoginActivity extends AIBaseActivity {
 				sellerSelectIv.startAnimation(animOut);
 			}
 			isLoadAnim = true;
-			currentRoleType = Constants.ROLE_TYPE_BUYER;
+			currentRoleTypeID = RoleType.CUSTOMER.getId();
 		}
 		// 设置卖家
-		else if (roleType == Constants.ROLE_TYPE_SELLER &&
+		else if (roleType == RoleType.PROVIDER &&
 				sellerSelectIv.getVisibility() == View.GONE) {
 			LogUtils.i(TAG, "设置卖家选中");
 			sellerSelectIv.setVisibility(View.VISIBLE);
@@ -233,7 +235,7 @@ public class LoginActivity extends AIBaseActivity {
 				buyerSelectIv.startAnimation(animOut);
 			}
 			isLoadAnim = true;
-			currentRoleType = Constants.ROLE_TYPE_SELLER;
+			currentRoleTypeID = Constants.ROLE_TYPE_SELLER;
 		}
 		// 执行动画的时候才绑定监听,动画执行完毕，界面跳转
 		if (isLoadAnim) {
@@ -242,14 +244,14 @@ public class LoginActivity extends AIBaseActivity {
 				public void onAnimationEnd(Animation animation) {
 					if (isClick) {
 						LogUtils.i(TAG, "选择角色动画执行完毕，查询用户信息");
-						queryUserInfo(currentRoleType);
+						queryUserInfo(RoleType.getRoleTypeById(currentRoleTypeID));
 					}
 					isLoadAnim = false;
 				}
 			});
 		} else if (isClick) {
 			LogUtils.i(TAG, "直接查询用户信息");
-			queryUserInfo(currentRoleType);
+			queryUserInfo(RoleType.getRoleTypeById(currentRoleTypeID));
 		}
 	}
 
@@ -270,17 +272,17 @@ public class LoginActivity extends AIBaseActivity {
 
 		@Override
 		public void onClick(View v) {
-			setRoleType(roleType, animIn, animOut, true);
+			setRoleType(RoleType.getRoleTypeById(roleType), animIn, animOut, true);
 		}
 	}
 
 	/**
 	 * 查询用户信息
 	 */
-	private void queryUserInfo(int roleType) {
-		if (roleType == Constants.ROLE_TYPE_BUYER) {
+	private void queryUserInfo(RoleType roleType) {
+		if (roleType == RoleType.CUSTOMER) {
 			queryBuyerInfo();
-		} else if (roleType == Constants.ROLE_TYPE_SELLER) {
+		} else if (roleType == RoleType.PROVIDER) {
 			querySellerInfo();
 		}
 	}
@@ -313,7 +315,7 @@ public class LoginActivity extends AIBaseActivity {
 								DataManager.getInstance().setSellerInfo(jsonObj);
 								// 缓存当前登录用户类型，可全局获取
 								PrefManager.setRoleType(getActivity(), RoleType.PROVIDER);
-								skipToMainActivity(currentRoleType);
+								skipToMainActivity(RoleType.getRoleTypeById(currentRoleTypeID));
 							}
 						}, 1000);
 					}
@@ -374,7 +376,7 @@ public class LoginActivity extends AIBaseActivity {
 								DataManager.getInstance().setBuyerInfo(jsonObj);
 								// 缓存当前登录用户类型，可全局获取
 								PrefManager.setRoleType(getActivity(), RoleType.CUSTOMER);
-								skipToMainActivity(currentRoleType);
+								skipToMainActivity(RoleType.getRoleTypeById(currentRoleTypeID));
 							}
 						}, 1000);
 
@@ -410,7 +412,7 @@ public class LoginActivity extends AIBaseActivity {
 	/**
 	 * 角色切换触发按钮点击监听
 	 */
-	private void setSwitchRoleV(){
+	private void setSwitchRoleV() {
 		switchRoleV.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
@@ -423,7 +425,7 @@ public class LoginActivity extends AIBaseActivity {
 	/**
 	 * 跳转到角色切换界面
 	 */
-	private void skipToSwitchRoleActivity(){
+	private void skipToSwitchRoleActivity() {
 		Intent intent = new Intent(this, SwitchRoleActivity.class);
 		startActivity(intent);
 	}
@@ -431,14 +433,14 @@ public class LoginActivity extends AIBaseActivity {
 	/**
 	 * 跳转到买家或卖家主页
 	 */
-	private void skipToMainActivity(int currentRoleType) {
+	private void skipToMainActivity(RoleType roleType) {
 		// 跳转到买家主页
-		if (currentRoleType == Constants.ROLE_TYPE_BUYER) {
+		if (roleType == RoleType.CUSTOMER) {
 			Intent intent = new Intent(this, BuyerMainActivity.class);
 			startActivity(intent);
 		}
 		// 跳转到卖家主页
-		else if (currentRoleType == Constants.ROLE_TYPE_SELLER) {
+		else if (roleType == RoleType.PROVIDER) {
 			Intent intent = new Intent(this, SellerMainActivity.class);
 			startActivity(intent);
 		} else {

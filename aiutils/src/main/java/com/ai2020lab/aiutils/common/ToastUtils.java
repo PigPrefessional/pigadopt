@@ -60,6 +60,10 @@ public class ToastUtils {
 		showToast(context, context.getString(stringResID), Toast.LENGTH_SHORT);
 	}
 
+	public void showToast(Context context, int stringResID, int duration) {
+		showToast(context, context.getString(stringResID), duration);
+	}
+
 	/**
 	 * 隐藏Toast,特别注意在退出Activity的时候要关闭已经显示的Toast
 	 */

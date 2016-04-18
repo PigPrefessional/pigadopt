@@ -10,8 +10,13 @@
 		android:resizeable="true"
 		android:smallScreens="true"/>
 
-	<uses-feature android:name="android.hardware.camera"/>
-	<uses-feature android:name="android.hardware.camera.autofocus"/>
+	<!--从android M开始应用权限分为普通权限和敏感权限-->
+	<!--无论普通权限和敏感权限都需要在manifest中声明-->
+	<!--设备运行5.1或者更低版本的系统，或者目标SDK版本号小于等于22，-->
+	<!--用户在安装应用的过程中就需要授予全部权限，否则应用无法正常安装-->
+	<!--设备运行在6.0或者更高的版本，并且目标SDK版本号大于或等于23-->
+	<!--应用必须要在manifest中声明需要的权限，再程序运行时，它必须向用户请求授权每个敏感权限-->
+	<!--也就是说应用程序的安装并不会因为用户的授权而受到影响，只是会影响到涉及敏感权限的一些功能-->
 
 	<!-- 照相机权限 -->
 	<uses-permission android:name="android.permission.CAMERA"/>
@@ -88,6 +93,9 @@
 	<uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 	<uses-permission android:name="android.permission.USE_CREDENTIALS"/>
 	<uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+
+	<uses-feature android:name="android.hardware.camera" android:required="true"/>
+	<uses-feature android:name="android.hardware.camera.autofocus"/>
 
 	<application
 		android:name=".base.BaseApplication"

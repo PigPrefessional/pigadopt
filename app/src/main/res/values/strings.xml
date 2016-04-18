@@ -78,6 +78,8 @@
 	<string name="prompt_add_hogpen_failure">添加猪圈失败，请重试</string>
 	<string name="prompt_add_loading">添加中，请稍后…</string>
 	<string name="prompt_hogpen_exceed_limit">猪圈个数超过限制</string>
+	<string name="prompt_camera_permission">养猪专业户需要调用您的相机来拍照</string>
+	<string name="prompt_get_permission">请到安全中心->授权管理->应用权限管理中对应用进行授权</string>
 
 	<string name="pig_add_category">猪的品种</string>
 	<string name="pig_add_age">入栏年龄</string>

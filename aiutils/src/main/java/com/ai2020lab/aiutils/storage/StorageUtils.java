@@ -140,7 +140,7 @@ public class StorageUtils {
 
 	private void initSDMap() {
 		if (sdMap == null) {
-			sdMap = new SparseArray<>();
+			sdMap = new SparseArray<String>();
 		}
 		sdMap.clear();
 		sdMap.put(SDCardCategory.INTERNAL, "");
