@@ -73,15 +73,12 @@
             </RelativeLayout>
 
             <include
-                layout="@layout/include_pig_detail_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp" />
+                layout="@layout/include_pig_detail_info" />
 
             <LinearLayout style="@style/LabelLayout"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp">
+                android:gravity="top"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp">
 
                 <TextView
                     style="@style/Label"

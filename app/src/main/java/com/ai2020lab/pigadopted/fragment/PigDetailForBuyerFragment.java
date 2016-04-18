@@ -55,7 +55,7 @@ public class PigDetailForBuyerFragment extends PigDetailForSellerFragment {
     @Override
     protected void loadPigDetailData(PigInfo pigInfo) {
         setupHogpenImages();
-        
+
         PigDetailManager pigDetailManager = new HttpPigDetailManager(getContext());
 
         final AIBaseActivity activity = (AIBaseActivity) getActivity();

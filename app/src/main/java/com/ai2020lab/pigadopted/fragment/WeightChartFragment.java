@@ -27,4 +27,9 @@ public class WeightChartFragment extends StatisticsChartFragment<WeightData> {
         zoomOutViewType();
         return ChartDataAdapter.convertToChartValues(ChartDataAdapter.groupByWeek(dataList));
     }
+
+    @Override
+    protected boolean canZoomOut(int currentViewType) {
+        return currentViewType == VIEW_DAY;
+    }
 }

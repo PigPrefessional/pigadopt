@@ -252,14 +252,12 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
     public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
 
         if (scaleX > 1.3) {
-            boolean canZoomIn = mViewType != VIEW_DAY;
-            if (canZoomIn) {
+            if (canZoomIn(mViewType)) {
                 zoomIn();
             }
 
         } else if (scaleX < 0.5) {
-            boolean canZoomOut = mViewType != VIEW_MONTH;
-            if (canZoomOut) {
+            if (canZoomOut(mViewType)) {
                 zoomOut();
             }
         }
@@ -274,6 +272,14 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
         set.setColor(getResources().getColor(R.color.pig_chart_weight_line));
         set.setCircleColor(getResources().getColor(R.color.pig_chart_weight_line));
         set.setFillColor(getResources().getColor(R.color.pig_chart_weight_fill));
+    }
+
+    protected boolean canZoomIn(int currentViewType) {
+        return mViewType != VIEW_DAY;
+    }
+
+    protected boolean canZoomOut(int currentViewType) {
+        return currentViewType != VIEW_MONTH;
     }
 
     private void setChartData(ChartDataAdapter.XYValues xyValues) {
