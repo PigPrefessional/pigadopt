@@ -10,7 +10,9 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -55,7 +57,7 @@ import com.ai2020lab.pigadopted.model.pig.PigPhotoUploadResponse;
 import com.ai2020lab.pigadopted.net.HttpManager;
 import com.ai2020lab.pigadopted.net.JsonHttpResponseHandler;
 import com.ai2020lab.pigadopted.net.UrlName;
-import com.ai2020lab.pigadopted.view.GSensitiveView;
+import com.ai2020lab.pigadopted.view.CropperView;
 
 import java.io.File;
 import java.util.Date;
@@ -121,10 +123,14 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	 * 显示拍照高度
 	 */
 	private TextView takePhotoHeightTv;
+//	/**
+//	 * 水平仪
+//	 */
+//	private GSensitiveView takePhotoGsv;
 	/**
-	 * 水平仪
+	 * 照片取景，裁剪拖动框
 	 */
-	private GSensitiveView takePhotoGsv;
+	private CropperView takePhotoCv;
 	/**
 	 * 调整拍照高度
 	 */
@@ -167,6 +173,10 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	 * 屏幕高度
 	 */
 	private int screenHeight;
+	/**
+	 * 预览宽度
+	 */
+	private int previewWidth;
 	/**
 	 * 预览高度
 	 */
@@ -283,7 +293,7 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	 */
 	private void initViews() {
 		// 拍照预览区域
-		takePhotoPreviewRl = (RelativeLayout) findViewById(R.id.take_photo_preview_rl);
+		takePhotoPreviewRl = (RelativeLayout) findViewById(R.id.take_photo_preview_fl);
 		// 拍照底部控制区域
 		getTakePhotoBottomRl = (RelativeLayout) findViewById(R.id.take_photo_bottom_rl);
 		// 控制栏 拍照按钮，闪光灯调节
@@ -298,9 +308,8 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 		takePhotoAngleTv = (TextView) infoView.findViewById(R.id.take_photo_angle_tv);
 		takePhotoDistanceTv = (TextView) infoView.findViewById(R.id.take_photo_distance_tv);
 		takePhotoHeightTv = (TextView) infoView.findViewById(R.id.take_photo_height_tv);
-		// 水平仪
-		takePhotoGsv = (GSensitiveView) ViewUtils.makeView(this,
-				R.layout.content_distance_camera_gradienter);
+		// 照片取景，裁剪拖动框
+		takePhotoCv = (CropperView) ViewUtils.makeView(this, R.layout.content_distance_camera_crop);
 		// 高度调节Seekbar
 		takePhotoHeightSb = (SeekBar) ViewUtils.makeView(this, R.layout
 				.content_distance_camera_height_seekbar);
@@ -318,6 +327,7 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 		LogUtils.i(TAG, "屏幕宽度-->" + screenWidth);
 		LogUtils.i(TAG, "状态栏高度-->" + statusBarHeight);
 		LogUtils.i(TAG, "工具栏高度-->" + toolbarHeight);
+		previewWidth = screenWidth;
 		// 按屏幕4:3的比例计算相机预览区域高度
 		previewHeight = screenWidth * 4 / 3;
 		LogUtils.i(TAG, "计算得到的预览区域高度为-->" + previewHeight);
@@ -353,17 +363,17 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 		infoViewLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		infoViewLp.topMargin = 20;
 		takePhotoPreviewRl.addView(infoView, infoViewLp);
-		// 加入水平仪
-		RelativeLayout.LayoutParams takePhotoGsvLp = new RelativeLayout.LayoutParams(
-				300, 300);
-		takePhotoGsvLp.addRule(RelativeLayout.CENTER_IN_PARENT);
-		takePhotoPreviewRl.addView(takePhotoGsv, takePhotoGsvLp);
 		// 加入高度调节seekbar
 		RelativeLayout.LayoutParams takePhotoHeightSbLp = new RelativeLayout.LayoutParams(
 				previewHeight * 2 / 3, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		takePhotoHeightSbLp.leftMargin = (screenWidth / 2 - 150) * -1;
 		takePhotoHeightSbLp.addRule(RelativeLayout.CENTER_VERTICAL);
 		takePhotoPreviewRl.addView(takePhotoHeightSb, takePhotoHeightSbLp);
+		// 加入取景，裁剪拖动框
+		takePhotoPreviewRl.addView(takePhotoCv);
+		takePhotoCv.setLayoutParams(new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.MATCH_PARENT,
+				RelativeLayout.LayoutParams.MATCH_PARENT));
 	}
 
 	/**
@@ -547,31 +557,33 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	 * 调用异步任务保存照片
 	 */
 	private void savePhoto(byte[] data, int orientation) {
+		// 生成照片截取数据
+		setPigPhotoCropData();
 		SavingPhotoTask savingPhotoTask = new SavingPhotoTask(getActivity(), data,
 				getPhotoFileName(), getPhotoPath(),
 				orientation, true,
-				new PhotoSavedListener() {
+				null, new PhotoSavedListener() {
 
-					@Override
-					public void savedBefore() {
-						showLoading(getString(R.string.pig_photo_prompt_saving));
-					}
+			@Override
+			public void savedBefore() {
+				showLoading(getString(R.string.pig_photo_prompt_saving));
+			}
 
-					@Override
-					public void savedFailure() {
-						dismissLoading();
-						ToastUtils.getInstance().showToast(getActivity(),
-								R.string.pig_photo_prompt_saving_failure);
-					}
+			@Override
+			public void savedFailure() {
+				dismissLoading();
+				ToastUtils.getInstance().showToast(getActivity(),
+						R.string.pig_photo_prompt_saving_failure);
+			}
 
-					@Override
-					public void savedSuccess(File file) {
-						dismissLoading();
-						LogUtils.i(TAG, "拍照成功，照片路径-->" + file.getPath());
-						setPigPhotoPath(file.getPath());
-						showPigPictureUploadDialog();
-					}
-				});
+			@Override
+			public void savedSuccess(File file) {
+				dismissLoading();
+				LogUtils.i(TAG, "拍照成功，照片路径-->" + file.getPath());
+				setPigPhotoPath(file.getPath());
+				showPigPictureUploadDialog();
+			}
+		});
 		savingPhotoTask.execute();
 	}
 
@@ -602,6 +614,34 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	private void setPigPhotoData(float distance, float angle) {
 		pigPhotoData.distance = distance;
 		pigPhotoData.verticalAngle = angle;
+	}
+
+	private void setPigPhotoCropData(){
+		Rect rect = takePhotoCv.getCropperRect();
+		Camera.Size pictureSize = CameraManager.getInstance().getPictureSize();
+		Camera.Size previewSize = CameraManager.getInstance().getPreviewSize();
+		if (pictureSize == null) {
+			return;
+		}
+		if (previewSize == null) {
+			return;
+		}
+		int pictureWidth = pictureSize.width;
+		int pictureHeight = pictureSize.height;
+		int previewWidth = previewSize.width;
+		int previewHeight = previewSize.height;
+		LogUtils.i(TAG, "picture size width-->" + pictureWidth);
+		LogUtils.i(TAG, "picture size height-->" + pictureHeight);
+		LogUtils.i(TAG, "preview size width-->" + previewWidth);
+		LogUtils.i(TAG, "preview size height-->" + previewHeight);
+		float ratio = (float) pictureWidth / previewWidth;
+		LogUtils.i(TAG, "缩放比例-->" + ratio);
+		pigPhotoData.objectLeft = CommonUtils.roundInt(rect.left * ratio);
+		pigPhotoData.objectTop = CommonUtils.roundInt(rect.top * ratio);
+		pigPhotoData.objectRight = CommonUtils.roundInt(rect.right * ratio);
+		pigPhotoData.objectDown = CommonUtils.roundInt(rect.bottom * ratio);
+		pigPhotoData.picWidth = pictureWidth;
+		pigPhotoData.picHeight = pictureHeight;
 	}
 
 	/**
@@ -645,6 +685,7 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 					registerSensorListener();
 				}
 			};
+
 
 	/**
 	 * 添加猪圈

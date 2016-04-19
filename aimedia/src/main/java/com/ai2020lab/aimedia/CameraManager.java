@@ -327,6 +327,30 @@ public final class CameraManager {
 	}
 
 	/**
+	 * 获取当前拍照分辨率
+	 * @return Camera.Size
+	 */
+	public Camera.Size getPictureSize() {
+		if (camera == null) {
+			LogUtils.i(TAG, "--请先打开相机--");
+			return null;
+		}
+		return camera.getParameters().getPictureSize();
+	}
+
+	/**
+	 * 获取当前预览分辨率
+	 * @return Camera.Size
+	 */
+	public Camera.Size getPreviewSize() {
+		if (camera == null) {
+			LogUtils.i(TAG, "--请先打开相机--");
+			return null;
+		}
+		return camera.getParameters().getPreviewSize();
+	}
+
+	/**
 	 * 关闭摄像头,当界面回到后台的时候调用
 	 */
 	public void closeDriver() {

@@ -8,11 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.hardware.Camera;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 
+import com.ai2020lab.aimedia.CameraManager;
 import com.ai2020lab.aimedia.interfaces.PhotoSavedListener;
 import com.ai2020lab.aiutils.common.LogUtils;
 import com.ai2020lab.aiutils.image.ImageUtils;
@@ -20,8 +23,6 @@ import com.ai2020lab.aiutils.storage.FileUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * 保存照片异步任务
@@ -39,25 +40,47 @@ public class SavingPhotoTask extends AsyncTask<Void, Void, File> {
 	private String path;
 	private int orientation;
 	private boolean isUpdateMedia;
+	private Rect rect;
 	private PhotoSavedListener callback;
 
+	/**
+	 * @param context       Context
+	 * @param data          byte[]
+	 * @param name          String
+	 * @param path          String
+	 * @param orientation   int
+	 * @param isUpdateMedia boolean
+	 * @param rect          Rect
+	 * @param callback      PhotoSavedListener
+	 */
 	public SavingPhotoTask(Context context, byte[] data,
 	                       String name, String path,
 	                       int orientation, boolean isUpdateMedia,
-	                       PhotoSavedListener callback) {
+	                       Rect rect, PhotoSavedListener callback) {
 		this.context = context;
 		this.data = data;
 		this.name = name;
 		this.path = path;
 		this.orientation = orientation;
 		this.isUpdateMedia = isUpdateMedia;
+		this.rect = rect;
 		this.callback = callback;
 	}
 
+	/**
+	 * @param context       Context
+	 * @param data          byte[]
+	 * @param name          String
+	 * @param path          String
+	 * @param orientation   int
+	 * @param isUpdateMedia boolean
+	 * @param rect          Rect
+	 */
 	public SavingPhotoTask(Context context, byte[] data,
 	                       String name, String path,
-	                       int orientation, boolean isUpdateMedia) {
-		this(context, data, name, path, orientation, isUpdateMedia, null);
+	                       int orientation, boolean isUpdateMedia,
+	                       Rect rect) {
+		this(context, data, name, path, orientation, isUpdateMedia, rect, null);
 	}
 
 	@Override
@@ -106,22 +129,27 @@ public class SavingPhotoTask extends AsyncTask<Void, Void, File> {
 	 * 0旋转角度保存照片
 	 */
 	private boolean saveByteArray(File photo, byte[] data) {
+		long totalTime = System.currentTimeMillis();
 		long time = System.currentTimeMillis();
-		FileOutputStream fos = null;
 		try {
-			fos = new FileOutputStream(photo);
-			fos.write(data);
-			return true;
+			Bitmap bitmap = null;
+			if (data != null) {
+				// 从byte数组中读出bitmap
+				bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+				LogUtils.i(TAG, "编码Bitmap消耗时间-->" + (System.currentTimeMillis() - time));
+			}
+			if (bitmap != null) {
+				time = System.currentTimeMillis();
+				// 截取图片
+//				bitmap = cropPhoto(bitmap);
+				// 保存图片
+				ImageUtils.saveBitmapAsJpeg(bitmap, photo.getPath(), COMPRESS_QUALITY);
+				LogUtils.i(TAG, "保存照片消耗时间-->" + (System.currentTimeMillis() - time));
+				LogUtils.i(TAG, "处理照片总消耗时间-->" + (System.currentTimeMillis() - totalTime));
+				return true;
+			}
 		} catch (Exception e) {
 			LogUtils.e(TAG, "--保存照片异常", e);
-		} finally {
-			try {
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (IOException e) {
-				LogUtils.e(TAG, "--保存照片异常", e);
-			}
 		}
 		LogUtils.i(TAG, "保存照片消耗时间-->" + (System.currentTimeMillis() - time));
 		return false;
@@ -147,6 +175,8 @@ public class SavingPhotoTask extends AsyncTask<Void, Void, File> {
 				if (orientation != 0 && bitmap.getWidth() > bitmap.getHeight()) {
 					bitmap = ImageUtils.getRotateBitmap(bitmap, orientation, true);
 				}
+				// 截取图片
+//				bitmap = cropPhoto(bitmap);
 				// 保存图片
 				ImageUtils.saveBitmapAsJpeg(bitmap, photo.getPath(), COMPRESS_QUALITY);
 				LogUtils.i(TAG, "保存照片消耗时间-->" + (System.currentTimeMillis() - time));
@@ -157,6 +187,42 @@ public class SavingPhotoTask extends AsyncTask<Void, Void, File> {
 			LogUtils.e(TAG, "--保存旋转照片异常", e);
 		}
 		return false;
+	}
+
+	/**
+	 * 使用景框区域截取的Bitmap
+	 */
+	private Bitmap cropPhoto(Bitmap bitmap) {
+		if (bitmap == null) {
+			return null;
+		}
+		Camera.Size pictureSize = CameraManager.getInstance().getPictureSize();
+		Camera.Size previewSize = CameraManager.getInstance().getPreviewSize();
+		if (pictureSize == null) {
+			return null;
+		}
+		if (previewSize == null) {
+			return null;
+		}
+		int pictureWidth = pictureSize.width;
+		int pictureHeight = pictureSize.height;
+		int previewWidth = previewSize.width;
+		int previewHeight = previewSize.height;
+		LogUtils.i(TAG, "picture size width-->" + pictureWidth);
+		LogUtils.i(TAG, "picture size height-->" + pictureHeight);
+		LogUtils.i(TAG, "preview size width-->" + previewWidth);
+		LogUtils.i(TAG, "preview size height-->" + previewHeight);
+		float ratio = (float) pictureWidth / previewWidth;
+		LogUtils.i(TAG, "缩放比例-->" + ratio);
+		int bitmapLeft = roundInt(rect.left * ratio);
+		int bitmapTop = roundInt(rect.top * ratio);
+		int bitmapWidth = roundInt((rect.right - rect.left) * ratio);
+		int bitmapHeight = roundInt((rect.bottom - rect.top) * ratio);
+		return Bitmap.createBitmap(bitmap, bitmapLeft, bitmapTop, bitmapWidth, bitmapHeight);
+	}
+
+	private int roundInt(float num) {
+		return (int) (num + 0.5);
 	}
 
 	private File getOutputMediaFile() {

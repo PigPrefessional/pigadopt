@@ -165,11 +165,7 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
-			<!--<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
 
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>-->
 		</activity>
 
 		<!--添加猪界面-->
@@ -195,6 +191,17 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+		</activity>
+
+
+		<!--测试界面-->
+		<activity
+			android:name=".activity.TestTouchScaleActivity"
+			android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+
 		</activity>
 	</application>
 

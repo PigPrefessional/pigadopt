@@ -25,6 +25,31 @@ public class PigPhotoUploadRequest implements Serializable {
 	@Expose
 	@SerializedName("vertical_angle")
 	public float verticalAngle;
+
+	@Expose
+	@SerializedName("object_left")
+	public int objectLeft;
+
+	@Expose
+	@SerializedName("object_top")
+	public int objectTop;
+
+	@Expose
+	@SerializedName("object_right")
+	public int objectRight;
+
+	@Expose
+	@SerializedName("object_down")
+	public int objectDown;
+
+	@Expose
+	@SerializedName("pic_width")
+	public int picWidth;
+
+	@Expose
+	@SerializedName("pic_height")
+	public int picHeight;
+
 	/**
 	 * 设备ID，小米手机为1
 	 */

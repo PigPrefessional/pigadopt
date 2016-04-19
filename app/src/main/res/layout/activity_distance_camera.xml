@@ -7,9 +7,10 @@
 
 	<!--拍照预览区域-->
 	<RelativeLayout
-		android:id="@+id/take_photo_preview_rl"
+		android:id="@+id/take_photo_preview_fl"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"/>
+		android:layout_height="wrap_content">
+	</RelativeLayout>
 
 	<!--拍照按钮区域，同时用作屏幕遮挡区域-->
 	<RelativeLayout
