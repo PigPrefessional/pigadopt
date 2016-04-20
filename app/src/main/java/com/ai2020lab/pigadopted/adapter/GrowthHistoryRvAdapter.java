@@ -21,6 +21,7 @@ import com.ai2020lab.aiutils.common.ViewUtils;
 import com.ai2020lab.aiviews.anim.AnimationImageLoadingListener;
 import com.ai2020lab.pigadopted.R;
 import com.ai2020lab.pigadopted.base.BaseApplication;
+import com.ai2020lab.pigadopted.common.CommonUtils;
 import com.ai2020lab.pigadopted.common.ImageLoaderManager;
 import com.ai2020lab.pigadopted.model.pig.GrowthInfo;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -102,8 +103,8 @@ public class GrowthHistoryRvAdapter extends
 	 */
 	private SpannableString getWeightStr(GrowthInfo growthInfo) {
 		String weight = context.getString(R.string.display_none);
-		if (growthInfo != null && growthInfo.pigWeight > 0) {
-			weight = growthInfo.pigWeight + "";
+		if (growthInfo != null && growthInfo.pigWeight > -1000) {
+			weight = CommonUtils.roundFloat(growthInfo.pigWeight, 2) + "";
 		}
 		String weightStr = String.format(context.getString(R.string.pig_weight),
 				weight);
@@ -122,8 +123,8 @@ public class GrowthHistoryRvAdapter extends
 	 */
 	private SpannableString getIncreasedStr(GrowthInfo growthInfo) {
 		String increased = context.getString(R.string.display_none);
-		if (growthInfo != null && growthInfo.increasedWeight > 0) {
-			increased = growthInfo.increasedWeight + "";
+		if (growthInfo != null && growthInfo.increasedWeight > -1000) {
+			increased = CommonUtils.roundFloat(growthInfo.increasedWeight, 2) + "";
 		}
 		String weightStr = String.format(context.getString(R.string.pig_increase_weight),
 				increased);

@@ -80,8 +80,15 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	 */
 	private final static String TAG_DIALOG_UPLOAD_PIG_PHOTO = "tag_dialog_UPLOAD_PIG_PHOTO";
 
-	private PigInfo pigInfo;
+	/**
+	 * 拍摄猪照片上传数据
+	 */
 	private PigPhotoUploadRequest pigPhotoData;
+
+	/**
+	 * 截图Rect对象
+	 */
+	private Rect cropperRect;
 
 	/**
 	 * 拍照预览容器
@@ -123,10 +130,6 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	 * 显示拍照高度
 	 */
 	private TextView takePhotoHeightTv;
-//	/**
-//	 * 水平仪
-//	 */
-//	private GSensitiveView takePhotoGsv;
 	/**
 	 * 照片取景，裁剪拖动框
 	 */
@@ -181,6 +184,10 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	 * 预览高度
 	 */
 	private int previewHeight;
+	/**
+	 * 是否能拍照
+	 */
+	private boolean canTakePhoto = false;
 
 	/**
 	 * 程序入口
@@ -260,7 +267,7 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	}
 
 	private void initData() {
-		pigInfo = (PigInfo) getIntent().getSerializableExtra(IntentExtra.PIG_INFO);
+		PigInfo pigInfo = (PigInfo) getIntent().getSerializableExtra(IntentExtra.PIG_INFO);
 		pigPhotoData = new PigPhotoUploadRequest();
 		if (pigInfo != null)
 			pigPhotoData.pigID = pigInfo.pigID;
@@ -544,6 +551,10 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	 * 自动对焦并拍照
 	 */
 	private void takePhoto() {
+		if (!canTakePhoto) {
+			ToastUtils.getInstance().showToast(this, R.string.prompt_turn_phone_azimuth);
+			return;
+		}
 		CameraManager.getInstance().takePicture(new PhotoTakenCallback() {
 			@Override
 			public void photoTaken(byte[] data, int orientation) {
@@ -558,11 +569,14 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	 */
 	private void savePhoto(byte[] data, int orientation) {
 		// 生成照片截取数据
-		setPigPhotoCropData();
+		if (!setPigPhotoCropData()) {
+			ToastUtils.getInstance().showToast(this, R.string.pig_photo_prompt_saving_failure);
+			return;
+		}
 		SavingPhotoTask savingPhotoTask = new SavingPhotoTask(getActivity(), data,
 				getPhotoFileName(), getPhotoPath(),
 				orientation, true,
-				null, new PhotoSavedListener() {
+				cropperRect, new PhotoSavedListener() {
 
 			@Override
 			public void savedBefore() {
@@ -577,10 +591,11 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 			}
 
 			@Override
-			public void savedSuccess(File file) {
+			public void savedSuccess(File photo, File cropperPhoto) {
 				dismissLoading();
-				LogUtils.i(TAG, "拍照成功，照片路径-->" + file.getPath());
-				setPigPhotoPath(file.getPath());
+				LogUtils.i(TAG, "拍照成功，照片路径-->" + photo.getPath());
+				setPigPhotoPath(photo.getPath());
+				// TODO:修改为跳转到新的界面展示原图和截取图
 				showPigPictureUploadDialog();
 			}
 		});
@@ -611,37 +626,38 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 	/**
 	 * 设置照片上传数据
 	 */
-	private void setPigPhotoData(float distance, float angle) {
+	private void setPigPhotoData(double distance, double angle) {
 		pigPhotoData.distance = distance;
 		pigPhotoData.verticalAngle = angle;
 	}
 
-	private void setPigPhotoCropData(){
+	/**
+	 * 设置照片剪切数据
+	 */
+	private boolean setPigPhotoCropData() {
 		Rect rect = takePhotoCv.getCropperRect();
 		Camera.Size pictureSize = CameraManager.getInstance().getPictureSize();
-		Camera.Size previewSize = CameraManager.getInstance().getPreviewSize();
 		if (pictureSize == null) {
-			return;
+			return false;
 		}
-		if (previewSize == null) {
-			return;
+		float ratio = CameraManager.getInstance().getPicturePreviewRatio();
+		if (ratio == -1) {
+			return false;
 		}
 		int pictureWidth = pictureSize.width;
 		int pictureHeight = pictureSize.height;
-		int previewWidth = previewSize.width;
-		int previewHeight = previewSize.height;
 		LogUtils.i(TAG, "picture size width-->" + pictureWidth);
 		LogUtils.i(TAG, "picture size height-->" + pictureHeight);
-		LogUtils.i(TAG, "preview size width-->" + previewWidth);
-		LogUtils.i(TAG, "preview size height-->" + previewHeight);
-		float ratio = (float) pictureWidth / previewWidth;
-		LogUtils.i(TAG, "缩放比例-->" + ratio);
 		pigPhotoData.objectLeft = CommonUtils.roundInt(rect.left * ratio);
 		pigPhotoData.objectTop = CommonUtils.roundInt(rect.top * ratio);
 		pigPhotoData.objectRight = CommonUtils.roundInt(rect.right * ratio);
 		pigPhotoData.objectDown = CommonUtils.roundInt(rect.bottom * ratio);
 		pigPhotoData.picWidth = pictureWidth;
 		pigPhotoData.picHeight = pictureHeight;
+		// 得到照片截取矩形
+		cropperRect = new Rect(pigPhotoData.objectLeft, pigPhotoData.objectTop,
+				pigPhotoData.objectRight, pigPhotoData.objectDown);
+		return true;
 	}
 
 	/**
@@ -686,7 +702,6 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 				}
 			};
 
-
 	/**
 	 * 添加猪圈
 	 */
@@ -694,7 +709,6 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 		LogUtils.i(TAG, "--上传猪圈照片请求--");
 		// 弹出提示
 		showLoading(getString(R.string.prompt_uploading));
-
 		HttpManager.postFile(this, UrlName.GROWTH_INFO_UPLOAD.getUrl(),
 				pigPhotoData, pigPhotoData.pigPhoto,
 				new JsonHttpResponseHandler<PigPhotoUploadResponse>(this) {
@@ -799,8 +813,10 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 		}
 		// 获取当前旋转角度，保留2位小数
 		currentRotationValue = getCurrentRotationValue();
+		if (currentRotationValue == 0d) canTakePhoto = false;
+		else canTakePhoto = true;
 //		LogUtils.i(TAG, "角度-->" + currentRotationValue);
-		double rotateAngle = CommonUtils.roundDouble(currentRotationValue, 1);
+		double rotateAngle = CommonUtils.roundDouble(90d - currentRotationValue, 1);
 		String rotateAngleShow = String.format(getString(R.string.pig_photo_angle_value), rotateAngle);
 		// 设置显示当前角度
 		if (takePhotoAngleTv != null)
@@ -810,7 +826,8 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 		String distanceShow = String.format(getString(R.string.pig_photo_distance_value), distance);
 		if (takePhotoDistanceTv != null)
 			takePhotoDistanceTv.setText(distanceShow);
-		setPigPhotoData((float) distance, (float) rotateAngle);
+		// 设置上传数据
+		setPigPhotoData(distance, rotateAngle);
 
 	}
 
@@ -835,15 +852,22 @@ public class DistanceCameraActivity extends AIBaseActivity implements SensorEven
 			 * 1 = portrait
 			 * 2 = landscape
 			 **/
-			int orientationValue = 1;
-			double tilt = Math.toDegrees(orientation[orientationValue]);
-			// the azimuth becomes negative when the tilt is > 90
-			if (orientation[0] < 0) {
-				tilt = -90d - (90d + tilt);
+//			int orientationValue = 1;
+			double tilt = Math.toDegrees(orientation[1]);
+			LogUtils.i(TAG, "手机同水平方向的夹角弧度-->" + orientation[1]);
+			LogUtils.i(TAG, "手机同水平方向的夹角是-->" + tilt);
+			tilt = Math.abs(tilt);
+			if (tilt > 90d) {
+				tilt = 0d;
 			}
-			return Math.abs(tilt);
+			return tilt;
+//			// the azimuth becomes negative when the tilt is > 90
+//			if (orientation[0] < 0) {
+//				tilt = -90d - (90d + tilt);
+//			}
+//			return Math.abs(tilt);
 		}
-		return 0;
+		return 0d;
 	}
 
 	/**

@@ -573,7 +573,6 @@ public class ImageUtils {
 		b.compress(Bitmap.CompressFormat.JPEG, ratio, fos);
 		fos.flush();
 		fos.close();
-		b.recycle();
 	}
 
 	/**

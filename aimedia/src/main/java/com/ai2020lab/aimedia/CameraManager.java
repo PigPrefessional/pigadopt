@@ -328,6 +328,7 @@ public final class CameraManager {
 
 	/**
 	 * 获取当前拍照分辨率
+	 *
 	 * @return Camera.Size
 	 */
 	public Camera.Size getPictureSize() {
@@ -340,6 +341,7 @@ public final class CameraManager {
 
 	/**
 	 * 获取当前预览分辨率
+	 *
 	 * @return Camera.Size
 	 */
 	public Camera.Size getPreviewSize() {
@@ -348,6 +350,30 @@ public final class CameraManager {
 			return null;
 		}
 		return camera.getParameters().getPreviewSize();
+	}
+
+	/**
+	 * 获取当前照片分辨率同预览分辨率的缩放比
+	 * @return 必须先打开相机，并且预览分辨率和照片分辨率的宽高比必须一致，否则都将返回-1
+	 */
+	public float getPicturePreviewRatio() {
+		Camera.Size pictureSize = getPictureSize();
+		Camera.Size previewSize = getPreviewSize();
+		if (pictureSize == null || previewSize == null) {
+			return -1f;
+		}
+		float pictureWidth = pictureSize.width;
+		float pictureHeight = pictureSize.height;
+		float previewWidth = previewSize.width;
+		float previewHeight = previewSize.height;
+		// 预览分辨率和照片分辨率必须比例一致才能计算照片分辨率和预览分辨率的缩放比
+		if (pictureWidth / pictureHeight != previewWidth / previewHeight) {
+			LogUtils.i(TAG, "--当前预览分辨率同照片分辨率比例不一致--");
+			return -1f;
+		}
+		float ratio = pictureWidth / previewWidth;
+		LogUtils.i(TAG, "当前照片分辨率同预览分辨率的缩放比为-->" + ratio);
+		return ratio;
 	}
 
 	/**
