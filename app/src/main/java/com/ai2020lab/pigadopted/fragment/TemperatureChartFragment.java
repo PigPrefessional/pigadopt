@@ -30,17 +30,20 @@ public class TemperatureChartFragment extends StatisticsChartFragment<BodyTemper
     }
 
     @Override
-    protected ChartDataAdapter.XYValues convertToChartValues(List<LineChartPoint> points, int viewType) {
+    protected ChartDataAdapter.XYValues convertToChartValues(List<LineChartPoint> dayPoints, int viewType) {
         ChartDataAdapter.XYValues xyValues = null;
 
         switch (viewType) {
             case VIEW_MONTH:
                 xyValues = ChartDataAdapter.convertToChartValues(
-                        ChartDataAdapter.groupPoints(points, ChartDataAdapter.monthGroupStrategy, ChartDataAdapter.maxStrategy));
+                        ChartDataAdapter.groupPoints(dayPoints, ChartDataAdapter.monthGroupStrategy, ChartDataAdapter.maxStrategy));
                 break;
             case VIEW_WEEK:
                 xyValues = ChartDataAdapter.convertToChartValues(
-                        ChartDataAdapter.groupPoints(points, ChartDataAdapter.weekGroupStrategy, ChartDataAdapter.maxStrategy));
+                        ChartDataAdapter.groupPoints(dayPoints, ChartDataAdapter.weekGroupStrategy, ChartDataAdapter.maxStrategy));
+                break;
+            case VIEW_DAY:
+                xyValues = ChartDataAdapter.convertToChartValues(dayPoints);
                 break;
             default:
                 break;

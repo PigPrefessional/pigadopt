@@ -374,16 +374,18 @@ public abstract class StatisticsChartFragment<T> extends DialogFragment implemen
         }
     }
 
-    protected ChartDataAdapter.XYValues convertToChartValues(List<LineChartPoint> points, int viewType) {
+    protected ChartDataAdapter.XYValues convertToChartValues(List<LineChartPoint> dayPoints, int viewType) {
         ChartDataAdapter.XYValues xyValues = null;
 
         switch (viewType) {
             case VIEW_MONTH:
-                xyValues = ChartDataAdapter.convertToChartValues(ChartDataAdapter.groupByMonth(points));
+                xyValues = ChartDataAdapter.convertToChartValues(ChartDataAdapter.groupByMonth(dayPoints));
                 break;
             case VIEW_WEEK:
-                xyValues = ChartDataAdapter.convertToChartValues(ChartDataAdapter.groupByWeek(points));
+                xyValues = ChartDataAdapter.convertToChartValues(ChartDataAdapter.groupByWeek(dayPoints));
                 break;
+            case VIEW_DAY:
+                xyValues = ChartDataAdapter.convertToChartValues(dayPoints);
             default:
                 break;
         }
