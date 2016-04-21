@@ -4,8 +4,10 @@
 
 package com.ai2020lab.pigadopted.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,6 +62,7 @@ public class UploadPigPhotoActivity extends AIBaseActivity {
 		setToolbar();
 		assignViews();
 		setPigPhotoInfo();
+		setPigPhotoIv();
 	}
 
 	private void setToolbar() {
@@ -91,15 +94,12 @@ public class UploadPigPhotoActivity extends AIBaseActivity {
 	}
 
 	/**
-	 * 设置界面图片和信息展示
+	 * 设置界面信息展示
 	 */
 	private void setPigPhotoInfo() {
 		if (pigPhotoData == null) {
 			return;
 		}
-		ImageLoader.getInstance().displayImage("file://" + pigPhotoData.pigPhoto, pigPhotoIv);
-		if (!TextUtils.isEmpty(pigPhotoData.pigPhotoCrop))
-			ImageLoader.getInstance().displayImage("file://" + pigPhotoData.pigPhotoCrop, pigPhotoCropIv);
 		String distanceShow = String.format(getString(R.string.pig_photo_distance_value),
 				pigPhotoData.distance);
 		String angleShow = String.format(getString(R.string.pig_photo_angle_value),
@@ -109,6 +109,41 @@ public class UploadPigPhotoActivity extends AIBaseActivity {
 		pigPhotoDistanceTv.setText(distanceShow);
 		pigPhotoAngleTv.setText(angleShow);
 		pigPhotoHeightTv.setText(heightShow);
+	}
+
+	/**
+	 * 设置界面图片展示
+	 */
+	private void setPigPhotoIv() {
+		if (pigPhotoData == null) {
+			return;
+		}
+		ImageLoader.getInstance().displayImage("file://" + pigPhotoData.pigPhoto, pigPhotoIv);
+		pigPhotoIv.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				skipToPhotoDetailActivity(pigPhotoData.pigPhoto);
+			}
+		});
+		if (!TextUtils.isEmpty(pigPhotoData.pigPhotoCrop)) {
+			ImageLoader.getInstance().displayImage("file://" + pigPhotoData.pigPhotoCrop,
+					pigPhotoCropIv);
+			pigPhotoCropIv.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					skipToPhotoDetailActivity(pigPhotoData.pigPhotoCrop);
+				}
+			});
+		}
+	}
+
+	/**
+	 * 跳转到展示大图界面
+	 */
+	private void skipToPhotoDetailActivity(String photoPath) {
+		Intent intent = new Intent(this, PhotoDetailActivity.class);
+		intent.putExtra(IntentExtra.PHOTO_PATH, photoPath);
+		startActivity(intent);
 	}
 
 	/**

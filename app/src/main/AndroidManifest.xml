@@ -112,7 +112,11 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
 
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
 		</activity>
 		<!--卖家主页-->
 		<activity
@@ -137,11 +141,6 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
-			<!--<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>-->
 		</activity>
 		<!--成长历程-->
 		<activity
@@ -158,11 +157,6 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
 		</activity>
 		<!--猪照片上传界面-->
 		<activity
@@ -196,7 +190,14 @@
 			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
 		</activity>
-
+		<!--展示照片大图界面-->
+		<activity
+			android:name=".activity.PhotoDetailActivity"
+			android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+		</activity>
 
 		<!--测试界面-->
 		<activity

@@ -130,4 +130,9 @@
 	<string name="activity_switch_role">用户切换</string>
 	<string name="select_customer">选择买家</string>
 	<string name="select_provider">选择卖家</string>
+
+	<!--照片详情界面-->
+	<string name="activity_title_photo_detail">照片详情</string>
+
+
 </resources>

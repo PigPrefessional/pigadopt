@@ -13,15 +13,13 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="30dp"
 		android:gravity="center"
 		android:orientation="vertical">
 
 		<ImageView
 			android:id="@+id/pig_photo_iv"
-			android:layout_width="150dp"
-			android:layout_height="150dp"
-			android:layout_marginLeft="10dp"
+			android:layout_width="200dp"
+			android:layout_height="200dp"
 			android:scaleType="centerCrop"
 			android:src="@mipmap/pig_photo_default1"
 			tools:ignore="contentDescription"/>
@@ -56,8 +54,7 @@
 			android:id="@+id/pig_photo_crop_iv"
 			android:layout_width="120dp"
 			android:layout_height="120dp"
-			android:layout_marginLeft="10dp"
-			android:scaleType="center"
+			android:scaleType="centerInside"
 			android:src="@mipmap/pig_photo_default1"
 			tools:ignore="contentDescription"/>
 		<TextView
@@ -101,7 +98,7 @@
 	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="15dp"
+		android:layout_marginTop="5dp"
 		android:orientation="horizontal">
 		<TextView
 			style="@style/TextNormal"
@@ -118,7 +115,7 @@
 	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="15dp"
+		android:layout_marginTop="5dp"
 		android:orientation="horizontal">
 		<TextView
 			style="@style/TextNormal"
