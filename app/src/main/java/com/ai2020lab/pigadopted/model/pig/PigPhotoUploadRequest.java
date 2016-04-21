@@ -71,5 +71,9 @@ public class PigPhotoUploadRequest implements Serializable {
 
 	public String pigPhoto;
 
+	public String pigPhotoCrop;
+
+	public float height;
+
 
 }

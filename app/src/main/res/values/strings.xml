@@ -117,10 +117,14 @@
 	<string name="pig_photo_angle_value" formatted="false">%s度</string>
 	<string name="pig_photo_distance_value" formatted="false">%s米</string>
 	<string name="pig_photo_height_value" formatted="false">%s米</string>
-
+	<string name="pig_photo_original_image">照片原图</string>
+	<string name="pig_photo_crop_image">照片截图</string>
 	<!--添加猪界面-->
 	<string name="activity_title_add_pig">添加猪</string>
 	<string name="activity_title_add_hogpen">添加猪圈</string>
+
+	<!--上传猪界面-->
+	<string name="activity_title_upload_pig_photo">上传照片</string>
 
 	<!--角色切换界面-->
 	<string name="activity_switch_role">用户切换</string>

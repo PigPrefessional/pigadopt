@@ -439,6 +439,9 @@ public final class CameraManager {
 				if (success) {
 					camera.takePicture(null, null, pictureCallback);
 				}
+				else {
+					CameraManager.this.photoTakenCallback.photoTakenFailure();
+				}
 
 			}
 		});
@@ -449,7 +452,7 @@ public final class CameraManager {
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
 			if (photoTakenCallback != null) {
-				photoTakenCallback.photoTaken(data.clone(), outputOrientation);
+				photoTakenCallback.photoTakenSuccess(data.clone(), outputOrientation);
 			}
 			// 拍照过程会自动停止预览,需要手动重新开始预览
 			camera.startPreview();

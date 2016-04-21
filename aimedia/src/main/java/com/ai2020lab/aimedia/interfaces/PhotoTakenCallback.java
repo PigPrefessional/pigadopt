@@ -10,5 +10,7 @@ package com.ai2020lab.aimedia.interfaces;
  * 502953057@qq.com
  */
 public interface PhotoTakenCallback {
-	void photoTaken(byte[] data, int orientation);
+	void photoTakenSuccess(byte[] data, int orientation);
+
+	void photoTakenFailure();
 }

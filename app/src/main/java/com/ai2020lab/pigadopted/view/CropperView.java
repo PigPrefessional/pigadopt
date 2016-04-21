@@ -41,7 +41,7 @@ public class CropperView extends View implements View.OnTouchListener {
 	/**
 	 * 高度偏移量的最小值
 	 */
-	private final static int OFFSET_HEIGHT_MIN = 80;
+	private final static int OFFSET_HEIGHT_MIN = 40;
 	/**
 	 * 高度偏移量的最大值
 	 */

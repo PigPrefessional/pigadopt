@@ -112,13 +112,8 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
 
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
 		</activity>
-
 		<!--卖家主页-->
 		<activity
 			android:name=".activity.SellerMainActivity"
@@ -135,7 +130,6 @@
 			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
 		</activity>
-
 		<!--猪详情界面-->
 		<activity
 			android:name=".activity.PigDetailActivity"
@@ -149,7 +143,6 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>-->
 		</activity>
-
 		<!--成长历程-->
 		<activity
 			android:name=".activity.GrowthHistoryActivity"
@@ -165,9 +158,20 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"
 			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
 
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
 		</activity>
-
+		<!--猪照片上传界面-->
+		<activity
+			android:name=".activity.UploadPigPhotoActivity"
+			android:configChanges="orientation|screenLayout|keyboardHidden|screenSize|navigation"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+		</activity>
 		<!--添加猪界面-->
 		<activity
 			android:name=".activity.AddPigActivity"
