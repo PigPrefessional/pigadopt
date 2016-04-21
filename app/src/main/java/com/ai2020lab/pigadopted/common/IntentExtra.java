@@ -15,5 +15,9 @@ public interface IntentExtra {
 
 	String SELLER_HOGPEN_INFO = "com.ai2020lab.pigadopted.model.hogpen.SellerHogpenInfo";
 
+	String PIG_PHOTO_UPLOAD = "com.ai2020lab.pigadopted.model.pig.PigPhotoUploadRequest";
+
+	String PHOTO_PATH = "com.ai2020lab.pigadopted.photoPath";
+
 
 }

@@ -13,7 +13,7 @@
 		android:layout_height="wrap_content"
 		android:orientation="horizontal">
 		<TextView
-			style="@style/TextNormal"
+			style="@style/TextLittle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/pig_photo_angle"
@@ -21,7 +21,7 @@
 		<!--显示拍摄角度-->
 		<TextView
 			android:id="@+id/take_photo_angle_tv"
-			style="@style/TextNormal"
+			style="@style/TextLittle"
 			android:layout_width="65dp"
 			android:layout_height="wrap_content"
 			android:singleLine="true"
@@ -34,7 +34,7 @@
 		android:layout_marginTop="5dp"
 		android:orientation="horizontal">
 		<TextView
-			style="@style/TextNormal"
+			style="@style/TextLittle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/pig_photo_height"
@@ -42,7 +42,7 @@
 		<!--显示拍摄高度-->
 		<TextView
 			android:id="@+id/take_photo_height_tv"
-			style="@style/TextNormal"
+			style="@style/TextLittle"
 			android:layout_width="65dp"
 			android:layout_height="wrap_content"
 			android:singleLine="true"
@@ -53,9 +53,10 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="5dp"
+		android:layout_marginBottom="10dp"
 		android:orientation="horizontal">
 		<TextView
-			style="@style/TextNormal"
+			style="@style/TextLittle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/pig_photo_distance"
@@ -63,7 +64,7 @@
 		<!--显示拍摄距离-->
 		<TextView
 			android:id="@+id/take_photo_distance_tv"
-			style="@style/TextNormal"
+			style="@style/TextLittle"
 			android:layout_width="65dp"
 			android:layout_height="wrap_content"
 			android:singleLine="true"

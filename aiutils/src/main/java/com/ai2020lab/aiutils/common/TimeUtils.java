@@ -95,7 +95,7 @@ public class TimeUtils {
 	 * @return 转化成功返回指定格式的时间展示字符窜，失败返回null
 	 */
 	public static String formatTimeStamp(long timeStamp, String template){
-		SimpleDateFormat format = getDateFormatInstance(template, null);
+		SimpleDateFormat format = getDateFormatInstance(template, Locale.CHINA);
 		if (format != null) {
 			return format.format(timeStamp);
 		}
@@ -183,7 +183,7 @@ public class TimeUtils {
 	 * @return 返回转化的Date对象
 	 */
 	public static Date paseDate(String date, String template) {
-		SimpleDateFormat format = getDateFormatInstance(template, null);
+		SimpleDateFormat format = getDateFormatInstance(template, Locale.CHINA);
 		Date d = null;
 //		// 验证时间字符窜的合法性
 //		if (!checkDate(date)) {

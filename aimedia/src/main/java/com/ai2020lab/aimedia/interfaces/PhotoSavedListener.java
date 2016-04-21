@@ -14,5 +14,5 @@ import java.io.File;
 public interface PhotoSavedListener {
 	void savedBefore();
 	void savedFailure();
-	void savedSuccess(File file);
+	void savedSuccess(File Photo, File cropperPhoto);
 }

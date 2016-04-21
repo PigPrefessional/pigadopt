@@ -18,13 +18,13 @@ public class PigPhotoUploadRequest implements Serializable {
 	 */
 	@Expose
 	@SerializedName("photo_distance")
-	public float distance;
+	public double distance;
 	/**
 	 * 拍照的时候手机同垂直方向的夹角，单位为度
 	 */
 	@Expose
 	@SerializedName("vertical_angle")
-	public float verticalAngle;
+	public double verticalAngle;
 
 	@Expose
 	@SerializedName("object_left")
@@ -70,6 +70,10 @@ public class PigPhotoUploadRequest implements Serializable {
 	public int pigID;
 
 	public String pigPhoto;
+
+	public String pigPhotoCrop;
+
+	public float height;
 
 
 }
