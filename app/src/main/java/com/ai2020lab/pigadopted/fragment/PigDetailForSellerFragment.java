@@ -177,7 +177,7 @@ public class PigDetailForSellerFragment extends Fragment {
 
 	private void setupPigInfo(PigDetailInfoAndOrder result) {
 		mIncreaseWeight.setVisibility(View.INVISIBLE);
-		mIncreaseWeight.setText(String.format(getResources().getString(R.string.pig_detail_weight_increase), result.growthInfo.increasedWeight / 2));
+		mIncreaseWeight.setText(String.format(getResources().getString(R.string.pig_detail_weight_increase), result.growthInfo.increasedWeight));
 		mPigTypeName.setText(DataManager.getInstance().getPigCategory(result.pigInfo.pigCategory.categoryID).categoryName);
         mPigWeight.setText(String.format(getResources().getString(R.string.pig_detail_weight), result.growthInfo.pigWeight));
 		mPigSteps.setText(String.format(getResources().getString(R.string.pig_detail_steps), result.healthInfo.steps));
