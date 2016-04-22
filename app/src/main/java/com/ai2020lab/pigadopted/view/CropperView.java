@@ -14,7 +14,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.ai2020lab.aiutils.common.LogUtils;
+import com.ai2020lab.aiutils.common.ResourcesUtils;
 import com.ai2020lab.aiutils.system.DisplayUtils;
+import com.ai2020lab.pigadopted.R;
 
 /**
  * 拖动缩放矩形框的自定义View，用于裁剪照片<p>
@@ -31,17 +33,21 @@ public class CropperView extends View implements View.OnTouchListener {
 	 */
 	private final static int TOUCH_EDGE_WIDTH = 20;
 	/**
+	 * 四个角的长度
+	 */
+	private final static int CORNER_EDGE_LENGTH = 15;
+	/**
 	 * 宽度偏移量的最小值
 	 */
-	private final static int OFFSET_WIDTH_MIN = 70;
+	private final static int OFFSET_WIDTH_MIN = 60;
 	/**
 	 * 宽度偏移量的最大值
 	 */
-	private final static int OFFSET_WIDTH_MAX = 130;
+	private final static int OFFSET_WIDTH_MAX = 140;
 	/**
 	 * 高度偏移量的最小值
 	 */
-	private final static int OFFSET_HEIGHT_MIN = 40;
+	private final static int OFFSET_HEIGHT_MIN = 20;
 	/**
 	 * 高度偏移量的最大值
 	 */
@@ -52,9 +58,17 @@ public class CropperView extends View implements View.OnTouchListener {
 	 */
 	private final static int LEFT = 0x0001;
 	/**
+	 * View的触摸区域-左上
+	 */
+	private final static int LEFT_TOP = 0x0006;
+	/**
 	 * View的触摸区域-右边
 	 */
 	private final static int RIGHT = 0x0002;
+	/**
+	 * View的触摸区域-右上
+	 */
+	private final static int RIGHT_TOP = 0x0007;
 	/**
 	 * View的触摸区域-顶边
 	 */
@@ -78,15 +92,24 @@ public class CropperView extends View implements View.OnTouchListener {
 	/**
 	 * 矩形框边的颜色
 	 */
-	private int strokeColor = Color.WHITE;
+	private int strokeColor = R.color.cropper_view_rect_border;
 	/**
 	 * 矩形框边的宽度
 	 */
-	private float strokeWidth = 1.0f;
+	private float strokeWidth = 2f;
+	/**
+	 * 四个角的线条颜色
+	 */
+	private int cornerColor = Color.WHITE;
+	/**
+	 * 四个角的线条宽度
+	 */
+	private float cornerWidth = 4.0f;
 	/**
 	 * 画笔对象
 	 */
-	private Paint paint;
+	private Paint rectPaint;
+	private Paint cornerPaint;
 	/**
 	 * 画布宽度，即整个View的宽度
 	 */
@@ -108,6 +131,10 @@ public class CropperView extends View implements View.OnTouchListener {
 	 * 触摸区域的宽度
 	 */
 	private int touchWidth;
+	/**
+	 * 四个角的长度
+	 */
+	private int cornerLength;
 	/**
 	 * 当前触摸的区域
 	 */
@@ -135,6 +162,8 @@ public class CropperView extends View implements View.OnTouchListener {
 		this.context = context;
 		touchWidth = DisplayUtils.dpToPxInt(context, TOUCH_EDGE_WIDTH);
 		LogUtils.i(TAG, "触摸操作区域宽度 touchWidth-->" + touchWidth);
+		cornerLength = DisplayUtils.dpToPxInt(context, CORNER_EDGE_LENGTH);
+		LogUtils.i(TAG, "四个边角线条长度 cornerLength-->" + cornerLength);
 		widthMin = DisplayUtils.dpToPxInt(context, OFFSET_WIDTH_MIN);
 		widthMax = DisplayUtils.dpToPxInt(context, OFFSET_WIDTH_MAX);
 		heightMin = DisplayUtils.dpToPxInt(context, OFFSET_HEIGHT_MIN);
@@ -147,22 +176,31 @@ public class CropperView extends View implements View.OnTouchListener {
 		LogUtils.i(TAG, "宽度偏移量 offsetWidth-->" + offsetWidth);
 		offsetHeight = heightMax;
 		LogUtils.i(TAG, "高度偏移量 offsetHeight-->" + offsetHeight);
+		initPaint();
 		// 注册触摸监听
 		setOnTouchListener(this);
 	}
 
 	private void initPaint() {
-		paint = new Paint();
-		paint.setColor(strokeColor);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(DisplayUtils.dpToPx(context, strokeWidth));
-		paint.setAntiAlias(true);
+		rectPaint = new Paint();
+		rectPaint.setColor(ResourcesUtils.getColor(strokeColor));
+		rectPaint.setStyle(Paint.Style.STROKE);
+		strokeWidth = DisplayUtils.dpToPx(context, strokeWidth);
+		LogUtils.i(TAG, "strokeWidth-->" + strokeWidth);
+		rectPaint.setStrokeWidth(strokeWidth);
+		rectPaint.setAntiAlias(true);
+		cornerPaint = new Paint();
+		cornerPaint.setColor(cornerColor);
+		cornerPaint.setStyle(Paint.Style.FILL);
+		cornerWidth = DisplayUtils.dpToPx(context, cornerWidth);
+		LogUtils.i(TAG, "cornerWidth-->" + cornerWidth);
+		cornerPaint.setStrokeWidth(cornerWidth);
+		cornerPaint.setAntiAlias(true);
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		initPaint();
 		// 获取整个画布的宽度和高度
 		width = canvas.getWidth();
 		height = canvas.getHeight();
@@ -171,13 +209,40 @@ public class CropperView extends View implements View.OnTouchListener {
 		// 矩形必须在整个画布的中心绘制，并且底边位于画布的中心线上
 		// 约束：最大宽度和最小宽度,最大高度和最小高度
 		// width - offset * 2 <= 200 && width - offset * 2 >=100
-		canvas.drawRect(offsetWidth, offsetHeight, width - offsetWidth, height / 2, paint);
+		canvas.drawRect(offsetWidth, offsetHeight, width - offsetWidth, height / 2, rectPaint);
+		///////////////////////////////////////////////////////////////////////////////////////
+		float offset = cornerWidth / 2;
+		// 画左上角的水平方向
+		canvas.drawLine(offsetWidth - cornerWidth, offsetHeight - offset,
+				offsetWidth + cornerLength, offsetHeight - offset, cornerPaint);
+		// 画左上角的垂直方向
+		canvas.drawLine(offsetWidth - offset, offsetHeight - cornerWidth,
+				offsetWidth - offset, offsetHeight + cornerLength, cornerPaint);
+		// 画左下角的水平方向
+		canvas.drawLine(offsetWidth - cornerWidth, height / 2 + offset,
+				offsetWidth + cornerLength, height / 2 + offset, cornerPaint);
+		// 画左下角的垂直方向
+		canvas.drawLine(offsetWidth - offset, height / 2 - cornerLength,
+				offsetWidth - offset, height / 2 + cornerWidth, cornerPaint);
+		// 画右上角的水平方向
+		canvas.drawLine(width - offsetWidth - cornerLength, offsetHeight - offset,
+				width - offsetWidth + cornerWidth, offsetHeight - offset, cornerPaint);
+		// 画右上角的垂直方向
+		canvas.drawLine(width - offsetWidth + offset, offsetHeight - cornerWidth,
+				width - offsetWidth + offset, offsetHeight + cornerLength, cornerPaint);
+		// 画右下角水平方向
+		canvas.drawLine(width - offsetWidth - cornerLength, height / 2 + offset,
+				width - offsetWidth + cornerWidth, height / 2 + offset, cornerPaint);
+		// 画右下角垂直方向
+		canvas.drawLine(width - offsetWidth + offset, height / 2 - cornerLength,
+				width - offsetWidth + offset, height / 2 + cornerWidth, cornerPaint);
 	}
 
 	/**
 	 * 是否处理拖动改变矩形框大小的标志位
 	 */
 	private boolean handleDragFlag = false;
+
 	// onTouch比onTouchEvent先执行
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
@@ -192,7 +257,7 @@ public class CropperView extends View implements View.OnTouchListener {
 				LogUtils.i(TAG, "按下的 lastY-->" + lastY);
 				// 获取触摸的区域
 				touchAreaFlag = getTouchAreaFlag(lastX, lastY);
-				if (touchAreaFlag == LEFT || touchAreaFlag == RIGHT || touchAreaFlag == TOP) {
+				if (touchAreaFlag != -1) {
 					LogUtils.i(TAG, "--触摸了操作区域--");
 					handleDragFlag = true;
 				}
@@ -242,6 +307,13 @@ public class CropperView extends View implements View.OnTouchListener {
 			case TOP:
 				top(offsetY);
 				break;
+			case LEFT_TOP:
+				leftTop(offsetX, offsetY);
+				break;
+			case RIGHT_TOP:
+				rightTop(offsetX, offsetY);
+				break;
+
 		}
 		invalidate();
 	}
@@ -276,6 +348,20 @@ public class CropperView extends View implements View.OnTouchListener {
 		setMaxMinHeight();
 	}
 
+	private void leftTop(int offsetX, int offsetY) {
+		offsetWidth += offsetX;
+		offsetHeight += offsetY;
+		setMaxMinHeight();
+		setMaxMinWidth();
+	}
+
+	private void rightTop(int offsetX, int offsetY) {
+		offsetWidth -= offsetX;
+		offsetHeight += offsetY;
+		setMaxMinHeight();
+		setMaxMinWidth();
+	}
+
 	/**
 	 * 矩形操作区域的宽度不能太小或者太大
 	 */
@@ -302,22 +388,32 @@ public class CropperView extends View implements View.OnTouchListener {
 	 * 判断触摸区域
 	 */
 	private int getTouchAreaFlag(int x, int y) {
-		// 触摸了左边
 		if (x >= offsetWidth - touchWidth && x <= offsetWidth + touchWidth) {
-			LogUtils.i(TAG, "--触摸了左边--");
-			return LEFT;
+			if (y > offsetHeight + touchWidth && y < height / 2 - touchWidth) {
+				LogUtils.i(TAG, "--触摸了左边--");
+				return LEFT;
+			}
+			if (y <= offsetHeight + touchWidth && y >= offsetHeight - touchWidth) {
+				LogUtils.i(TAG, "--触摸了左边顶部--");
+				return LEFT_TOP;
+			}
 		}
-		// 触摸了右边
 		if (x <= width - offsetWidth + touchWidth && x >= width - offsetWidth - touchWidth) {
-			LogUtils.i(TAG, "--触摸了右边--");
-			return RIGHT;
+			if (y > offsetHeight + touchWidth && y < height / 2 - touchWidth) {
+				LogUtils.i(TAG, "--触摸了右边--");
+				return RIGHT;
+			}
+			if (y <= offsetHeight + touchWidth && y >= offsetHeight - touchWidth) {
+				LogUtils.i(TAG, "--触摸了右边顶部--");
+				return RIGHT_TOP;
+			}
 		}
-		// 触摸了顶边
-		if (y >= offsetHeight - touchWidth && y <= offsetHeight + touchWidth) {
-			LogUtils.i(TAG, "--触摸了顶边--");
-			return TOP;
+		if (y <= offsetHeight + touchWidth && y >= offsetHeight - touchWidth) {
+			if (x > offsetWidth + touchWidth && x < width - offsetWidth - touchWidth) {
+				LogUtils.i(TAG, "--触摸了顶边--");
+				return TOP;
+			}
 		}
-		// 触摸底部不改变
 		return -1;
 	}
 
@@ -343,9 +439,10 @@ public class CropperView extends View implements View.OnTouchListener {
 
 	/**
 	 * 返回取景框的矩形坐标
+	 *
 	 * @return Rect
 	 */
-	public Rect getCropperRect(){
+	public Rect getCropperRect() {
 		return new Rect(offsetWidth, offsetHeight, width - offsetWidth, height / 2);
 	}
 
