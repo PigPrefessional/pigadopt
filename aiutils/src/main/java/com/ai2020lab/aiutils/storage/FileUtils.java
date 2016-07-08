@@ -137,7 +137,7 @@ public class FileUtils {
 		boolean flag = true; // 标示删除成功还是失败
 		File[] fileList = dirFile.listFiles();
 		for (File file : fileList) {
-			if (file.isFile()) { // 如果是文件
+			if (file != null && file.isFile()) { // 如果是文件
 				flag = deleteFile(file.getAbsolutePath());
 			} else { // 如果是目录
 				flag = deleteDirectory(file.getAbsolutePath());
